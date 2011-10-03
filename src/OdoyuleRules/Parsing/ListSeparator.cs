@@ -12,24 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Parsing
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
-    public class RuleDefinition
+    public class ListSeparator
     {
-        public RuleDefinition(string name, IEnumerable<RuleCondition> conditions)
-        {
-            Name = name;
-            Conditions = conditions.ToArray();
-        }
-
-        public string Name { get; set; }
-
-        public RuleCondition[] Conditions { get; set; }
-
-        public override string ToString()
-        {
-            return string.Format("{0}\n{1}", Name, string.Join(", ", Conditions.Select(x => x.ToString())));
-        }
     }
 }

@@ -10,26 +10,32 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Parsing
+namespace OdoyuleRules.Models.RuntimeModel
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    using System;
 
-    public class RuleDefinition
+    class StatefulActivationContext<T> :
+        ActivationContext<T>
+        where T : class
     {
-        public RuleDefinition(string name, IEnumerable<RuleCondition> conditions)
+        readonly T _fact;
+        readonly StatefulSession _session;
+
+        public StatefulActivationContext(StatefulSession session, T fact)
         {
-            Name = name;
-            Conditions = conditions.ToArray();
+            _session = session;
+            _fact = fact;
         }
 
-        public string Name { get; set; }
-
-        public RuleCondition[] Conditions { get; set; }
-
-        public override string ToString()
+        public Session CurrentSession
         {
-            return string.Format("{0}\n{1}", Name, string.Join(", ", Conditions.Select(x => x.ToString())));
+            get { return _session; }
+        }
+
+        public void Convert<TOutput>(Action<ActivationContext<TOutput>> callback)
+            where TOutput : class
+        {
+            throw new NotImplementedException();
         }
     }
 }

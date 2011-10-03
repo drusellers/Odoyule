@@ -10,26 +10,26 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Parsing
+namespace OdoyuleRules.Models.RuntimeModel
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    using System;
+    using Configuration;
 
-    public class RuleDefinition
+    class ActivationTypeProxyImpl<T> :
+        ActivationTypeProxy
+        where T : class
     {
-        public RuleDefinition(string name, IEnumerable<RuleCondition> conditions)
+        public FactHandle Activate(RulesEngine rulesEngine, Session session, FactCache factCache, object obj)
         {
-            Name = name;
-            Conditions = conditions.ToArray();
-        }
+            var fact = obj as T;
+            if (fact == null)
+                throw new ArgumentNullException("fact");
 
-        public string Name { get; set; }
+            ActivationContext<T> context = session.CreateContext(fact);
 
-        public RuleCondition[] Conditions { get; set; }
+            rulesEngine.Activate(context);
 
-        public override string ToString()
-        {
-            return string.Format("{0}\n{1}", Name, string.Join(", ", Conditions.Select(x => x.ToString())));
+            return factCache.Add(context);
         }
     }
 }

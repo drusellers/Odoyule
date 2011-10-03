@@ -34,6 +34,10 @@ namespace OdoyuleRules.Parsing
                            from deq in Char(enq)
                            select new string(text);
 
+            ListSeparator = from w in Whitespace
+                            from ch in Char(',')
+                            select new ListSeparator();
+
             Minus = from w in Whitespace
                     from op in Char('-')
                     select (Operator)new MinusOperator();
@@ -84,18 +88,55 @@ namespace OdoyuleRules.Parsing
                         from value in QuotedString
                         select new RuleCondition(id, op, value);
 
+            NextCondition = from sep in ListSeparator
+                            from cond in Condition
+                            select cond;
+
+            MatchConditions = from first in Condition
+                              from rest in Rep(NextCondition)
+                              select new[] {first}.Concat(rest).ToArray();
+
+            TypeMatch = from w in Whitespace
+                        from className in Id
+                        from open in Char('(')
+                        from conditions in MatchConditions
+                        from close in Char(')')
+                        select (RuleCondition)new ClassRuleCondition(className, conditions);
+
+            Variable = from w in Whitespace
+                       from flag in Char('$')
+                       from id in Id
+                       select new Variable(id);
+
+            AssignedMatch = from v in Variable
+                            from w in Whitespace
+                            from c in Char(':')
+                            from t in TypeMatch
+                            select (RuleCondition) new AssignedRuleCondition(v, t);
+
             Rule = from open in Id
                    where open == "rule"
                    from name in QuotedString.Or(Id)
                    from when in Id
                    where when == "when"
-                   from conditions in Rep(Condition)
+                   from conditions in Rep(AssignedMatch.Or(TypeMatch.Or(Condition)))
                    from then in Id
                    where then == "then"
                    from theEnd in Id
                    where theEnd == "end"
                    select new RuleDefinition(name, conditions);
         }
+
+        protected Parser<TInput, RuleCondition> AssignedMatch { get; set; }
+
+        protected Parser<TInput, Variable> Variable { get; set; }
+
+        public Parser<TInput, RuleCondition[]> MatchConditions { get; private set; } 
+        public Parser<TInput, RuleCondition> TypeMatch { get; private set; }
+        public Parser<TInput, RuleCondition> NextCondition { get; private set; }
+
+        
+        public Parser<TInput, ListSeparator> ListSeparator { get; private set; }
 
         public Parser<TInput, Comparator> Equal { get; private set; }
         public Parser<TInput, Comparator> NotEqual { get; private set; }
@@ -124,5 +165,27 @@ namespace OdoyuleRules.Parsing
         public Parser<TInput, RuleDefinition> Rule { get; private set; }
 
         public Parser<TInput, RuleCondition> Condition { get; private set; }
+    }
+
+    public class AssignedRuleCondition : RuleCondition
+    {
+        readonly Variable _variable;
+        ClassRuleCondition _ruleCondition;
+
+        public Variable Variable
+        {
+            get { return _variable; }
+        }
+
+        public ClassRuleCondition RuleCondition
+        {
+            get { return _ruleCondition; }
+        }
+
+        public AssignedRuleCondition(Variable variable, RuleCondition ruleCondition)
+        {
+            _variable = variable;
+            _ruleCondition = ruleCondition as ClassRuleCondition;
+        }
     }
 }

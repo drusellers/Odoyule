@@ -17,12 +17,21 @@ namespace OdoyuleRules.Parsing
         public RuleCondition(string name, Comparator op, string val)
         {
             Name = name;
-            Operator = op;
+            Comparator = op;
             Value = val;
         }
 
+        protected RuleCondition()
+        {
+        }
+
         public string Name { get; set; }
-        public Comparator Operator { get; set; }
+        public Comparator Comparator { get; set; }
         public string Value { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} {1} {2}", Name, Comparator, Value);
+        }
     }
 }
