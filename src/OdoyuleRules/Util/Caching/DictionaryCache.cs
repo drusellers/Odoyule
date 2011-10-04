@@ -10,79 +10,79 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Internal.Caching
+namespace OdoyuleRules.Util.Caching
 {
     using System;
     using System.Collections;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
 
     [Serializable]
-    class ConcurrentCache<TKey, TValue> :
+    class DictionaryCache<TKey, TValue> :
         Cache<TKey, TValue>
     {
-        readonly ConcurrentDictionary<TKey, TValue> _values;
-        CacheItemCallback<TKey, TValue> _duplicateValueAdded = ThrowOnDuplicateValue;
+        readonly IDictionary<TKey, TValue> _values;
+        CacheItemCallback<TKey, TValue> _duplicateValueAdded;
 
         KeySelector<TKey, TValue> _keySelector = DefaultKeyAccessor;
         MissingValueProvider<TKey, TValue> _missingValueProvider = ThrowOnMissingValue;
         CacheItemCallback<TKey, TValue> _valueAddedCallback = DefaultCacheItemCallback;
         CacheItemCallback<TKey, TValue> _valueRemovedCallback = DefaultCacheItemCallback;
 
-        public ConcurrentCache()
+        public DictionaryCache()
         {
-            _values = new ConcurrentDictionary<TKey, TValue>();
+            _values = new Dictionary<TKey, TValue>();
         }
 
-        public ConcurrentCache(MissingValueProvider<TKey, TValue> missingValueProvider)
+        public DictionaryCache(MissingValueProvider<TKey, TValue> missingValueProvider)
             : this()
         {
             _missingValueProvider = missingValueProvider;
         }
 
-        public ConcurrentCache(IEqualityComparer<TKey> equalityComparer)
+        public DictionaryCache(IEqualityComparer<TKey> equalityComparer)
         {
-            _values = new ConcurrentDictionary<TKey, TValue>(equalityComparer);
+            _values = new Dictionary<TKey, TValue>(equalityComparer);
         }
 
-        public ConcurrentCache(KeySelector<TKey, TValue> keySelector)
+        public DictionaryCache(KeySelector<TKey, TValue> keySelector)
         {
-            _values = new ConcurrentDictionary<TKey, TValue>();
+            _values = new Dictionary<TKey, TValue>();
             _keySelector = keySelector;
         }
 
-        public ConcurrentCache(KeySelector<TKey, TValue> keySelector, IEnumerable<TValue> values)
+        public DictionaryCache(KeySelector<TKey, TValue> keySelector, IEnumerable<TValue> values)
             : this(keySelector)
         {
             Fill(values);
         }
 
-        public ConcurrentCache(IEqualityComparer<TKey> equalityComparer,
+        public DictionaryCache(IEqualityComparer<TKey> equalityComparer,
                                MissingValueProvider<TKey, TValue> missingValueProvider)
             : this(equalityComparer)
         {
             _missingValueProvider = missingValueProvider;
         }
 
-        public ConcurrentCache(IDictionary<TKey, TValue> values)
+        public DictionaryCache(IDictionary<TKey, TValue> values, bool copy = true)
         {
-            _values = new ConcurrentDictionary<TKey, TValue>(values);
+            _values = copy ? new Dictionary<TKey, TValue>(values) : values;
         }
 
-        public ConcurrentCache(IDictionary<TKey, TValue> values,
-                               MissingValueProvider<TKey, TValue> missingValueProvider)
-            : this(values)
+        public DictionaryCache(IDictionary<TKey, TValue> values,
+                               MissingValueProvider<TKey, TValue> missingValueProvider,
+                               bool copy = true)
+            : this(values, copy)
         {
             _missingValueProvider = missingValueProvider;
         }
 
-        public ConcurrentCache(IDictionary<TKey, TValue> values, IEqualityComparer<TKey> equalityComparer)
+        public DictionaryCache(IDictionary<TKey, TValue> values, IEqualityComparer<TKey> equalityComparer)
         {
-            _values = new ConcurrentDictionary<TKey, TValue>(values, equalityComparer);
+            _values = new Dictionary<TKey, TValue>(values, equalityComparer);
         }
 
-        public ConcurrentCache(IDictionary<TKey, TValue> values,
+        public DictionaryCache(IDictionary<TKey, TValue> values,
                                IEqualityComparer<TKey> equalityComparer,
                                MissingValueProvider<TKey, TValue> missingValueProvider)
             : this(values, equalityComparer)
@@ -154,16 +154,13 @@ namespace OdoyuleRules.Internal.Caching
 
         public TValue Get(TKey key, MissingValueProvider<TKey, TValue> missingValueProvider)
         {
-            bool added = false;
+            TValue value;
+            if (_values.TryGetValue(key, out value))
+                return value;
 
-            TValue value = _values.GetOrAdd(key, x =>
-                {
-                    added = true;
-                    return missingValueProvider(x);
-                });
+            value = missingValueProvider(key);
 
-            if (added)
-                _valueAddedCallback(key, value);
+            Add(key, value);
 
             return value;
         }
@@ -182,11 +179,8 @@ namespace OdoyuleRules.Internal.Caching
 
         public void Add(TKey key, TValue value)
         {
-            bool added = _values.TryAdd(key, value);
-            if (added)
-                _valueAddedCallback(key, value);
-            else
-                _duplicateValueAdded(key, value);
+            _values.Add(key, value);
+            _valueAddedCallback(key, value);
         }
 
         public void AddValue(TValue value)
@@ -246,8 +240,11 @@ namespace OdoyuleRules.Internal.Caching
         public void Remove(TKey key)
         {
             TValue existingValue;
-            if (_values.TryRemove(key, out existingValue))
+            if (_values.TryGetValue(key, out existingValue))
+            {
                 _valueRemovedCallback(key, existingValue);
+                _values.Remove(key);
+            }
         }
 
         public void RemoveValue(TValue value)

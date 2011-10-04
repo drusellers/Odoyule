@@ -66,17 +66,6 @@
     <Compile Include="Configuration\SessionConfigurators\StatelessSessionConfigurator.cs" />
     <Compile Include="Configuration\SessionConfigurators\StatelessSessionConfiguratorImpl.cs" />
     <Compile Include="FactHandle.cs" />
-    <Compile Include="Internal\Caching\Cache.cs" />
-    <Compile Include="Internal\Caching\CacheItemCallback.cs" />
-    <Compile Include="Internal\Caching\ConcurrentCache.cs" />
-    <Compile Include="Internal\Caching\DictionaryCache.cs" />
-    <Compile Include="Internal\Caching\GenericTypeCache.cs" />
-    <Compile Include="Internal\Caching\KeySelector.cs" />
-    <Compile Include="Internal\Caching\MissingValueProvider.cs" />
-    <Compile Include="Internal\Caching\ReadCache.cs" />
-    <Compile Include="Internal\ExpressionExtensions.cs" />
-    <Compile Include="Internal\FastProperty.cs" />
-    <Compile Include="Internal\Observable.cs" />
     <Compile Include="Models\RuntimeModel\AcceptRuntimeModelVisitor.cs" />
     <Compile Include="Models\RuntimeModel\Activation.cs" />
     <Compile Include="Models\RuntimeModel\ActivationContext.cs" />
@@ -152,6 +141,17 @@
     <Compile Include="StatefulSessionFactory.cs" />
     <Compile Include="StatelessSession.cs" />
     <Compile Include="StatelessSessionFactory.cs" />
+    <Compile Include="Util\Caching\Cache.cs" />
+    <Compile Include="Util\Caching\CacheItemCallback.cs" />
+    <Compile Include="Util\Caching\ConcurrentCache.cs" />
+    <Compile Include="Util\Caching\DictionaryCache.cs" />
+    <Compile Include="Util\Caching\GenericTypeCache.cs" />
+    <Compile Include="Util\Caching\KeySelector.cs" />
+    <Compile Include="Util\Caching\MissingValueProvider.cs" />
+    <Compile Include="Util\Caching\ReadCache.cs" />
+    <Compile Include="Util\ExpressionExtensions.cs" />
+    <Compile Include="Util\FastProperty.cs" />
+    <Compile Include="Util\Observable.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

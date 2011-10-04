@@ -13,7 +13,7 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
-    using Internal.Caching;
+    using Util.Caching;
 
     class StatelessSessionImpl :
         StatelessSession,

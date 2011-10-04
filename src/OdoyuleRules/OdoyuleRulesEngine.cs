@@ -16,8 +16,8 @@ namespace OdoyuleRules
     using System.Collections.Generic;
     using System.Linq;
     using Configuration.RulesEngineConfigurators;
-    using Internal.Caching;
     using Models.RuntimeModel;
+    using Util.Caching;
 
     public class OdoyuleRulesEngine :
         RulesEngine,

@@ -14,8 +14,8 @@ namespace OdoyuleRules.Configuration.Builders
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Internal.Caching;
     using Models.SemanticModel;
+    using Util.Caching;
 
     class RuleSetBuilderImpl :
         RuleSetBuilder

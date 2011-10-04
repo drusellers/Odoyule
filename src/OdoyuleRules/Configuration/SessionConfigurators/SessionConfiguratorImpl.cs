@@ -13,8 +13,8 @@
 namespace OdoyuleRules.Configuration.SessionConfigurators
 {
     using System;
-    using Internal.Caching;
     using Models.RuntimeModel;
+    using Util.Caching;
 
     abstract class SessionConfiguratorImpl
     {
