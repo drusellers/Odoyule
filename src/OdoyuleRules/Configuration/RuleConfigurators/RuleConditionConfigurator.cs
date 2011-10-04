@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Configuration.RuleConfigurators
 {
     using System;
+    using Models.SemanticModel;
     using Parsing;
 
     public interface RuleConditionConfigurator

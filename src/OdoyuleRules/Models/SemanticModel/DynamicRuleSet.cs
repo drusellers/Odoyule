@@ -15,7 +15,8 @@ namespace OdoyuleRules.Models.SemanticModel
     using System.Collections.Generic;
     using System.Linq;
 
-    class DynamicRuleSet : RuleSet
+    class DynamicRuleSet : 
+        RuleSet
     {
         IList<Rule> _rules;
 

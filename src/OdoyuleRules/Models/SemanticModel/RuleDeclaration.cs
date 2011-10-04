@@ -14,6 +14,7 @@ namespace OdoyuleRules.Models.SemanticModel
 {
     using System.Collections.Generic;
     using System.Linq;
+    using ParseModel;
 
     public class RuleDeclaration :
         Declaration

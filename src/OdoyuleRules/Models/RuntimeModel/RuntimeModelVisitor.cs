@@ -26,10 +26,13 @@ namespace OdoyuleRules.Models.RuntimeModel
             where T : class;
 
         bool Visit<TInput, TOutput>(ConvertNode<TInput, TOutput> node, Func<RuntimeModelVisitor, bool> next)
-            where TInput : class, TOutput 
+            where TInput : class, TOutput
             where TOutput : class;
 
         bool Visit<T>(DelegateProductionNode<T> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class;
+
+        bool Visit<T, TProperty>(PropertyNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
     }
 }

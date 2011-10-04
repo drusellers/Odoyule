@@ -37,7 +37,6 @@ namespace OdoyuleRules.Models.RuntimeModel
             return GetEnumerator();
         }
 
-
         public void Add(Activation<T> activation)
         {
             _activations.Add(activation);
@@ -45,8 +44,10 @@ namespace OdoyuleRules.Models.RuntimeModel
 
         public void All(Action<Activation<T>> callback)
         {
-            foreach (var activation in this)
-                callback(activation);
+            for (int i = 0; i < _activations.Count; i++)
+            {
+                callback(_activations[i]);
+            }
         }
 
         public void Remove(Activation<T> activation)

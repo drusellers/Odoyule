@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Tests
 {
+    using Configuration;
     using NUnit.Framework;
 
     [TestFixture]
@@ -42,7 +43,8 @@ namespace OdoyuleRules.Tests
                 {
                     x.Rule("Order", r =>
                         {
-                            r.When<Order>(order => order.Amount > 10000.0m)
+                            r.When<Order>(c => c.Predicate(order => order != null),
+                                          c => c.Predicate(order => order.Amount > 10000.0m))
                                 .Then(order => _matchedOrder = order);
                         });
                 });

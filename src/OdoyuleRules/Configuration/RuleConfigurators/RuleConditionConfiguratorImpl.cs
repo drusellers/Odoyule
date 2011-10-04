@@ -14,6 +14,7 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
 {
     using System;
     using System.Collections.Generic;
+    using Models.SemanticModel;
     using Parsing;
 
     class RuleConditionConfiguratorImpl<T> :

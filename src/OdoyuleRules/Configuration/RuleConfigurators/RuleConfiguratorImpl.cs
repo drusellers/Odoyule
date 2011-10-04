@@ -16,6 +16,7 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using Models.SemanticModel;
+    using Parsing;
 
     class RuleConfiguratorImpl :
         RuleConfigurator
@@ -40,18 +41,19 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
             return configurator;
         }
 
-        public RuleConditionConfigurator<T> When<T>(Expression<Func<T, bool>> predicate) 
+        public RuleConditionConfigurator<T> When<T>(params Func<RuleConditionConfigurator<T>, RuleCondition<T>>[] conditions)
             where T : class
         {
             var configurator = new RuleConditionConfiguratorImpl<T>();
 
-            var condition = new PredicateCondition<T>(predicate);
-
-            configurator.AddCondition(condition);
+            for (int i = 0; i < conditions.Length; i++)
+            {
+                conditions[i](configurator);
+            }
 
             _conditionConfigurators.Add(configurator);
 
-            return configurator;            
+            return configurator;
         }
     }
 }

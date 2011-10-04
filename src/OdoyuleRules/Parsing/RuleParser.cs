@@ -13,6 +13,8 @@
 namespace OdoyuleRules.Parsing
 {
     using System.Linq;
+    using Comparators;
+    using Operators;
 
     public abstract class RuleParser<TInput> :
         AbstractCharacterParser<TInput>

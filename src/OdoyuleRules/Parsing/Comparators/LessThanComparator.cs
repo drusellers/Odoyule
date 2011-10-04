@@ -10,22 +10,15 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Models.SemanticModel
+namespace OdoyuleRules.Parsing.Comparators
 {
-    using System;
-    using System.Linq.Expressions;
-    using Parsing;
-
-    class PredicateCondition<T> :
-        RuleCondition
+    public class LessThanComparator :
+        Comparator
     {
-        readonly Expression<Func<T, bool>> _predicateExpression;
-        Func<T, bool> _predicate;
+        public LessThanComparator()
+            : base(ComparatorType.LessThan)
 
-        public PredicateCondition(Expression<Func<T, bool>> predicateExpression)
         {
-            _predicateExpression = predicateExpression;
-            _predicate = predicateExpression.Compile();
         }
     }
 }
