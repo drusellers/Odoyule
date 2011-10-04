@@ -12,26 +12,47 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.RuntimeModel
 {
-    using System.Linq;
+    using System;
+    using System.Collections.Generic;
 
-    public abstract class Node<T>
+    public abstract class MemoryNode<T>
         where T : class
     {
+        readonly int _id;
         readonly ActivationList<T> _successors;
 
-        protected Node()
+        protected MemoryNode(int id)
         {
+            _id = id;
+
             _successors = new ActivationList<T>();
+        }
+
+        public IEnumerable<Activation<T>> Successors
+        {
+            get { return _successors; }
+        }
+
+        public int Id
+        {
+            get { return _id; }
         }
 
         public virtual void Activate(ActivationContext<T> context)
         {
-            _successors.All(activation => activation.Activate(context));
+            context.Access<T>(_id, x => x.Activate(context));
+
+            context.Schedule(() => _successors.All(activation => activation.Activate(context)));
         }
 
-        public bool Successors(RuntimeModelVisitor visitor)
+        public void RightActivate(ActivationContext context, Func<ActivationContext<T>, bool> callback)
         {
-            return Enumerable.All(_successors, activation => activation.Accept(visitor));
+            context.Access<T>(_id, x => x.All(callback));
+        }
+
+        public void RightActivate(ActivationContext<T> context, Action<ActivationContext<T>> callback)
+        {
+            context.Access<T>(_id, x => x.Any(context, callback));
         }
 
         public void AddActivation(Activation<T> activation)

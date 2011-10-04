@@ -13,7 +13,6 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
-    using System.Linq;
 
     /// <summary>
     /// A property node matches a property on a fact and activates successors
@@ -22,24 +21,15 @@ namespace OdoyuleRules.Models.RuntimeModel
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TProperty"></typeparam>
     public class PropertyNode<T, TProperty> :
+        Node<Token<T, TProperty>>,
         Activation<T>
         where T : class
     {
-        readonly int _id;
         readonly Action<T, Action<TProperty>> _propertyMatch;
-        readonly ActivationList<Token<T, TProperty>> _successors;
 
-        public PropertyNode(int id, Action<T, Action<TProperty>> propertyMatch)
+        public PropertyNode(Action<T, Action<TProperty>> propertyMatch)
         {
-            _id = id;
             _propertyMatch = propertyMatch;
-
-            _successors = new ActivationList<Token<T, TProperty>>();
-        }
-
-        public int Id
-        {
-            get { return _id; }
         }
 
         public void Activate(ActivationContext<T> context)
@@ -49,23 +39,13 @@ namespace OdoyuleRules.Models.RuntimeModel
                     ActivationContext<Token<T, TProperty>> propertyContext =
                         context.CreateContext(new Token<T, TProperty>(context, property));
 
-                    _successors.All(x => x.Activate(propertyContext));
+                    base.Activate(propertyContext);
                 });
         }
 
         public bool Accept(RuntimeModelVisitor visitor)
         {
-            return visitor.Visit(this, x => Enumerable.All(_successors, activation => activation.Accept(x)));
-        }
-
-        public void AddActivation(Activation<Token<T, TProperty>> activation)
-        {
-            _successors.Add(activation);
-        }
-
-        public void RemoveActivation(Activation<Token<T, TProperty>> activation)
-        {
-            _successors.Remove(activation);
+            return visitor.Visit(this, Successors);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace OdoyuleRules
             var fastProperty = new FastProperty<T, TProperty>(propertyInfo);
 
             PropertyNode<T, TProperty> propertyNode =
-                configurator.CreateNode(id => new PropertyNode<T, TProperty>(id, (x, next) => next(fastProperty.Get(x))));
+                configurator.CreateNode(id => new PropertyNode<T, TProperty>((x, next) => next(fastProperty.Get(x))));
 
             return propertyNode;
         }
@@ -40,7 +40,7 @@ namespace OdoyuleRules
             where T : class
         {
             ConditionNode<T> conditionNode = configurator.CreateNode(
-                id => new ConditionNode<T>(id, (value, next) =>
+                id => new ConditionNode<T>((value, next) =>
                     {
                         if (condition(value))
                             next();
@@ -54,7 +54,7 @@ namespace OdoyuleRules
             where T1 : class
         {
             ConditionNode<Token<T1, T2>> conditionNode = configurator.CreateNode(
-                id => new ConditionNode<Token<T1, T2>>(id, (value, next) =>
+                id => new ConditionNode<Token<T1, T2>>((value, next) =>
                     {
                         if (condition(value.Item2))
                             next();

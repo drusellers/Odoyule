@@ -24,11 +24,6 @@ namespace OdoyuleRules.Models.RuntimeModel
             _output = output;
         }
 
-        public Activation<TOutput> Output
-        {
-            get { return _output; }
-        }
-
         public void Activate(ActivationContext<TInput> context)
         {
             context.Convert<TOutput>(proxy => _output.Activate(proxy));

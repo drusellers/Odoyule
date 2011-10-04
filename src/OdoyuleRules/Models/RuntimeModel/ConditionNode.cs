@@ -13,41 +13,27 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
-    using System.Linq;
 
     public class ConditionNode<T> :
+        Node<T>,
         Activation<T>
         where T : class
     {
-        readonly int _id;
         readonly Action<T, Action> _condition;
-        readonly ActivationList<T> _successors;
 
-        public ConditionNode(int id, Action<T, Action> condition)
+        public ConditionNode(Action<T, Action> condition)
         {
-            _id = id;
             _condition = condition;
-            _successors = new ActivationList<T>();
         }
 
-        public void Activate(ActivationContext<T> context)
+        public override void Activate(ActivationContext<T> context)
         {
-            _condition(context.Fact, () => _successors.All(x => x.Activate(context)));
+            _condition(context.Fact, () => base.Activate(context));
         }
 
         public bool Accept(RuntimeModelVisitor visitor)
         {
-            return visitor.Visit(this, x => Enumerable.All(_successors, activation => activation.Accept(x)));
-        }
-
-        public void AddActivation(Activation<T> activation)
-        {
-            _successors.Add(activation);
-        }
-
-        public void RemoveActivation(Activation<T> activation)
-        {
-            _successors.Remove(activation);
+            return visitor.Visit(this, Successors);
         }
     }
 }

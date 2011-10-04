@@ -85,9 +85,9 @@
     <Compile Include="Models\RuntimeModel\ConvertNode.cs" />
     <Compile Include="Models\RuntimeModel\FactCache.cs" />
     <Compile Include="Models\RuntimeModel\JoinNode.cs" />
+    <Compile Include="Models\RuntimeModel\MemoryNode.cs" />
     <Compile Include="Models\RuntimeModel\Node.cs" />
     <Compile Include="Models\RuntimeModel\DelegateProductionNode.cs" />
-    <Compile Include="Models\RuntimeModel\NodeType.cs" />
     <Compile Include="Models\RuntimeModel\PropertyNode.cs" />
     <Compile Include="Models\RuntimeModel\RightActivation.cs" />
     <Compile Include="Models\RuntimeModel\RuntimeModelVisitor.cs" />

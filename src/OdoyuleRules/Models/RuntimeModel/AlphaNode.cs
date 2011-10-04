@@ -17,7 +17,7 @@ namespace OdoyuleRules.Models.RuntimeModel
 
 
     public class AlphaNode<T> :
-        Node<T>,
+        MemoryNode<T>,
         Activation,
         Activation<T>,
         RightActivation<T>
