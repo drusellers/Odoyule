@@ -46,46 +46,24 @@ namespace OdoyuleRules.Models.RuntimeModel
 
         public virtual void Activate(ActivationContext<T> context)
         {
-            Add(context);
+            context.Access<T>(_id, x => x.Activate(context));
+
+            context.Schedule(() => _successors.All(activation => activation.Activate(context)));
         }
 
         public void RightActivate(ActivationContext context, Func<ActivationContext<T>, bool> callback)
         {
-            All(context, callback);
+            context.Access<T>(_id, x => x.All(callback));
         }
 
         public void RightActivate(ActivationContext<T> context, Action<ActivationContext<T>> callback)
         {
-            Any(context, callback);
-        }
-
-        void Add(ActivationContext<T> context)
-        {
-            context.Access<T>(_id, x => x.Add(context));
-        }
-
-        void All(ActivationContext context, Func<ActivationContext<T>, bool> callback)
-        {
-            context.Access<T>(_id, x => x.All(callback));
-        }
-
-        void Any(ActivationContext<T> match, Action<ActivationContext<T>> callback)
-        {
-            match.Access<T>(_id, x => x.Any(match, callback));
+            context.Access<T>(_id, x => x.Any(context, callback));
         }
 
         public void AddActivation(Activation<T> activation)
         {
             _successors.Add(activation);
-
-            // TODO: any existing working memories will not be activated based on this change...
-
-//            _contexts.All(context =>
-//                {
-//                    activation.Activate(context);
-//
-//                    return true;
-//                });
         }
 
         public void RemoveActivation(Activation<T> activation)

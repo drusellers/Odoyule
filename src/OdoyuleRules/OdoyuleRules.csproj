@@ -86,6 +86,7 @@
     <Compile Include="Models\RuntimeModel\Agenda.cs" />
     <Compile Include="Models\RuntimeModel\AgendaImpl.cs" />
     <Compile Include="Models\RuntimeModel\AlphaNodeInitializerImpl.cs" />
+    <Compile Include="Models\RuntimeModel\ConstantNode.cs" />
     <Compile Include="Models\RuntimeModel\ContextMemory.cs" />
     <Compile Include="Models\RuntimeModel\AlphaNode.cs" />
     <Compile Include="Models\RuntimeModel\AlphaNodeInitializer.cs" />

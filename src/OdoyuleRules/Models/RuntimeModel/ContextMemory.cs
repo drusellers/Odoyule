@@ -39,7 +39,7 @@ namespace OdoyuleRules.Models.RuntimeModel
             get { return _contexts.Count; }
         }
 
-        public void Add(ActivationContext<T> context)
+        public void Activate(ActivationContext<T> context)
         {
             _contexts.Add(context);
 

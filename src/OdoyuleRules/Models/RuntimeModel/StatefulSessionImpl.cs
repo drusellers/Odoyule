@@ -87,7 +87,7 @@ namespace OdoyuleRules.Models.RuntimeModel
 
         public void Run()
         {
-            _agenda.Run();
+            while (_agenda.Run()) ;
         }
 
         ~StatefulSessionImpl()

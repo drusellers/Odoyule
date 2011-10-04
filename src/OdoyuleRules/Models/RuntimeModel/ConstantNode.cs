@@ -10,21 +10,27 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Configuration.RulesEngineConfigurators
+namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
-    using System.Threading;
 
-    public class RuntimeConfiguratorImpl :
-        RuntimeConfigurator
+    public class ConstantNode<T> :
+        RightActivation<T>
+        where T : class
     {
-        int _nextNodeId;
-
-        public T CreateNode<T>(Func<int, T> nodeFactory)
+        public void RightActivate(ActivationContext context, Func<ActivationContext<T>, bool> callback)
         {
-            int nodeId = Interlocked.Increment(ref _nextNodeId);
+            // constant nodes are never activated by an alpha node, so they would never have pending joins
+        }
 
-            return nodeFactory(nodeId);
+        public void RightActivate(ActivationContext<T> context, Action<ActivationContext<T>> callback)
+        {
+            callback(context);
+        }
+
+        public bool Accept(RuntimeModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => true);
         }
     }
 }

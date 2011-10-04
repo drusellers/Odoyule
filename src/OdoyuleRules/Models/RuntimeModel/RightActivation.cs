@@ -14,7 +14,8 @@ namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
 
-    public interface RightActivation<T>
+    public interface RightActivation<T> :
+        AcceptRuntimeModelVisitor
         where T : class
     {
         /// <summary>

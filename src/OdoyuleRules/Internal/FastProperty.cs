@@ -16,7 +16,7 @@ namespace OdoyuleRules.Internal
     using System.Linq.Expressions;
     using System.Reflection;
 
-    public class FastProperty<T, TProperty>
+    class FastProperty<T, TProperty>
     {
         public readonly Func<T, TProperty> GetDelegate;
         public readonly Action<T, TProperty> SetDelegate;
