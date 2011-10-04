@@ -21,7 +21,6 @@ namespace OdoyuleRules.Models.RuntimeModel
         bool Visit<T>(Node<T> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
-
         bool Visit<T>(AlphaNode<T> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
@@ -36,6 +35,9 @@ namespace OdoyuleRules.Models.RuntimeModel
             where T : class;
 
         bool Visit<T>(ConstantNode<T> node, Func<RuntimeModelVisitor, bool> next) 
+            where T : class;
+
+        bool Visit<T>(ConditionNode<T> node, Func<RuntimeModelVisitor, bool> next) 
             where T : class;
     }
 }

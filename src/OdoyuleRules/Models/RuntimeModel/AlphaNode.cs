@@ -15,10 +15,12 @@ namespace OdoyuleRules.Models.RuntimeModel
     using System;
     using System.Linq;
 
+
     public class AlphaNode<T> :
         Node<T>,
         Activation,
-        Activation<T>
+        Activation<T>,
+        RightActivation<T>
         where T : class
     {
         public AlphaNode(int id)

@@ -14,6 +14,7 @@ namespace OdoyuleRules.Models.RuntimeModel
 {
     using System.Linq;
 
+
     public class JoinNode<T> :
         Node<T>,
         Activation<T>,

@@ -15,42 +15,24 @@ namespace OdoyuleRules.Models.RuntimeModel
     using System;
     using System.Linq;
 
-    /// <summary>
-    /// A property node matches a property on a fact and activates successors
-    /// with a tuple of the fact and the property
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="TProperty"></typeparam>
-    public class PropertyNode<T, TProperty> :
+    public class ConditionNode<T> :
         Activation<T>
         where T : class
     {
         readonly int _id;
-        readonly Action<T, Action<TProperty>> _propertyMatch;
-        readonly ActivationList<Token<T, TProperty>> _successors;
+        readonly Action<T, Action> _condition;
+        readonly ActivationList<T> _successors;
 
-        public PropertyNode(int id, Action<T, Action<TProperty>> propertyMatch)
+        public ConditionNode(int id, Action<T, Action> condition)
         {
             _id = id;
-            _propertyMatch = propertyMatch;
-
-            _successors = new ActivationList<Token<T, TProperty>>();
-        }
-
-        public int Id
-        {
-            get { return _id; }
+            _condition = condition;
+            _successors = new ActivationList<T>();
         }
 
         public void Activate(ActivationContext<T> context)
         {
-            _propertyMatch(context.Fact, property =>
-                {
-                    ActivationContext<Token<T, TProperty>> propertyContext =
-                        context.CreateContext(new Token<T, TProperty>(context, property));
-
-                    _successors.All(x => x.Activate(propertyContext));
-                });
+            _condition(context.Fact, () => _successors.All(x => x.Activate(context)));
         }
 
         public bool Accept(RuntimeModelVisitor visitor)
@@ -58,12 +40,12 @@ namespace OdoyuleRules.Models.RuntimeModel
             return visitor.Visit(this, x => Enumerable.All(_successors, activation => activation.Accept(x)));
         }
 
-        public void AddActivation(Activation<Token<T, TProperty>> activation)
+        public void AddActivation(Activation<T> activation)
         {
             _successors.Add(activation);
         }
 
-        public void RemoveActivation(Activation<Token<T, TProperty>> activation)
+        public void RemoveActivation(Activation<T> activation)
         {
             _successors.Remove(activation);
         }

@@ -17,5 +17,6 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
     public interface RuntimeConfigurator
     {
         T CreateNode<T>(Func<int, T> nodeFactory);
+        T CreateNode<T>(Func<T> nodeFactory);
     }
 }

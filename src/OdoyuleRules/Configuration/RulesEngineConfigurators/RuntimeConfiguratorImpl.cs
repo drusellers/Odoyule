@@ -26,5 +26,10 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 
             return nodeFactory(nodeId);
         }
+
+        public T CreateNode<T>(Func<T> nodeFactory)
+        {
+            return nodeFactory();
+        }
     }
 }
