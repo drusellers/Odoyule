@@ -18,24 +18,35 @@ namespace OdoyuleRules.Models.RuntimeModel
         ActivationContext<T>
         where T : class
     {
+        readonly ActivationContext _context;
         readonly T _fact;
-        readonly StatefulSession _session;
 
-        public StatefulActivationContext(StatefulSession session, T fact)
+        public StatefulActivationContext(ActivationContext context, T fact)
         {
-            _session = session;
+            _context = context;
             _fact = fact;
         }
 
-        public Session CurrentSession
+        public T Fact
         {
-            get { return _session; }
+            get { return _fact; }
         }
 
         public void Convert<TOutput>(Action<ActivationContext<TOutput>> callback)
             where TOutput : class
         {
             throw new NotImplementedException();
+        }
+
+        public ActivationContext<TContext> CreateContext<TContext>(TContext fact) where TContext : class
+        {
+            return _context.CreateContext(fact);
+        }
+
+        public void Access<TMemory>(int id, Action<ContextMemory<TMemory>> callback)
+            where TMemory : class
+        {
+            _context.Access(id, callback);
         }
     }
 }

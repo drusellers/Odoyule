@@ -14,13 +14,29 @@ namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
 
+    public interface ActivationContext
+    {
+        ActivationContext<TContext> CreateContext<TContext>(TContext fact)
+            where TContext : class;
+
+        /// <summary>
+        /// Provides access to memory storage for nodes
+        /// </summary>
+        /// <typeparam name="TMemory">The type of memory to access</typeparam>
+        /// <param name="id">The identifier for the node</param>
+        /// <param name="callback">The callback to access the memory</param>
+        void Access<TMemory>(int id, Action<ContextMemory<TMemory>> callback)
+            where TMemory : class;
+    }
+
+
     public interface ActivationContext<T> :
-        SessionContext<T>
+        ActivationContext
         where T : class
     {
-        Session CurrentSession { get; }
+        T Fact { get; }
 
-        void Convert<TOutput>(Action<ActivationContext<TOutput>> callback) 
+        void Convert<TOutput>(Action<ActivationContext<TOutput>> callback)
             where TOutput : class;
     }
 }

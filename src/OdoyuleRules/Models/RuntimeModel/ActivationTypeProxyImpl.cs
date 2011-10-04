@@ -13,19 +13,21 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
-    using Configuration;
 
     class ActivationTypeProxyImpl<T> :
         ActivationTypeProxy
         where T : class
     {
-        public FactHandle Activate(RulesEngine rulesEngine, Session session, FactCache factCache, object obj)
+        public FactHandle Activate(RulesEngine rulesEngine,
+                                   ActivationContext baseContext,
+                                   FactCache factCache,
+                                   object obj)
         {
             var fact = obj as T;
             if (fact == null)
                 throw new ArgumentNullException("fact");
 
-            ActivationContext<T> context = session.CreateContext(fact);
+            ActivationContext<T> context = baseContext.CreateContext(fact);
 
             rulesEngine.Activate(context);
 

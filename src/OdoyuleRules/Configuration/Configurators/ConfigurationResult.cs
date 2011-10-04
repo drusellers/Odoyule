@@ -10,27 +10,12 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Configuration
+namespace OdoyuleRules.Configuration.Configurators
 {
-    using System;
-    using System.Threading;
+    using System.Collections.Generic;
 
-    class RulesEngineConfiguratorImpl :
-        RulesEngineConfigurator
+    public interface ConfigurationResult
     {
-        readonly OdoyuleRulesEngine _rulesEngine;
-        int _nextNodeId;
-
-        public RulesEngineConfiguratorImpl(OdoyuleRulesEngine rulesEngine)
-        {
-            _rulesEngine = rulesEngine;
-        }
-
-        public T CreateNode<T>(Func<int, T> nodeFactory)
-        {
-            int nodeId = Interlocked.Increment(ref _nextNodeId);
-
-            return nodeFactory(nodeId);
-        }
+        IEnumerable<ValidationResult> Results { get; }
     }
 }

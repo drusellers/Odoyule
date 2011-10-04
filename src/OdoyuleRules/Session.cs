@@ -13,10 +13,9 @@
 namespace OdoyuleRules
 {
     using System;
-    using System.Collections.Generic;
-    using Models.RuntimeModel;
 
-    public interface Session
+    public interface Session :
+        IDisposable
     {
         /// <summary>
         /// Adds a fact to the session
@@ -34,11 +33,9 @@ namespace OdoyuleRules
         /// <returns>A fact handle, which can be used to remove the fact from the session</returns>
         FactHandle Add(object fact);
 
-        ActivationContext<T> CreateContext<T>(T fact) 
-            where T : class;
-
-
-        void Access<T>(int id, Action<ContextMemory<T>> callback)
-            where T : class;
+        /// <summary>
+        /// Runs the rules until completion
+        /// </summary>
+        void Run();
     }
 }

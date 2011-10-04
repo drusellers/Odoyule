@@ -10,10 +10,25 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Models.RuntimeModel
+namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 {
-    interface ActivationTypeProxy
+    using System.Collections.Generic;
+    using Configurators;
+
+    class RulesEngineConfiguratorImpl :
+        RulesEngineConfigurator,
+        Configurator
     {
-        FactHandle Activate(RulesEngine rulesEngine, ActivationContext session, FactCache factCache, object fact);
+        public RulesEngine Create()
+        {
+            RuntimeConfigurator runtimeConfigurator = new RuntimeConfiguratorImpl();
+
+            return new OdoyuleRulesEngine(runtimeConfigurator);
+        }
+
+        public IEnumerable<ValidationResult> ValidateConfiguration()
+        {
+            yield break;
+        }
     }
 }

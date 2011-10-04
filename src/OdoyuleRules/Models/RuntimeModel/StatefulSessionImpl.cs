@@ -16,13 +16,16 @@ namespace OdoyuleRules.Models.RuntimeModel
     using Internal.Caching;
 
     class StatefulSessionImpl :
-        StatefulSession
+        StatefulSession,
+        ActivationContext
     {
+        readonly FactCache _facts;
         readonly Cache<int, ContextMemory> _memoryCache;
         readonly Cache<Type, ActivationTypeProxy> _objectCache;
         readonly RulesEngine _rulesEngine;
-        FactCache _facts;
 
+        bool _disposed;
+        Agenda _agenda;
 
         public StatefulSessionImpl(RulesEngine rulesEngine, Cache<Type, ActivationTypeProxy> objectCache)
         {
@@ -30,6 +33,29 @@ namespace OdoyuleRules.Models.RuntimeModel
             _objectCache = objectCache;
             _memoryCache = new ConcurrentCache<int, ContextMemory>();
             _facts = new FactCache();
+            _agenda = new AgendaImpl();
+        }
+
+        public ActivationContext<T> CreateContext<T>(T fact)
+            where T : class
+        {
+            var context = new StatefulActivationContext<T>(this, fact);
+
+            return context;
+        }
+
+        public void Access<T>(int id, Action<ContextMemory<T>> callback)
+            where T : class
+        {
+            ContextMemory contextMemory = _memoryCache.Get(id, key => new ContextMemory<T>());
+
+            contextMemory.Access(callback);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public FactHandle Add<T>(T fact)
@@ -54,20 +80,26 @@ namespace OdoyuleRules.Models.RuntimeModel
             return _objectCache[factType].Activate(_rulesEngine, this, _facts, fact);
         }
 
-        public ActivationContext<T> CreateContext<T>(T fact)
-            where T : class
+        public void Run()
         {
-            var context = new StatefulActivationContext<T>(this, fact);
-
-            return context;
+            _agenda.Run();
         }
 
-        public void Access<T>(int id, Action<ContextMemory<T>> callback)
-            where T : class
+        ~StatefulSessionImpl()
         {
-            ContextMemory contextMemory = _memoryCache.Get(id, key => new ContextMemory<T>());
+            Dispose(false);
+        }
 
-            contextMemory.Access(callback);
+        void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                _facts.Clear();
+                _memoryCache.Clear();
+            }
+
+            _disposed = true;
         }
     }
 }

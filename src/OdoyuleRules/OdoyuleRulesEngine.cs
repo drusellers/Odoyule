@@ -15,7 +15,7 @@ namespace OdoyuleRules
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Configuration;
+    using Configuration.RulesEngineConfigurators;
     using Internal.Caching;
     using Models.RuntimeModel;
 
@@ -25,10 +25,10 @@ namespace OdoyuleRules
         static readonly Cache<Type, AlphaNodeInitializer> _initializers =
             new GenericTypeCache<AlphaNodeInitializer>(typeof (AlphaNodeInitializerImpl<>));
 
-        readonly RulesEngineConfigurator _configurator;
+        readonly RuntimeConfigurator _configurator;
         readonly Cache<Type, Activation> _types;
 
-        public OdoyuleRulesEngine(RulesEngineConfigurator configurator)
+        public OdoyuleRulesEngine(RuntimeConfigurator configurator)
         {
             _configurator = configurator;
             _types = new GenericTypeCache<Activation>(typeof (AlphaNode<>));

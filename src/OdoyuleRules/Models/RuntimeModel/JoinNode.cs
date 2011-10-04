@@ -12,8 +12,28 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.RuntimeModel
 {
-    interface ActivationTypeProxy
+    public class JoinNode<T> :
+        Node<T>,
+        Activation<T>,
+        RightActivation<T>
+        where T : class
     {
-        FactHandle Activate(RulesEngine rulesEngine, ActivationContext session, FactCache factCache, object fact);
+        readonly RightActivation<T> _rightActivation;
+
+        public JoinNode(int id, RightActivation<T> rightActivation)
+            : base(id)
+        {
+            _rightActivation = rightActivation;
+        }
+
+        public RightActivation<T> RightActivation
+        {
+            get { return _rightActivation; }
+        }
+
+        public override void Activate(ActivationContext<T> context)
+        {
+            _rightActivation.RightActivate(context, match => base.Activate(context));
+        }
     }
 }

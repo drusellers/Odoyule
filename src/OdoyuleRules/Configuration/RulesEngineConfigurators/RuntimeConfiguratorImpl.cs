@@ -10,10 +10,21 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Models.RuntimeModel
+namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 {
-    interface ActivationTypeProxy
+    using System;
+    using System.Threading;
+
+    class RuntimeConfiguratorImpl :
+        RuntimeConfigurator
     {
-        FactHandle Activate(RulesEngine rulesEngine, ActivationContext session, FactCache factCache, object fact);
+        int _nextNodeId;
+
+        public T CreateNode<T>(Func<int, T> nodeFactory)
+        {
+            int nodeId = Interlocked.Increment(ref _nextNodeId);
+
+            return nodeFactory(nodeId);
+        }
     }
 }

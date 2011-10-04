@@ -44,6 +44,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factory_Specs.cs" />
     <Compile Include="Parser_Specs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

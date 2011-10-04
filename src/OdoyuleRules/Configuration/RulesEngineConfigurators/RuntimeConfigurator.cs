@@ -10,10 +10,12 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Models.RuntimeModel
+namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 {
-    interface ActivationTypeProxy
+    using System;
+
+    public interface RuntimeConfigurator
     {
-        FactHandle Activate(RulesEngine rulesEngine, ActivationContext session, FactCache factCache, object fact);
+        T CreateNode<T>(Func<int, T> nodeFactory);
     }
 }

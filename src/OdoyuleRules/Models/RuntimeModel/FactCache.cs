@@ -41,6 +41,11 @@ namespace OdoyuleRules.Models.RuntimeModel
             return factHandle;
         }
 
+        public void Clear()
+        {
+            _cache.Clear();
+        }
+
         class FactHandleImpl<T> :
             FactHandle
             where T : class

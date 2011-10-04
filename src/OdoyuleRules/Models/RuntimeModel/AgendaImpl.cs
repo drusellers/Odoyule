@@ -12,8 +12,11 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.RuntimeModel
 {
-    interface ActivationTypeProxy
+    class AgendaImpl :
+        Agenda
     {
-        FactHandle Activate(RulesEngine rulesEngine, ActivationContext session, FactCache factCache, object fact);
+        public void Run()
+        {
+        }
     }
 }

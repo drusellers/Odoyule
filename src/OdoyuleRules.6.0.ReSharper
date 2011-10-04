@@ -9,6 +9,8 @@
     </CSS>
     <CSharp>
       <FormatSettings>
+        <BLANK_LINES_AFTER_START_COMMENT>0</BLANK_LINES_AFTER_START_COMMENT>
+        <EXPLICIT_INTERNAL_MODIFIER>False</EXPLICIT_INTERNAL_MODIFIER>
         <EXPLICIT_PRIVATE_MODIFIER>False</EXPLICIT_PRIVATE_MODIFIER>
         <INDENT_ANONYMOUS_METHOD_BLOCK>False</INDENT_ANONYMOUS_METHOD_BLOCK>
         <INDENT_EMBRACED_INITIALIZER_BLOCK>False</INDENT_EMBRACED_INITIALIZER_BLOCK>
@@ -275,6 +277,18 @@ II.2.12 <HandlesEvent />
     <Xaml>
       <Naming2 />
     </Xaml>
+    <FileHeader><![CDATA[Copyright 2011 Chris Patterson
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+this file except in compliance with the License. You may obtain a copy of the 
+License at 
+
+    http://www.apache.org/licenses/LICENSE-2.0 
+
+Unless required by applicable law or agreed to in writing, software distributed 
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+specific language governing permissions and limitations under the License.]]></FileHeader>
     <GenerateMemberBody />
     <Naming2>
       <EventHandlerPatternLong>$object$_On$event$</EventHandlerPatternLong>
@@ -285,7 +299,9 @@ II.2.12 <HandlesEvent />
       <PredefinedRule Inspect="True" Prefix="" Suffix="" Style="AaBb" ElementKind="TypesAndNamespaces">
         <ExtraRule Prefix="" Suffix="" Style="Aa_bb" />
       </PredefinedRule>
-      <PredefinedRule Inspect="True" Prefix="I" Suffix="" Style="AaBb" ElementKind="Interfaces" />
+      <PredefinedRule Inspect="True" Prefix="I" Suffix="" Style="AaBb" ElementKind="Interfaces">
+        <ExtraRule Prefix="" Suffix="" Style="AaBb" />
+      </PredefinedRule>
       <PredefinedRule Inspect="True" Prefix="T" Suffix="" Style="AaBb" ElementKind="TypeParameters" />
       <PredefinedRule Inspect="True" Prefix="" Suffix="" Style="AaBb" ElementKind="MethodPropertyEvent">
         <ExtraRule Prefix="" Suffix="" Style="Aa_bb" />

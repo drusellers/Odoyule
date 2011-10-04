@@ -21,8 +21,9 @@ namespace OdoyuleRules.Models.RuntimeModel
         /// Performs a join operation between the two messages, performing the callback for
         /// every activation on the right node until the callback returns false
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="callback"></param>
-        void RightActivate(Session session, Func<ActivationContext<T>, bool> callback);
+        void RightActivate(ActivationContext context, Func<ActivationContext<T>, bool> callback);
 
         /// <summary>
         /// Performs a match operation between two activations, 

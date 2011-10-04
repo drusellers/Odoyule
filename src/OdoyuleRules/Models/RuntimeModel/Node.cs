@@ -33,12 +33,12 @@ namespace OdoyuleRules.Models.RuntimeModel
         }
 
 
-        public void Activate(ActivationContext<T> context)
+        public virtual void Activate(ActivationContext<T> context)
         {
             Add(context);
         }
 
-        public void RightActivate(Session session, Func<ActivationContext<T>, bool> callback)
+        public void RightActivate(ActivationContext session, Func<ActivationContext<T>, bool> callback)
         {
             All(session, callback);
         }
@@ -50,17 +50,17 @@ namespace OdoyuleRules.Models.RuntimeModel
 
         protected void Add(ActivationContext<T> context)
         {
-            context.CurrentSession.Access<T>(_id, x=> x.Add(context));
+            context.Access<T>(_id, x=> x.Add(context));
         }
 
-        protected void All(Session session, Func<ActivationContext<T>, bool> callback)
+        protected void All(ActivationContext context, Func<ActivationContext<T>, bool> callback)
         {
-            session.Access<T>(_id, x => x.All(callback));
+            context.Access<T>(_id, x => x.All(callback));
         }
 
         protected void Any(ActivationContext<T> match, Action<ActivationContext<T>> callback)
         {
-            match.CurrentSession.Access<T>(_id, x => x.Any(match, callback));
+            match.Access<T>(_id, x => x.Any(match, callback));
         }
 
         public void AddActivation(Activation<T> activation)

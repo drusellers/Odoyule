@@ -13,16 +13,19 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
-    using Configuration;
     using Internal.Caching;
 
     class StatelessSessionImpl :
-        StatelessSession
+        StatelessSession,
+        ActivationContext
     {
+        readonly FactCache _facts;
         readonly Cache<int, ContextMemory> _memoryCache;
+        readonly Cache<Type, ActivationTypeProxy> _objectCache;
         readonly RulesEngine _rulesEngine;
-        FactCache _facts;
-        Cache<Type, ActivationTypeProxy> _objectCache;
+
+        bool _disposed;
+        Agenda _agenda;
 
         public StatelessSessionImpl(RulesEngine rulesEngine, Cache<Type, ActivationTypeProxy> objectCache)
         {
@@ -30,6 +33,30 @@ namespace OdoyuleRules.Models.RuntimeModel
             _objectCache = objectCache;
             _memoryCache = new ConcurrentCache<int, ContextMemory>();
             _facts = new FactCache();
+            _agenda = new AgendaImpl();
+        }
+
+        public void Access<TMemory>(int id, Action<ContextMemory<TMemory>> callback)
+            where TMemory : class
+        {
+            ContextMemory contextMemory = _memoryCache.Get(id, key => new ContextMemory<TMemory>());
+
+            contextMemory.Access(callback);
+        }
+
+
+        public ActivationContext<T> CreateContext<T>(T fact)
+            where T : class
+        {
+            var context = new StatelessActivationContext<T>(this, fact);
+
+            return context;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         public FactHandle Add<T>(T fact)
@@ -48,27 +75,32 @@ namespace OdoyuleRules.Models.RuntimeModel
                 throw new ArgumentNullException("fact");
 
             Type factType = fact.GetType();
-            if (factType.IsValueType || factType.Equals(typeof(string)))
+            if (factType.IsValueType || factType.Equals(typeof (string)))
                 throw new ArgumentException("Facts must be reference types", "fact");
 
             return _objectCache[factType].Activate(_rulesEngine, this, _facts, fact);
         }
 
-
-        public ActivationContext<T> CreateContext<T>(T fact)
-            where T : class
+        public void Run()
         {
-            var context = new StatelessActivationContext<T>(this, fact);
-
-            return context;
+            _agenda.Run();
         }
 
-        public void Access<T>(int id, Action<ContextMemory<T>> callback)
-            where T : class
+        ~StatelessSessionImpl()
         {
-            ContextMemory contextMemory = _memoryCache.Get(id, key => new ContextMemory<T>());
+            Dispose(false);
+        }
 
-            contextMemory.Access(callback);
+        void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+            if (disposing)
+            {
+                _facts.Clear();
+                _memoryCache.Clear();
+            }
+
+            _disposed = true;
         }
     }
 }
