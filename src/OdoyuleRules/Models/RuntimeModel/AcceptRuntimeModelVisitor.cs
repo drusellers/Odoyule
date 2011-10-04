@@ -10,9 +10,15 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Parsing
+namespace OdoyuleRules.Models.RuntimeModel
 {
-    public interface RuleCondition
+    public interface AcceptRuntimeModelVisitor
     {
+        /// <summary>
+        /// Any node that accepts the visitor should implement this interface
+        /// </summary>
+        /// <param name="visitor">The visitor to accept</param>
+        /// <returns>True if visitation should continue, otherwise false</returns>
+        bool Accept(RuntimeModelVisitor visitor);
     }
 }

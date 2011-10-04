@@ -20,7 +20,8 @@ namespace OdoyuleRules
     using Models.RuntimeModel;
 
     public class OdoyuleRulesEngine :
-        RulesEngine
+        RulesEngine,
+        AcceptRuntimeModelVisitor
     {
         static readonly Cache<Type, AlphaNodeInitializer> _initializers =
             new GenericTypeCache<AlphaNodeInitializer>(typeof (AlphaNodeInitializerImpl<>));
@@ -120,6 +121,11 @@ namespace OdoyuleRules
                 return false;
 
             return true;
+        }
+
+        public bool Accept(RuntimeModelVisitor visitor)
+        {
+            return visitor.Visit(this, next => _types.All(activation => activation.Accept(next)));
         }
     }
 }

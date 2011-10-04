@@ -12,28 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.SemanticModel
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    public class RuleSet :
-        IEnumerable<RuleDeclaration>
+    public interface RuleSet
     {
-        readonly IList<RuleDeclaration> _rules;
-
-        public RuleSet(IEnumerable<RuleDeclaration> rules)
-        {
-            _rules = rules.ToList();
-        }
-
-        public IEnumerator<RuleDeclaration> GetEnumerator()
-        {
-            return _rules.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
     }
 }

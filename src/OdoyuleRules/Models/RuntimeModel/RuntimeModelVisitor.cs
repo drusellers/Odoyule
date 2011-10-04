@@ -12,18 +12,24 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.RuntimeModel
 {
-    public interface Activation :
-        AcceptRuntimeModelVisitor
+    using System;
+
+    public interface RuntimeModelVisitor
     {
-        void Activate<T>(ActivationContext<T> context)
+        bool Visit(RulesEngine rulesEngine, Func<RuntimeModelVisitor, bool> next);
+
+        bool Visit<T>(Node<T> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
-    }
 
 
-    public interface Activation<T> :
-        AcceptRuntimeModelVisitor
-        where T : class
-    {
-        void Activate(ActivationContext<T> context);
+        bool Visit<T>(AlphaNode<T> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class;
+
+        bool Visit<TInput, TOutput>(ConvertNode<TInput, TOutput> node, Func<RuntimeModelVisitor, bool> next)
+            where TInput : class, TOutput 
+            where TOutput : class;
+
+        bool Visit<T>(DelegateProductionNode<T> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class;
     }
 }

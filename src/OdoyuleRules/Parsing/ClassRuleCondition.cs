@@ -14,12 +14,12 @@ namespace OdoyuleRules.Parsing
 {
     using System.Linq;
 
-    public class ClassRuleCondition : RuleCondition
+    public class ClassRuleCondition : RuleConditionImpl
     {
         readonly string _className;
-        readonly RuleCondition[] _conditions;
+        readonly RuleConditionImpl[] _conditions;
 
-        public ClassRuleCondition(string className, RuleCondition[] conditions)
+        public ClassRuleCondition(string className, RuleConditionImpl[] conditions)
         {
             _className = className;
             _conditions = conditions;

@@ -10,9 +10,21 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Parsing
+namespace OdoyuleRules.Configuration.RuleConfigurators
 {
-    public interface RuleCondition
+    using System;
+    using Parsing;
+
+    public interface RuleConditionConfigurator
     {
+    }
+
+    public interface RuleConditionConfigurator<T> :
+        RuleConditionConfigurator
+        where T : class
+    {
+        void AddCondition(RuleCondition condition);
+
+        RuleConsequenceConfigurator<T> Then(Action<T> callback);
     }
 }

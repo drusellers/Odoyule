@@ -12,11 +12,73 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.RuntimeModel
 {
+    using System;
+    using System.Collections.Generic;
+
     class AgendaImpl :
         Agenda
     {
-        public void Run()
+        const int InitialCapacity = 10;
+        IList<Tuple<int, Action>> _operations;
+        bool _stopped;
+
+        public AgendaImpl()
         {
+            _operations = new List<Tuple<int, Action>>(InitialCapacity);
+        }
+
+        public void Schedule(Action operation, int priority)
+        {
+            if (_stopped)
+                return;
+
+            Tuple<int, Action> item = Tuple.Create(priority, operation);
+
+            int count = _operations.Count;
+            if(count > 0 && _operations[count-1].Item1 == priority)
+            {
+                _operations.Add(item);
+                return;
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                if (priority > _operations[i].Item1)
+                {
+                    _operations.Insert(i, item);
+                    return;
+                }
+            }
+
+            _operations.Add(item);
+        }
+
+        public void Stop()
+        {
+            _stopped = true;
+        }
+
+        public bool Run()
+        {
+            if (_stopped)
+                return false;
+
+            int count = _operations.Count;
+            if (count == 0)
+                return false;
+
+            IList<Tuple<int, Action>> operations = _operations;
+            _operations = new List<Tuple<int, Action>>(InitialCapacity);
+
+            for (int i = 0; i < count; i++)
+            {
+                if (_stopped)
+                    return false;
+
+                operations[i].Item2();
+            }
+
+            return _operations.Count > 0;
         }
     }
 }

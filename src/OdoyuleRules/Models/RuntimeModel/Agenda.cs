@@ -12,8 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.RuntimeModel
 {
+    using System;
+
     interface Agenda
     {
-        void Run();
+        void Schedule(Action operation, int priority = 0);
+        void Stop();
+        bool Run();
     }
 }

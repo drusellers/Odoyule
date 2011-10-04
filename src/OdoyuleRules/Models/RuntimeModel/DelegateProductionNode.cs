@@ -1,4 +1,4 @@
-// Copyright 2011 Chris Patterson
+﻿// Copyright 2011 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -13,33 +13,28 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
-    using System.Linq;
 
-    public class AlphaNode<T> :
-        Node<T>,
-        Activation,
+    public class DelegateProductionNode<T> :
         Activation<T>
         where T : class
     {
-        public AlphaNode(int id)
-            : base(id)
+        readonly Action<T> _callback;
+        int _priority;
+
+        public DelegateProductionNode(Action<T> callback)
         {
+            _callback = callback;
+            _priority = 0;
         }
 
-        public void Activate<TActivation>(ActivationContext<TActivation> context)
-            where TActivation : class
+        public void Activate(ActivationContext<T> context)
         {
-            var self = this as Activation<TActivation>;
-            if (self == null)
-                throw new ArgumentException("The activation type of " + typeof (TActivation).Name
-                                            + " did not match the alpha node type of " + typeof (T).Name);
-
-            self.Activate(context);
+            context.Schedule(() => _callback(context.Fact), _priority);
         }
 
         public bool Accept(RuntimeModelVisitor visitor)
         {
-            return visitor.Visit(this, next => Successors.All(activation => activation.Accept(next)));
+            return visitor.Visit(this, next => true);
         }
     }
 }

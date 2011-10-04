@@ -12,6 +12,8 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.RuntimeModel
 {
+    using System.Linq;
+
     public class JoinNode<T> :
         Node<T>,
         Activation<T>,
@@ -34,6 +36,11 @@ namespace OdoyuleRules.Models.RuntimeModel
         public override void Activate(ActivationContext<T> context)
         {
             _rightActivation.RightActivate(context, match => base.Activate(context));
+        }
+
+        public bool Accept(RuntimeModelVisitor visitor)
+        {
+            return visitor.Visit(this, next => Successors.All(activation => activation.Accept(next)));
         }
     }
 }

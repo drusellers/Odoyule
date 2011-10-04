@@ -15,7 +15,13 @@ namespace OdoyuleRules.Models.RuntimeModel
     using System;
     using System.Collections.Generic;
 
-    public abstract class Node<T>
+    public interface Node
+    {
+        int Id { get; }
+    }
+
+    public abstract class Node<T> :
+        Node
         where T : class
     {
         readonly int _id;
@@ -24,6 +30,7 @@ namespace OdoyuleRules.Models.RuntimeModel
         protected Node(int id)
         {
             _id = id;
+
             _successors = new ActivationList<T>();
         }
 
@@ -32,15 +39,19 @@ namespace OdoyuleRules.Models.RuntimeModel
             get { return _successors; }
         }
 
+        public int Id
+        {
+            get { return _id; }
+        }
 
         public virtual void Activate(ActivationContext<T> context)
         {
             Add(context);
         }
 
-        public void RightActivate(ActivationContext session, Func<ActivationContext<T>, bool> callback)
+        public void RightActivate(ActivationContext context, Func<ActivationContext<T>, bool> callback)
         {
-            All(session, callback);
+            All(context, callback);
         }
 
         public void RightActivate(ActivationContext<T> context, Action<ActivationContext<T>> callback)
@@ -48,17 +59,17 @@ namespace OdoyuleRules.Models.RuntimeModel
             Any(context, callback);
         }
 
-        protected void Add(ActivationContext<T> context)
+        void Add(ActivationContext<T> context)
         {
-            context.Access<T>(_id, x=> x.Add(context));
+            context.Access<T>(_id, x => x.Add(context));
         }
 
-        protected void All(ActivationContext context, Func<ActivationContext<T>, bool> callback)
+        void All(ActivationContext context, Func<ActivationContext<T>, bool> callback)
         {
             context.Access<T>(_id, x => x.All(callback));
         }
 
-        protected void Any(ActivationContext<T> match, Action<ActivationContext<T>> callback)
+        void Any(ActivationContext<T> match, Action<ActivationContext<T>> callback)
         {
             match.Access<T>(_id, x => x.Any(match, callback));
         }

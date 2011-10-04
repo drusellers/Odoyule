@@ -86,7 +86,7 @@ namespace OdoyuleRules.Parsing
                         from id in Id
                         from op in Comparators
                         from value in QuotedString
-                        select new RuleCondition(id, op, value);
+                        select new RuleConditionImpl(id, op, value);
 
             NextCondition = from sep in ListSeparator
                             from cond in Condition
@@ -101,7 +101,7 @@ namespace OdoyuleRules.Parsing
                         from open in Char('(')
                         from conditions in MatchConditions
                         from close in Char(')')
-                        select (RuleCondition)new ClassRuleCondition(className, conditions);
+                        select (RuleConditionImpl)new ClassRuleCondition(className, conditions);
 
             Variable = from w in Whitespace
                        from flag in Char('$')
@@ -112,7 +112,7 @@ namespace OdoyuleRules.Parsing
                             from w in Whitespace
                             from c in Char(':')
                             from t in TypeMatch
-                            select (RuleCondition) new AssignedRuleCondition(v, t);
+                            select (RuleConditionImpl) new AssignedRuleCondition(v, t);
 
             Rule = from open in Id
                    where open == "rule"
@@ -127,13 +127,13 @@ namespace OdoyuleRules.Parsing
                    select new RuleDefinition(name, conditions);
         }
 
-        protected Parser<TInput, RuleCondition> AssignedMatch { get; set; }
+        protected Parser<TInput, RuleConditionImpl> AssignedMatch { get; set; }
 
         protected Parser<TInput, Variable> Variable { get; set; }
 
-        public Parser<TInput, RuleCondition[]> MatchConditions { get; private set; } 
-        public Parser<TInput, RuleCondition> TypeMatch { get; private set; }
-        public Parser<TInput, RuleCondition> NextCondition { get; private set; }
+        public Parser<TInput, RuleConditionImpl[]> MatchConditions { get; private set; } 
+        public Parser<TInput, RuleConditionImpl> TypeMatch { get; private set; }
+        public Parser<TInput, RuleConditionImpl> NextCondition { get; private set; }
 
         
         public Parser<TInput, ListSeparator> ListSeparator { get; private set; }
@@ -164,10 +164,10 @@ namespace OdoyuleRules.Parsing
 
         public Parser<TInput, RuleDefinition> Rule { get; private set; }
 
-        public Parser<TInput, RuleCondition> Condition { get; private set; }
+        public Parser<TInput, RuleConditionImpl> Condition { get; private set; }
     }
 
-    public class AssignedRuleCondition : RuleCondition
+    public class AssignedRuleCondition : RuleConditionImpl
     {
         readonly Variable _variable;
         ClassRuleCondition _ruleCondition;
@@ -182,7 +182,7 @@ namespace OdoyuleRules.Parsing
             get { return _ruleCondition; }
         }
 
-        public AssignedRuleCondition(Variable variable, RuleCondition ruleCondition)
+        public AssignedRuleCondition(Variable variable, RuleConditionImpl ruleCondition)
         {
             _variable = variable;
             _ruleCondition = ruleCondition as ClassRuleCondition;

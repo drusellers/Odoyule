@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Factory_Specs.cs" />
     <Compile Include="Parser_Specs.cs" />
+    <Compile Include="Production_Specs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

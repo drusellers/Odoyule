@@ -12,7 +12,11 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 {
+    using System;
+    using RuleConfigurators;
+
     public interface RulesEngineConfigurator
     {
+        void Rule(string name, Action<RuleConfigurator> configureCallback);
     }
 }

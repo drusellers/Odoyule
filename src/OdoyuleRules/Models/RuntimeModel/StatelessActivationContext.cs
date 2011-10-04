@@ -49,5 +49,10 @@ namespace OdoyuleRules.Models.RuntimeModel
         {
             _context.Access(id, callback);
         }
+
+        public void Schedule(Action operation, int priority = 0)
+        {
+            _context.Schedule(operation, priority);
+        }
     }
 }

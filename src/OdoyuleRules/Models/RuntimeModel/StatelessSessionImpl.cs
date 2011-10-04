@@ -44,6 +44,11 @@ namespace OdoyuleRules.Models.RuntimeModel
             contextMemory.Access(callback);
         }
 
+        public void Schedule(Action operation, int priority = 0)
+        {
+            _agenda.Schedule(operation, priority);
+        }
+
 
         public ActivationContext<T> CreateContext<T>(T fact)
             where T : class

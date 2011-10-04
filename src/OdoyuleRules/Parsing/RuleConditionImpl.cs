@@ -12,7 +12,26 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Parsing
 {
-    public interface RuleCondition
+    public class RuleConditionImpl
     {
+        public RuleConditionImpl(string name, Comparator op, string val)
+        {
+            Name = name;
+            Comparator = op;
+            Value = val;
+        }
+
+        protected RuleConditionImpl()
+        {
+        }
+
+        public string Name { get; set; }
+        public Comparator Comparator { get; set; }
+        public string Value { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{0} {1} {2}", Name, Comparator, Value);
+        }
     }
 }

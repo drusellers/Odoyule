@@ -12,13 +12,22 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 {
+    using System;
     using System.Collections.Generic;
     using Configurators;
+    using RuleConfigurators;
 
     class RulesEngineConfiguratorImpl :
         RulesEngineConfigurator,
         Configurator
     {
+        IList<RuleConfigurator> _ruleConfigurators;
+
+        public RulesEngineConfiguratorImpl()
+        {
+            _ruleConfigurators = new List<RuleConfigurator>();
+        }
+
         public RulesEngine Create()
         {
             RuntimeConfigurator runtimeConfigurator = new RuntimeConfiguratorImpl();
@@ -29,6 +38,16 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
         public IEnumerable<ValidationResult> ValidateConfiguration()
         {
             yield break;
+        }
+
+        public void Rule(string name, Action<RuleConfigurator> configureCallback)
+        {
+            var configurator = new RuleConfiguratorImpl(name);
+
+            configureCallback(configurator);
+
+            _ruleConfigurators.Add(configurator);
+
         }
     }
 }

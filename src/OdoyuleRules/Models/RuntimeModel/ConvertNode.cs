@@ -33,5 +33,10 @@ namespace OdoyuleRules.Models.RuntimeModel
         {
             context.Convert<TOutput>(proxy => _output.Activate(proxy));
         }
+
+        public bool Accept(RuntimeModelVisitor visitor)
+        {
+            return visitor.Visit(this, next => _output.Accept(next));
+        }
     }
 }

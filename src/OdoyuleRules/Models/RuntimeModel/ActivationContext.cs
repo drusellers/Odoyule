@@ -27,6 +27,13 @@ namespace OdoyuleRules.Models.RuntimeModel
         /// <param name="callback">The callback to access the memory</param>
         void Access<TMemory>(int id, Action<ContextMemory<TMemory>> callback)
             where TMemory : class;
+
+        /// <summary>
+        /// Schedule an operation on the agenda for this session
+        /// </summary>
+        /// <param name="operation">The operation to invoke</param>
+        /// <param name="priority">The priority of the operation, should be zero</param>
+        void Schedule(Action operation, int priority = 0);
     }
 
 

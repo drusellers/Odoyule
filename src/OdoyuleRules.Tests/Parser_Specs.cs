@@ -132,7 +132,7 @@ end";
 
             Assert.AreEqual(1, rule.Conditions.Length);
 
-            RuleCondition condition = rule.Conditions[0];
+            RuleConditionImpl condition = rule.Conditions[0];
             Assert.IsNotNull(condition);
 
             var namedCondition = condition as AssignedRuleCondition;
