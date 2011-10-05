@@ -14,6 +14,8 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using Builders;
     using Configurators;
     using Models.SemanticModel;
     using RuleConfigurators;
@@ -31,9 +33,11 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 
         public RulesEngine Create()
         {
-            RuntimeConfigurator runtimeConfigurator = new RuntimeConfiguratorImpl();
+            RulesEngineBuilder builder = new RulesEngineBuilderImpl();
 
-            return new OdoyuleRulesEngine(runtimeConfigurator);
+            builder = _ruleConfigurators.Aggregate(builder, (current, configurator) => configurator.Configure(current));
+
+            return builder.Build();
         }
 
         public IEnumerable<ValidationResult> ValidateConfiguration()

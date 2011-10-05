@@ -41,14 +41,14 @@ namespace OdoyuleRules.Visualization
 
         public virtual bool Visit<T>(MemoryNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
         {
-            Append("MemoryNode<{0}>", typeof (T).Name);
+            Append("MemoryNode[{0}]", Tokens<T>());
 
             return Indent(next);
         }
 
         public virtual bool Visit<T>(AlphaNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
         {
-            Append("AlphaNode<{0}>", typeof (T).Name);
+            Append("AlphaNode[{0}]", Tokens<T>());
 
             return Indent(next);
         }
@@ -57,7 +57,7 @@ namespace OdoyuleRules.Visualization
                                                    Func<RuntimeModelVisitor, bool> next) where TInput : class, TOutput
             where TOutput : class
         {
-            Append("ConvertNode<{0}> => {1}", typeof (TInput).Name, typeof (TOutput).Name);
+            Append("ConvertNode[{0}] => {1}", Tokens<TInput>(), Tokens<TOutput>());
 
             return Indent(next);
         }
@@ -65,7 +65,7 @@ namespace OdoyuleRules.Visualization
         public virtual bool Visit<T>(DelegateProductionNode<T> node, Func<RuntimeModelVisitor, bool> next)
             where T : class
         {
-            Append("DelegateProductionNode<{0}>", typeof (T).Name);
+            Append("DelegateProductionNode[{0}]", Tokens<T>());
 
             return Indent(next);
         }
@@ -73,29 +73,29 @@ namespace OdoyuleRules.Visualization
         public virtual bool Visit<T, TProperty>(PropertyNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
             where T : class
         {
-            Append("PropertyNode<{0}>.{1}", typeof (T).Name, typeof (TProperty).Name);
+            Append("PropertyNode[{0}].{1} ({2})", Tokens<T>(), node.PropertyInfo.Name, typeof (TProperty).Name);
 
             return Indent(next);
         }
 
         public virtual bool Visit<T>(ConstantNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
         {
-            Append("v<{0}>", typeof (T).Name);
+            Append("v[{0}]", Tokens<T>());
 
             return Indent(next);
         }
 
         public virtual bool Visit<T>(ConditionNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
         {
-            Append("ConditionNode<{0}>", typeof (T).Name);
+            Append("ConditionNode[{0}]", Tokens<T>());
 
             return Indent(next);
         }
 
-        public virtual bool Visit<T, TProperty>(EqualNode<T, TProperty> rulesEngine,
+        public virtual bool Visit<T, TProperty>(EqualNode<T, TProperty> node,
                                                 Func<RuntimeModelVisitor, bool> next) where T : class
         {
-            Append("EqualNode<{0}>.{1}", typeof (T).Name, typeof (TProperty).Name);
+            Append("EqualNode[{0}] ({1})", Tokens<T>(), typeof (TProperty).Name);
 
             return Indent(next);
         }
@@ -108,6 +108,23 @@ namespace OdoyuleRules.Visualization
         void Append(string text)
         {
             _sb.Append(_padding).AppendLine(text);
+        }
+
+        string Tokens<T>()
+        {
+            return Tokens(typeof (T));
+        }
+
+        string Tokens(Type type)
+        {
+            if(type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Token<,>))
+            {
+                var arguments = type.GetGenericArguments();
+
+                return string.Join(",", Tokens(arguments[0]), arguments[1].Name);
+            }
+
+            return type.Name;
         }
 
         bool Indent(Func<RuntimeModelVisitor, bool> next)

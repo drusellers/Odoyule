@@ -35,7 +35,8 @@ namespace OdoyuleRules.Models.SemanticModel
 
         bool Visit<T, TProperty>(PropertyGreaterThanCondition<T, TProperty> condition,
                                  Func<SemanticModelVisitor, bool> next)
-            where T : class;
+            where T : class
+            where TProperty : IComparable<TProperty>;
 
         bool Visit<T, TProperty>(PropertyGreaterThanOrEqualCondition<T, TProperty> condition,
                                  Func<SemanticModelVisitor, bool> next)

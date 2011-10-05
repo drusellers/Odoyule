@@ -20,8 +20,14 @@ namespace OdoyuleRules.Models.SemanticModel
         RuleCondition<T>, 
         IEquatable<PropertyGreaterThanCondition<T, TProperty>>
         where T : class
+        where TProperty : IComparable<TProperty>
     {
         readonly TProperty _value;
+
+        public TProperty Value
+        {
+            get { return _value; }
+        }
 
         public PropertyGreaterThanCondition(PropertyInfo propertyInfo, TProperty value)
             : base(propertyInfo)

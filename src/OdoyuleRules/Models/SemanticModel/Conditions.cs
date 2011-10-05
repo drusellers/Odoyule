@@ -45,7 +45,8 @@ namespace OdoyuleRules.Models.SemanticModel
 
         public static PropertyGreaterThanCondition<T, TProperty> GreaterThan<T, TProperty>(
             Expression<Func<T, TProperty>> propertyExpression, TProperty value)
-            where T : class
+            where T : class 
+            where TProperty : IComparable<TProperty>
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 

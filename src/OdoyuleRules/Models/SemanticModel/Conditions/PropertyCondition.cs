@@ -15,7 +15,8 @@ namespace OdoyuleRules.Models.SemanticModel
     using System;
     using System.Reflection;
 
-    public abstract class PropertyCondition<T, TProperty> : IEquatable<PropertyCondition<T, TProperty>>
+    public abstract class PropertyCondition<T, TProperty> : 
+        IEquatable<PropertyCondition<T, TProperty>>
         where T : class
     {
         readonly PropertyInfo _propertyInfo;

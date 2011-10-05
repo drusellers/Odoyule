@@ -67,7 +67,7 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
             return next(this);
         }
 
-        public virtual bool Visit<T, TProperty>(EqualNode<T, TProperty> rulesEngine, Func<RuntimeModelVisitor, bool> next) 
+        public virtual bool Visit<T, TProperty>(EqualNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
             where T : class
         {
             return next(this);

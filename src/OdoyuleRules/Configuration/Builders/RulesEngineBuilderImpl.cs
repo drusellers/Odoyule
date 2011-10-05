@@ -45,15 +45,11 @@ namespace OdoyuleRules.Configuration.Builders
         {
             RuntimeConfigurator runtimeConfigurator = _runtimeConfiguratorFactory();
 
-            var rulesEngine = new OdoyuleRulesEngine(runtimeConfigurator);
-
             RuleCompiler compiler = new OdoyuleRuleCompiler(runtimeConfigurator);
+            _rules.Each(rule => compiler.Add(rule));
+            compiler.Compile();
 
-            foreach (var rule in _rules)
-            {
-            }
-
-            return rulesEngine;
+            return runtimeConfigurator.RulesEngine;
         }
 
         static RuntimeConfigurator DefaultRuntimeConfiguratorFactory()

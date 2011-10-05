@@ -69,9 +69,25 @@ namespace OdoyuleRules.Compiling
         }
 
         public bool Visit<T, TProperty>(PropertyGreaterThanCondition<T, TProperty> condition,
-                                        Func<SemanticModelVisitor, bool> next) where T : class
+                                        Func<SemanticModelVisitor, bool> next) 
+            where T : class
+            where TProperty : IComparable<TProperty>
         {
-            throw new NotImplementedException();
+            _configurator.MatchPropertyNode<T, TProperty>(condition.PropertyInfo, node =>
+            {
+                var alpha = _configurator.Alpha<T, TProperty>();
+                _alphaNodes.Add(alpha);
+
+                var conditionNode = new ConditionNode<Token<T, TProperty>>((x,accept) =>
+                    {
+                        if(x.Item2.CompareTo(condition.Value) > 0)
+                            accept();
+                    });
+
+                node.AddActivation(conditionNode);
+            });
+
+            return true;
         }
 
         public bool Visit<T, TProperty>(PropertyGreaterThanOrEqualCondition<T, TProperty> condition,
