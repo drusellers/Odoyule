@@ -12,45 +12,46 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.RuntimeModel
 {
+    using System.Linq;
     using Util.Caching;
 
+
     public class EqualNode<T, TProperty> :
-        Node<Token<T, TProperty>>,
         Activation<Token<T, TProperty>>
         where T : class
     {
-        readonly Cache<TProperty, ActivationList<Token<T, TProperty>>> _values;
+        readonly Cache<TProperty, ValueNode<T, TProperty>> _values;
 
         public EqualNode()
         {
-            _values = new DictionaryCache<TProperty, ActivationList<Token<T, TProperty>>>(CreateActivationList);
+            _values = new DictionaryCache<TProperty, ValueNode<T, TProperty>>(CreateValueNode);
         }
 
-        public override void Activate(ActivationContext<Token<T, TProperty>> context)
+        public void Activate(ActivationContext<Token<T, TProperty>> context)
         {
             TProperty value = context.Fact.Item2;
 
-            _values.WithValue(value, list => list.All(activation => activation.Activate(context)));
+            _values.WithValue(value, node => node.Activate(context));
         }
 
         public bool Accept(RuntimeModelVisitor visitor)
         {
-            return visitor.Visit(this, Successors);
+            return visitor.Visit(this, x => _values.All(value => value.Accept(x)));
         }
 
-        static ActivationList<Token<T, TProperty>> CreateActivationList(TProperty value)
+        static ValueNode<T, TProperty> CreateValueNode(TProperty value)
         {
-            return new ActivationList<Token<T, TProperty>>();
+            return new ValueNode<T, TProperty>(value);
         }
 
         public void AddActivation(TProperty value, Activation<Token<T, TProperty>> activation)
         {
-            _values[value].Add(activation);
+            _values[value].AddActivation(activation);
         }
 
         public void RemoveActivation(TProperty value, Activation<Token<T, TProperty>> activation)
         {
-            _values[value].Remove(activation);
+            _values[value].RemoveActivation(activation);
         }
     }
 }

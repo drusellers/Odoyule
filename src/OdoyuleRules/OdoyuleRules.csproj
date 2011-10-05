@@ -111,6 +111,7 @@
     <Compile Include="Models\RuntimeModel\StatelessSessionImpl.cs" />
     <Compile Include="Models\ParseModel\ConditionDeclaration.cs" />
     <Compile Include="Models\RuntimeModel\Token.cs" />
+    <Compile Include="Models\RuntimeModel\ValueNode.cs" />
     <Compile Include="Models\SemanticModel\AcceptSemanticModelVisitor.cs" />
     <Compile Include="Models\SemanticModel\Conditions.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PredicateCondition.cs" />

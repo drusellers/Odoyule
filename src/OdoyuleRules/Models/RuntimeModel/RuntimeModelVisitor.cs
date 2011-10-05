@@ -42,5 +42,8 @@ namespace OdoyuleRules.Models.RuntimeModel
 
         bool Visit<T,TProperty>(EqualNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
             where T : class;
+
+        bool Visit<T,TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
+            where T : class;
     }
 }

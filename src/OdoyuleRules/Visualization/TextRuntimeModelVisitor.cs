@@ -100,6 +100,13 @@ namespace OdoyuleRules.Visualization
             return Indent(next);
         }
 
+        public bool Visit<T, TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        {
+            Append("ValueNode[{0}] == {1}", Tokens<T>(), node.Value);
+
+            return Indent(next);
+        }
+
         void Append(string format, params object[] args)
         {
             Append(string.Format(format, args));

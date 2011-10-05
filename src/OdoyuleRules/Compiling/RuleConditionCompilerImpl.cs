@@ -83,6 +83,7 @@ namespace OdoyuleRules.Compiling
                         if(x.Item2.CompareTo(condition.Value) > 0)
                             accept();
                     });
+                conditionNode.AddActivation(alpha);
 
                 node.AddActivation(conditionNode);
             });
