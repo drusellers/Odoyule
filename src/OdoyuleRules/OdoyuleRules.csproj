@@ -183,6 +183,7 @@
     <Compile Include="Util\ExpressionExtensions.cs" />
     <Compile Include="Util\FastProperty.cs" />
     <Compile Include="Util\Observable.cs" />
+    <Compile Include="Visualization\TextRuntimeModelVisitor.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

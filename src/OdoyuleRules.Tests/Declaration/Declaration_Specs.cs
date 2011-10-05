@@ -12,9 +12,11 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Tests.Declaration
 {
+    using System;
     using System.Linq;
     using Models.SemanticModel;
     using NUnit.Framework;
+    using Visualization;
 
     [TestFixture]
     public class Defining_a_rule_using_the_semantic_model
@@ -29,6 +31,11 @@ namespace OdoyuleRules.Tests.Declaration
                 session.Add(new A {Name = "JOE", Amount = 10001.0m});
                 session.Run();
             }
+
+            var visitor = new TextRuntimeModelVisitor();
+            rulesEngine.Accept(visitor);
+
+            Console.WriteLine(visitor);
 
             Assert.IsNotNull(_result);
         }
