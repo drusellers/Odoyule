@@ -13,6 +13,8 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
+    using System.Reflection;
+    using Util;
 
     /// <summary>
     /// A property node matches a property on a fact and activates successors
@@ -26,10 +28,18 @@ namespace OdoyuleRules.Models.RuntimeModel
         where T : class
     {
         readonly Action<T, Action<TProperty>> _propertyMatch;
+        FastProperty<T, TProperty> _property;
 
-        public PropertyNode(Action<T, Action<TProperty>> propertyMatch)
+        public PropertyNode(PropertyInfo propertyInfo)
         {
-            _propertyMatch = propertyMatch;
+            _property = new FastProperty<T, TProperty>(propertyInfo);
+
+            _propertyMatch = (x, next) => next(_property.Get(x));
+        }
+
+        public PropertyInfo PropertyInfo
+        {
+            get { return _property.Property; }
         }
 
         public void Activate(ActivationContext<T> context)

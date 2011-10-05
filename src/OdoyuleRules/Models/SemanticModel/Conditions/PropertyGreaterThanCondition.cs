@@ -12,11 +12,13 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.SemanticModel
 {
+    using System;
     using System.Reflection;
 
     public class PropertyGreaterThanCondition<T, TProperty> :
         PropertyCondition<T, TProperty>,
-        RuleCondition<T>
+        RuleCondition<T>, 
+        IEquatable<PropertyGreaterThanCondition<T, TProperty>>
         where T : class
     {
         readonly TProperty _value;
@@ -25,6 +27,43 @@ namespace OdoyuleRules.Models.SemanticModel
             : base(propertyInfo)
         {
             _value = value;
+        }
+
+        public bool Equals(PropertyGreaterThanCondition<T, TProperty> other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return base.Equals(other) && Equals(other._value, _value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return Equals(obj as PropertyGreaterThanCondition<T, TProperty>);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode()*397) ^ _value.GetHashCode();
+            }
+        }
+
+        public bool Accept(SemanticModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => true);
+        }
+
+        public static bool operator ==(PropertyGreaterThanCondition<T, TProperty> left, PropertyGreaterThanCondition<T, TProperty> right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(PropertyGreaterThanCondition<T, TProperty> left, PropertyGreaterThanCondition<T, TProperty> right)
+        {
+            return !Equals(left, right);
         }
     }
 }

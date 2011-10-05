@@ -18,13 +18,22 @@ namespace OdoyuleRules.Models.SemanticModel
     public class OdoyuleRule :
         Rule
     {
+        readonly string _ruleName;
         IList<RuleCondition> _conditions;
         IList<RuleConsequence> _consequences;
 
-        public OdoyuleRule(IEnumerable<RuleCondition> conditions, IEnumerable<RuleConsequence> consequences)
+        public OdoyuleRule(string ruleName,
+                           IEnumerable<RuleCondition> conditions,
+                           IEnumerable<RuleConsequence> consequences)
         {
+            _ruleName = ruleName;
             _conditions = conditions.ToList();
             _consequences = consequences.ToList();
+        }
+
+        public string RuleName
+        {
+            get { return _ruleName; }
         }
 
         public IEnumerable<RuleCondition> Conditions
@@ -35,6 +44,11 @@ namespace OdoyuleRules.Models.SemanticModel
         public IEnumerable<RuleConsequence> Consequences
         {
             get { return _consequences; }
+        }
+
+        public bool Accept(SemanticModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => _conditions.All(y => y.Accept(x)) && _consequences.All(y => y.Accept(x)));
         }
     }
 }

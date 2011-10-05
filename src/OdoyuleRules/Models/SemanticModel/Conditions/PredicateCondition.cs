@@ -22,7 +22,8 @@ namespace OdoyuleRules.Models.SemanticModel
     /// </summary>
     /// <typeparam name="T">The fact type for the expression</typeparam>
     public class PredicateCondition<T> :
-        RuleCondition<T>
+        RuleCondition<T>,
+        IEquatable<PredicateCondition<T>>
     {
         readonly Func<T, bool> _predicate;
 
@@ -34,6 +35,41 @@ namespace OdoyuleRules.Models.SemanticModel
         public Func<T, bool> Predicate
         {
             get { return _predicate; }
+        }
+
+        public bool Equals(PredicateCondition<T> other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(other._predicate, _predicate);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof (PredicateCondition<T>)) return false;
+            return Equals((PredicateCondition<T>) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_predicate != null ? _predicate.GetHashCode() : 0);
+        }
+
+        public bool Accept(SemanticModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => true);
+        }
+
+        public static bool operator ==(PredicateCondition<T> left, PredicateCondition<T> right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(PredicateCondition<T> left, PredicateCondition<T> right)
+        {
+            return !Equals(left, right);
         }
     }
 }

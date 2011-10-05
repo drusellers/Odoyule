@@ -16,7 +16,7 @@ namespace OdoyuleRules.Compiling
 
     public interface RuleCompiler
     {
-        void Add(Rule rule);
+        void Add(params Rule[] rules);
 
         RulePackage Compile();
     }

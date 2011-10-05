@@ -13,16 +13,22 @@
 namespace OdoyuleRules.Configuration.Builders
 {
     using System;
+    using Compiling;
+    using Models.SemanticModel;
     using RulesEngineConfigurators;
+    using Util.Caching;
 
     class RulesEngineBuilderImpl :
         RulesEngineBuilder
     {
         Func<RuntimeConfigurator> _runtimeConfiguratorFactory;
+        readonly Cache<string, Rule> _rules;
 
         public RulesEngineBuilderImpl()
         {
             _runtimeConfiguratorFactory = DefaultRuntimeConfiguratorFactory;
+
+            _rules = new DictionaryCache<string, Rule>(rule => rule.RuleName);
         }
 
         public void UseRuntimeConfigurator(Func<RuntimeConfigurator> runtimeConfiguratorFactory)
@@ -30,11 +36,22 @@ namespace OdoyuleRules.Configuration.Builders
             _runtimeConfiguratorFactory = runtimeConfiguratorFactory ?? DefaultRuntimeConfiguratorFactory;
         }
 
+        public void AddRule(Rule rule)
+        {
+            _rules.AddValue(rule);
+        }
+
         public RulesEngine Build()
         {
             RuntimeConfigurator runtimeConfigurator = _runtimeConfiguratorFactory();
 
             var rulesEngine = new OdoyuleRulesEngine(runtimeConfigurator);
+
+            RuleCompiler compiler = new OdoyuleRuleCompiler(runtimeConfigurator);
+
+            foreach (var rule in _rules)
+            {
+            }
 
             return rulesEngine;
         }

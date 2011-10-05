@@ -27,10 +27,26 @@ namespace OdoyuleRules
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
-            var fastProperty = new FastProperty<T, TProperty>(propertyInfo);
-
             PropertyNode<T, TProperty> propertyNode =
-                configurator.CreateNode(id => new PropertyNode<T, TProperty>((x, next) => next(fastProperty.Get(x))));
+                configurator.CreateNode(id => new PropertyNode<T, TProperty>(propertyInfo));
+
+            return propertyNode;
+        }
+
+        public static PropertyNode<T, TProperty> Property<T, TProperty>(
+            this RuntimeConfigurator configurator, PropertyInfo propertyInfo)
+            where T : class
+        {
+            PropertyNode<T, TProperty> propertyNode =
+                configurator.CreateNode(id => new PropertyNode<T, TProperty>(propertyInfo));
+
+            return propertyNode;
+        }
+
+        public static EqualNode<T, TProperty> Equal<T, TProperty>(this RuntimeConfigurator configurator)
+            where T : class
+        {
+            EqualNode<T, TProperty> propertyNode = configurator.CreateNode(id => new EqualNode<T, TProperty>());
 
             return propertyNode;
         }

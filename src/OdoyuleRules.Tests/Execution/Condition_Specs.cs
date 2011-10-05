@@ -34,7 +34,7 @@ namespace OdoyuleRules.Tests.Execution
 
             var configurator = new RuntimeConfiguratorImpl();
 
-            var engine = new OdoyuleRulesEngine(configurator);
+            var engine = configurator.RulesEngine;
 
             PropertyNode<A, decimal> propertyNode = configurator.Property<A, decimal>(x => x.Amount);
 
@@ -44,7 +44,7 @@ namespace OdoyuleRules.Tests.Execution
             AlphaNode<Token<A, decimal>> edgeAlpha = configurator.Alpha<A, decimal>();
             conditionNode.AddActivation(edgeAlpha);
 
-            AlphaNode<A> alphaNode = engine.GetAlphaNode<A>();
+            AlphaNode<A> alphaNode = configurator.GetAlphaNode<A>();
             alphaNode.AddActivation(propertyNode);
 
             JoinNode<A> joinNode = configurator.Join(alphaNode);

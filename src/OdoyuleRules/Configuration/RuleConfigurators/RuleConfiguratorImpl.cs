@@ -14,12 +14,14 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq.Expressions;
+    using Builders;
+    using Configurators;
     using Models.SemanticModel;
-    using Parsing;
+    using RulesEngineConfigurators;
 
     class RuleConfiguratorImpl :
-        RuleConfigurator
+        RuleConfigurator,
+        RulesEngineBuilderConfigurator
     {
         readonly IList<RuleConditionConfigurator> _conditionConfigurators;
         string _ruleName;
@@ -54,6 +56,21 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
             _conditionConfigurators.Add(configurator);
 
             return configurator;
+        }
+
+        public RulesEngineBuilder Configure(RulesEngineBuilder builder)
+        {
+            throw new NotImplementedException("Need to configure rule");
+
+            return builder;
+        }
+
+        public IEnumerable<ValidationResult> ValidateConfiguration()
+        {
+            if (string.IsNullOrEmpty(_ruleName))
+                yield return this.Failure("The rule name must be specified");
+
+            yield break;
         }
     }
 }

@@ -12,18 +12,32 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 {
-    using System;
+    using System.Collections.Generic;
+    using Builders;
+    using Configurators;
     using Models.SemanticModel;
-    using RuleConfigurators;
 
-    public interface RulesEngineConfigurator
+    public class SemanticModelRuleConfigurator :
+        RulesEngineBuilderConfigurator
     {
-        void Rule(string name, Action<RuleConfigurator> configureCallback);
+        readonly Rule _rule;
 
-        /// <summary>
-        /// Add rules to the rules engine (using an already generated semantic model)
-        /// </summary>
-        /// <param name="rules">The rules to add</param>
-        void Add(params Rule[] rules);
+        public SemanticModelRuleConfigurator(Rule rule)
+        {
+            _rule = rule;
+        }
+
+        public RulesEngineBuilder Configure(RulesEngineBuilder builder)
+        {
+            builder.AddRule(_rule);
+
+            return builder;
+        }
+
+        public IEnumerable<ValidationResult> ValidateConfiguration()
+        {
+            if (_rule == null)
+                yield return this.Failure("Rule", "A null rule was specified");
+        }
     }
 }

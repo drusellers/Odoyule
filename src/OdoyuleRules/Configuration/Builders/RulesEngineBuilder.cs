@@ -13,11 +13,14 @@
 namespace OdoyuleRules.Configuration.Builders
 {
     using System;
+    using Models.SemanticModel;
     using RulesEngineConfigurators;
 
     public interface RulesEngineBuilder
     {
         void UseRuntimeConfigurator(Func<RuntimeConfigurator> runtimeConfiguratorFactory);
+
+        void AddRule(Rule rule);
 
         RulesEngine Build();
     }

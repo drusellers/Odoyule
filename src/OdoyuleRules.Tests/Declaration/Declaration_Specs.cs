@@ -19,29 +19,18 @@ namespace OdoyuleRules.Tests.Declaration
     [TestFixture]
     public class Defining_a_rule_using_the_semantic_model
     {
-        Rule _rule;
-
-        [TestFixtureSetUp]
-        public void Define_rule()
+        [Test]
+        public void Should_compile_and_execute()
         {
-            var conditions = new RuleCondition[]
-                {
-                    Conditions.Equal((A x) => x.Name, "JOE"),
-                    Conditions.GreaterThan((A x) => x.Amount, 10000.0m),
-                };
+            RulesEngine rulesEngine = RulesEngineFactory.New(x => { x.Add(_rule); });
 
-            var consequences = new RuleConsequence[]
-                {
-                    Consequences.Delegate<A>(x => { }),
-                };
+            using (StatefulSession session = rulesEngine.CreateSession())
+            {
+                session.Add(new A {Name = "JOE", Amount = 10001.0m});
+                session.Run();
+            }
 
-            _rule = new OdoyuleRule(conditions, consequences);
-        }
-
-        class A
-        {
-            public string Name { get; set; }
-            public decimal Amount { get; set; }
+            Assert.IsNotNull(_result);
         }
 
         [Test]
@@ -54,6 +43,32 @@ namespace OdoyuleRules.Tests.Declaration
         public void Should_have_the_proper_consequence_count()
         {
             Assert.AreEqual(1, _rule.Consequences.Count());
+        }
+
+        Rule _rule;
+        A _result;
+
+        [TestFixtureSetUp]
+        public void Define_rule()
+        {
+            var conditions = new RuleCondition[]
+                {
+                    Conditions.Equal((A x) => x.Name, "JOE"),
+                    Conditions.GreaterThan((A x) => x.Amount, 10000.0m),
+                };
+
+            var consequences = new RuleConsequence[]
+                {
+                    Consequences.Delegate<A>(x => { _result = x; }),
+                };
+
+            _rule = new OdoyuleRule("RuleA", conditions, consequences);
+        }
+
+        class A
+        {
+            public string Name { get; set; }
+            public decimal Amount { get; set; }
         }
     }
 }

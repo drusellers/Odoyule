@@ -13,12 +13,25 @@
 namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 {
     using System;
+    using System.Reflection;
     using System.Threading;
+    using Models.RuntimeModel;
 
     public class RuntimeConfiguratorImpl :
         RuntimeConfigurator
     {
         int _nextNodeId;
+        OdoyuleRulesEngine _rulesEngine;
+
+        public RuntimeConfiguratorImpl()
+        {
+            _rulesEngine = new OdoyuleRulesEngine(this);
+        }
+
+        public RulesEngine RulesEngine
+        {
+            get { return _rulesEngine; }
+        }
 
         public T CreateNode<T>(Func<int, T> nodeFactory)
         {
@@ -30,6 +43,28 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
         public T CreateNode<T>(Func<T> nodeFactory)
         {
             return nodeFactory();
+        }
+
+        public AlphaNode<T> GetAlphaNode<T>()
+            where T : class
+        {
+            return _rulesEngine.GetAlphaNode<T>();
+        }
+
+        public void MatchPropertyNode<T, TProperty>(PropertyInfo propertyInfo,
+                                                    Action<PropertyNode<T, TProperty>> callback)
+            where T : class
+        {
+            var locator = new PropertyNodeLocator<T, TProperty>(this, propertyInfo);
+            locator.Find(callback);
+        }
+
+        public void MatchEqualNode<T, TProperty>(PropertyInfo propertyInfo,
+                                                 Action<EqualNode<T, TProperty>> callback)
+            where T : class
+        {
+            var locator = new EqualNodeLocator<T, TProperty>(this, propertyInfo);
+            locator.Find(callback);
         }
     }
 }

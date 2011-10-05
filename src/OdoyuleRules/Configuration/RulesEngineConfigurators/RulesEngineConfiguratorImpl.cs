@@ -15,17 +15,18 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
     using System;
     using System.Collections.Generic;
     using Configurators;
+    using Models.SemanticModel;
     using RuleConfigurators;
 
     class RulesEngineConfiguratorImpl :
         RulesEngineConfigurator,
         Configurator
     {
-        IList<RuleConfigurator> _ruleConfigurators;
+        IList<RulesEngineBuilderConfigurator> _ruleConfigurators;
 
         public RulesEngineConfiguratorImpl()
         {
-            _ruleConfigurators = new List<RuleConfigurator>();
+            _ruleConfigurators = new List<RulesEngineBuilderConfigurator>();
         }
 
         public RulesEngine Create()
@@ -48,6 +49,16 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 
             _ruleConfigurators.Add(configurator);
 
+        }
+
+        public void Add(params Rule[] rules)
+        {
+            foreach (var rule in rules)
+            {
+                var configurator = new SemanticModelRuleConfigurator(rule);
+
+                _ruleConfigurators.Add(configurator);
+            }
         }
     }
 }

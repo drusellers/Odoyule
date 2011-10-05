@@ -23,5 +23,10 @@ namespace OdoyuleRules.Models.SemanticModel
         {
             _callback = callback;
         }
+
+        public bool Accept(SemanticModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => true);
+        }
     }
 }

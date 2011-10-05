@@ -12,11 +12,13 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.SemanticModel
 {
+    using System;
     using System.Reflection;
 
     public class PropertyNotEqualCondition<T, TProperty> :
         PropertyCondition<T, TProperty>,
-        RuleCondition<T>
+        RuleCondition<T>, 
+        IEquatable<PropertyNotEqualCondition<T, TProperty>>
         where T : class
     {
         readonly TProperty _value;
@@ -30,6 +32,38 @@ namespace OdoyuleRules.Models.SemanticModel
         public TProperty Value
         {
             get { return _value; }
+        }
+
+        public bool Equals(PropertyNotEqualCondition<T, TProperty> other)
+        {
+            return base.Equals(other);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return Equals(obj as PropertyNotEqualCondition<T, TProperty>);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public bool Accept(SemanticModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => true);
+        }
+
+        public static bool operator ==(PropertyNotEqualCondition<T, TProperty> left, PropertyNotEqualCondition<T, TProperty> right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(PropertyNotEqualCondition<T, TProperty> left, PropertyNotEqualCondition<T, TProperty> right)
+        {
+            return !Equals(left, right);
         }
     }
 }

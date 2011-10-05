@@ -12,7 +12,8 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.SemanticModel
 {
-    public interface RuleCondition
+    public interface RuleCondition :
+        AcceptSemanticModelVisitor
     {
     }
 

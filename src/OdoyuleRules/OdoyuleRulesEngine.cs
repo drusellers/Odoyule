@@ -20,8 +20,7 @@ namespace OdoyuleRules
     using Util.Caching;
 
     public class OdoyuleRulesEngine :
-        RulesEngine,
-        AcceptRuntimeModelVisitor
+        RulesEngine
     {
         static readonly Cache<Type, AlphaNodeInitializer> _initializers =
             new GenericTypeCache<AlphaNodeInitializer>(typeof (AlphaNodeInitializerImpl<>));
