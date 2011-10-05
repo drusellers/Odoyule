@@ -12,21 +12,24 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Models.SemanticModel
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using ParseModel;
+    using System.Reflection;
 
-    public class RuleDeclaration :
-        Declaration
+    public class PropertyNotEqualCondition<T, TProperty> :
+        PropertyCondition<T, TProperty>,
+        RuleCondition<T>
+        where T : class
     {
-        readonly IList<ConditionDeclaration> _conditions;
-        readonly IList<ConsequenceDeclaration> _consequences;
+        readonly TProperty _value;
 
-        public RuleDeclaration(IEnumerable<ConditionDeclaration> conditions, IEnumerable<ConsequenceDeclaration> consequences)
-            : base(DeclarationType.Rule)
+        public PropertyNotEqualCondition(PropertyInfo propertyInfo, TProperty value)
+            : base(propertyInfo)
         {
-            _conditions = conditions.ToList();
-            _consequences = consequences.ToList();
+            _value = value;
+        }
+
+        public TProperty Value
+        {
+            get { return _value; }
         }
     }
 }

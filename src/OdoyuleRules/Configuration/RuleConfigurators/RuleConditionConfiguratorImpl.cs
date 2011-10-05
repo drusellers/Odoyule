@@ -15,7 +15,6 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
     using System;
     using System.Collections.Generic;
     using Models.SemanticModel;
-    using Parsing;
 
     class RuleConditionConfiguratorImpl<T> :
         RuleConditionConfigurator<T>
@@ -23,16 +22,23 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
     {
         readonly IList<RuleConsequenceConfigurator<T>> _consequenceConfigurators;
         IList<RuleCondition> _conditions;
+        readonly IList<RuleConsequence> _consequences;
 
         public RuleConditionConfiguratorImpl()
         {
             _consequenceConfigurators = new List<RuleConsequenceConfigurator<T>>();
+            _consequences = new List<RuleConsequence>();
             _conditions = new List<RuleCondition>();
         }
 
         public void AddCondition(RuleCondition condition)
         {
             _conditions.Add(condition);
+        }
+
+        public void AddConsequence(RuleConsequence consequence)
+        {
+            _consequences.Add(consequence);
         }
 
         public RuleConsequenceConfigurator<T> Then(Action<T> callback)

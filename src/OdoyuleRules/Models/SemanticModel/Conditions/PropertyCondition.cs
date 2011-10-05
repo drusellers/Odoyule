@@ -10,24 +10,23 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Configuration
+namespace OdoyuleRules.Models.SemanticModel
 {
-    using System;
-    using System.Linq.Expressions;
-    using Models.SemanticModel.Conditions;
-    using RuleConfigurators;
+    using System.Reflection;
 
-    public static class Conditions
+    public abstract class PropertyCondition<T,TProperty>
+        where T : class
     {
-        public static PredicateExpressionCondition<T> Predicate<T>(this RuleConditionConfigurator<T> configurator,
-                                                                   Expression<Func<T, bool>> predicateExpression)
-            where T : class
+        readonly PropertyInfo _propertyInfo;
+
+        public PropertyInfo PropertyInfo
         {
-            var condition = new PredicateExpressionCondition<T>(predicateExpression);
+            get { return _propertyInfo; }
+        }
 
-            configurator.AddCondition(condition);
-
-            return condition;
+        protected PropertyCondition(PropertyInfo propertyInfo)
+        {
+            _propertyInfo = propertyInfo;
         }
     }
 }

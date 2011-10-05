@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
+    using System.Diagnostics;
     using Util.Caching;
 
     class StatefulSessionImpl :
@@ -87,7 +88,15 @@ namespace OdoyuleRules.Models.RuntimeModel
 
         public void Run()
         {
+            // TODO: Add an elapsed time break and at some point a thread monitor so that
+            // the execution of rules can be killed after some timeout to avoid a process
+            // killing the server and never returning due to looped rules
+
+            var startedAt = Stopwatch.GetTimestamp();
+
             while (_agenda.Run()) ;
+
+            var endedAt = Stopwatch.GetTimestamp();
         }
 
         ~StatefulSessionImpl()

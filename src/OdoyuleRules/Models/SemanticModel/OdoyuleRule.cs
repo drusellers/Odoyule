@@ -13,10 +13,28 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System.Collections.Generic;
+    using System.Linq;
 
-    public interface Rule
+    public class OdoyuleRule :
+        Rule
     {
-        IEnumerable<RuleCondition> Conditions { get; }
-        IEnumerable<RuleConsequence> Consequences { get; }
+        IList<RuleCondition> _conditions;
+        IList<RuleConsequence> _consequences;
+
+        public OdoyuleRule(IEnumerable<RuleCondition> conditions, IEnumerable<RuleConsequence> consequences)
+        {
+            _conditions = conditions.ToList();
+            _consequences = consequences.ToList();
+        }
+
+        public IEnumerable<RuleCondition> Conditions
+        {
+            get { return _conditions; }
+        }
+
+        public IEnumerable<RuleConsequence> Consequences
+        {
+            get { return _consequences; }
+        }
     }
 }

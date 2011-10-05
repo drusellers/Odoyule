@@ -35,12 +35,14 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiling\ExpressionNormalizer.cs" />
+    <Compile Include="Compiling\RuleCompiler.cs" />
     <Compile Include="Configuration\Builders\RuleBuilder.cs" />
     <Compile Include="Configuration\Builders\RulesEngineBuilder.cs" />
     <Compile Include="Configuration\Builders\RulesEngineBuilderImpl.cs" />
     <Compile Include="Configuration\Builders\RuleSetBuilder.cs" />
     <Compile Include="Configuration\Builders\RuleSetBuilderImpl.cs" />
-    <Compile Include="Configuration\Conditions.cs" />
+    <Compile Include="Configuration\ConditionExtensions.cs" />
     <Compile Include="Configuration\ConfigurationException.cs" />
     <Compile Include="Configuration\Configurators\ConfigurationResult.cs" />
     <Compile Include="Configuration\Configurators\ConfigurationResultImpl.cs" />
@@ -49,6 +51,7 @@
     <Compile Include="Configuration\Configurators\ValidationResultDisposition.cs" />
     <Compile Include="Configuration\Configurators\ValidationResultExtensions.cs" />
     <Compile Include="Configuration\Configurators\ValidationResultImpl.cs" />
+    <Compile Include="Configuration\ConsequenceExtensions.cs" />
     <Compile Include="Configuration\RuleConfigurators\DelegateRuleConsequenceConfigurator.cs" />
     <Compile Include="Configuration\RuleConfigurators\RuleConditionConfigurator.cs" />
     <Compile Include="Configuration\RuleConfigurators\RuleConditionConfiguratorImpl.cs" />
@@ -67,6 +70,8 @@
     <Compile Include="Configuration\SessionConfigurators\StatelessSessionConfigurator.cs" />
     <Compile Include="Configuration\SessionConfigurators\StatelessSessionConfiguratorImpl.cs" />
     <Compile Include="FactHandle.cs" />
+    <Compile Include="Models\ParseModel\RuleDeclaration.cs" />
+    <Compile Include="Models\ParseModel\RuleSetImpl.cs" />
     <Compile Include="Models\RuntimeModel\AcceptRuntimeModelVisitor.cs" />
     <Compile Include="Models\RuntimeModel\Activation.cs" />
     <Compile Include="Models\RuntimeModel\ActivationContext.cs" />
@@ -97,17 +102,27 @@
     <Compile Include="Models\RuntimeModel\StatelessSessionImpl.cs" />
     <Compile Include="Models\ParseModel\ConditionDeclaration.cs" />
     <Compile Include="Models\RuntimeModel\Token.cs" />
+    <Compile Include="Models\SemanticModel\Conditions.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PredicateCondition.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PredicateExpressionCondition.cs" />
     <Compile Include="Models\ParseModel\ConsequenceDeclaration.cs" />
     <Compile Include="Models\ParseModel\Declaration.cs" />
     <Compile Include="Models\ParseModel\DeclarationType.cs" />
+    <Compile Include="Models\SemanticModel\Conditions\PropertyCondition.cs" />
+    <Compile Include="Models\SemanticModel\Conditions\PropertyEqualCondition.cs" />
+    <Compile Include="Models\SemanticModel\Conditions\PropertyGreaterThanCondition.cs" />
+    <Compile Include="Models\SemanticModel\Conditions\PropertyGreaterThanOrEqualCondition.cs" />
+    <Compile Include="Models\SemanticModel\Conditions\PropertyLessThanCondition.cs" />
+    <Compile Include="Models\SemanticModel\Conditions\PropertyLessThanOrEqualCondition.cs" />
+    <Compile Include="Models\SemanticModel\Conditions\PropertyNotEqualCondition.cs" />
+    <Compile Include="Models\SemanticModel\Consequences.cs" />
+    <Compile Include="Models\SemanticModel\Consequences\DelegateConsequence.cs" />
     <Compile Include="Models\SemanticModel\DynamicRuleSet.cs" />
+    <Compile Include="Models\SemanticModel\OdoyuleRule.cs" />
     <Compile Include="Models\SemanticModel\Rule.cs" />
     <Compile Include="Models\SemanticModel\RuleCondition.cs" />
-    <Compile Include="Models\SemanticModel\RuleDeclaration.cs" />
+    <Compile Include="Models\SemanticModel\RuleConsequence.cs" />
     <Compile Include="Models\SemanticModel\RuleSet.cs" />
-    <Compile Include="Models\SemanticModel\RuleSetImpl.cs" />
     <Compile Include="OdoyuleRulesEngine.cs" />
     <Compile Include="Parsing\AbstractCharacterParser.cs" />
     <Compile Include="Parsing\AbstractParser.cs" />
@@ -137,6 +152,7 @@
     <Compile Include="Parsing\StringRuleParser.cs" />
     <Compile Include="Parsing\Variable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RulePackage.cs" />
     <Compile Include="RulesEngine.cs" />
     <Compile Include="RulesEngineException.cs" />
     <Compile Include="RulesEngineFactory.cs" />

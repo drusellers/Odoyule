@@ -10,22 +10,22 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Configuration.RuleConfigurators
+namespace OdoyuleRules.Models.ParseModel
 {
-    using System;
-    using Models.SemanticModel;
+    using System.Collections.Generic;
+    using System.Linq;
 
-    public interface RuleConditionConfigurator
+    public class RuleDeclaration :
+        Declaration
     {
-    }
+        readonly IList<ConditionDeclaration> _conditions;
+        readonly IList<ConsequenceDeclaration> _consequences;
 
-    public interface RuleConditionConfigurator<T> :
-        RuleConditionConfigurator
-        where T : class
-    {
-        void AddCondition(RuleCondition condition);
-        void AddConsequence(RuleConsequence consequence);
-
-        RuleConsequenceConfigurator<T> Then(Action<T> callback);
+        public RuleDeclaration(IEnumerable<ConditionDeclaration> conditions, IEnumerable<ConsequenceDeclaration> consequences)
+            : base(DeclarationType.Rule)
+        {
+            _conditions = conditions.ToList();
+            _consequences = consequences.ToList();
+        }
     }
 }
