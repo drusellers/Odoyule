@@ -23,7 +23,18 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
             return next(this);
         }
 
+        public bool Visit<T>(JoinNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        {
+            return next(this);
+        }
+
         public virtual bool Visit<T>(MemoryNode<T> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
+        {
+            return next(this);
+        }
+
+        public virtual bool Visit<T, TDiscard>(LeftJoinNode<T, TDiscard> node, Func<RuntimeModelVisitor, bool> next) 
             where T : class
         {
             return next(this);

@@ -38,7 +38,7 @@ namespace OdoyuleRules.Compiling
                 {
                     AlphaNode<Token<T, TProperty>> alpha = _configurator.Alpha<T, TProperty>();
 
-                    _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(alpha));
+                    _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(_configurator, alpha));
 
                     node.AddActivation(condition.Value, alpha);
                 });
@@ -52,7 +52,7 @@ namespace OdoyuleRules.Compiling
             _configurator.MatchPropertyNode<T, TProperty>(condition.PropertyInfo, node =>
                 {
                     AlphaNode<Token<T, TProperty>> alpha = _configurator.Alpha<T, TProperty>();
-                    _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(alpha));
+                    _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(_configurator, alpha));
 
                     var conditionNode = new ConditionNode<Token<T, TProperty>>((x, accept) =>
                         {

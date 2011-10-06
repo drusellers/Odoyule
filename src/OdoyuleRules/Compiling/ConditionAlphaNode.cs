@@ -13,12 +13,16 @@
 namespace OdoyuleRules.Compiling
 {
     using System;
+    using Configuration.RulesEngineConfigurators;
     using Models.RuntimeModel;
 
     public interface ConditionAlphaNode
     {
         void Select<T>(Action<AlphaNode<T>> callback)
             where T : class;
+
+        void AddLeftJoin<TOutput,TDiscard>(AlphaNode<Token<TOutput, TDiscard>> previousNode) 
+            where TOutput : class;
     }
 
     public class ConditionAlphaNode<T> :
@@ -26,11 +30,19 @@ namespace OdoyuleRules.Compiling
         where T : class
     {
         AlphaNode<T> _node;
+        readonly RuntimeConfigurator _configurator;
+        ConditionAlphaNode _parent;
 
+        public ConditionAlphaNode(RuntimeConfigurator configurator)
+        {
+            _configurator = configurator;
+            _node = _configurator.CreateNode(id => new AlphaNode<T>(id));
+        }
 
-        public ConditionAlphaNode(AlphaNode<T> node)
+        public ConditionAlphaNode(RuntimeConfigurator configurator, AlphaNode<T> node)
         {
             _node = node;
+            _configurator = configurator;
         }
 
         public void Select<TSelect>(Action<AlphaNode<TSelect>> callback)
@@ -43,23 +55,55 @@ namespace OdoyuleRules.Compiling
                 return;
             }
 
-
-            if (typeof (T).IsGenericType && typeof (T).GetGenericTypeDefinition() == typeof (Token<,>))
-            {
-                Type[] arguments = typeof (T).GetGenericArguments();
-            }
+            SearchTokenChain(callback);
         }
 
-        string Tokens(Type type)
+        public void SearchTokenChain<TSelect>(Action<AlphaNode<TSelect>> callback) 
+            where TSelect : class
         {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Token<,>))
+            if (!typeof (T).IsGenericType || typeof (T).GetGenericTypeDefinition() != typeof (Token<,>)) 
+                return;
+
+            if (_parent != null)
             {
-                Type[] arguments = type.GetGenericArguments();
-
-                return string.Join(",", Tokens(arguments[0]), arguments[1].Name);
+                _parent.Select(callback);
+                return;
             }
+            
+            Type[] arguments = typeof (T).GetGenericArguments();
+            Type parentType = arguments[0];
 
-            return type.Name;
+            var parent =
+                (ConditionAlphaNode)
+                Activator.CreateInstance(typeof (ConditionAlphaNode<>).MakeGenericType(parentType),
+                                         _configurator);
+
+            parent.Select<TSelect>(alphaNode =>
+                {
+                    typeof (ConditionAlphaNode).GetMethod("AddLeftJoin")
+                        .MakeGenericMethod(arguments)
+                        .Invoke(parent, new[]{_node});
+
+                    _parent = parent;
+
+                    callback(alphaNode);
+                });
+        }
+
+        public void AddLeftJoin<TOutput,TDiscard>(AlphaNode<Token<TOutput, TDiscard>> previousNode) 
+            where TOutput : class
+        {
+            LeftJoinNode<TOutput, TDiscard> left = _configurator.Left<TOutput, TDiscard>(new ConstantNode<TOutput>());
+
+            var self = this as ConditionAlphaNode<TOutput>;
+            if(self == null)
+                throw new InvalidOperationException("I'm stupid, but it should always work");
+
+            left.AddActivation(self._node);
+
+            Activation<Token<TOutput,TDiscard>> x = left;
+
+               previousNode.AddActivation(x);
         }
     }
 }

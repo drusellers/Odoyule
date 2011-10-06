@@ -39,9 +39,17 @@ namespace OdoyuleRules.Visualization
             return Indent(next);
         }
 
-        public virtual bool Visit<T>(MemoryNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        public virtual bool Visit<T>(JoinNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
         {
-            Append("MemoryNode[{0}]", Tokens<T>());
+            Append("JoinNode[{0}]", Tokens<T>());
+
+            return Indent(next);
+        }
+
+        public bool Visit<T, TOutput>(LeftJoinNode<T, TOutput> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
+        {
+            Append("LeftJoinNode[{0}] => {1}", Tokens<T>(), Tokens<TOutput>());
 
             return Indent(next);
         }
@@ -100,7 +108,8 @@ namespace OdoyuleRules.Visualization
             return Indent(next);
         }
 
-        public bool Visit<T, TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        public bool Visit<T, TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
         {
             Append("ValueNode[{0}] == {1}", Tokens<T>(), node.Value);
 
@@ -124,9 +133,9 @@ namespace OdoyuleRules.Visualization
 
         string Tokens(Type type)
         {
-            if(type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Token<,>))
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Token<,>))
             {
-                var arguments = type.GetGenericArguments();
+                Type[] arguments = type.GetGenericArguments();
 
                 return string.Join(",", Tokens(arguments[0]), arguments[1].Name);
             }

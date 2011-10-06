@@ -92,7 +92,7 @@
     <Compile Include="Models\RuntimeModel\ActivationTypeProxy.cs" />
     <Compile Include="Models\RuntimeModel\ActivationTypeProxyImpl.cs" />
     <Compile Include="Models\RuntimeModel\EqualNode.cs" />
-    <Compile Include="Models\RuntimeModel\LeftNode.cs" />
+    <Compile Include="Models\RuntimeModel\LeftJoinNode.cs" />
     <Compile Include="Models\RuntimeModel\Agenda.cs" />
     <Compile Include="Models\RuntimeModel\AgendaImpl.cs" />
     <Compile Include="Models\RuntimeModel\AlphaNodeInitializerImpl.cs" />

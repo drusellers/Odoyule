@@ -18,7 +18,10 @@ namespace OdoyuleRules.Models.RuntimeModel
     {
         bool Visit(RulesEngine rulesEngine, Func<RuntimeModelVisitor, bool> next);
 
-        bool Visit<T>(MemoryNode<T> node, Func<RuntimeModelVisitor, bool> next)
+        bool Visit<T>(JoinNode<T> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class;
+
+        bool Visit<T, TDiscard>(LeftJoinNode<T,TDiscard> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
         bool Visit<T>(AlphaNode<T> node, Func<RuntimeModelVisitor, bool> next)

@@ -52,7 +52,7 @@ namespace OdoyuleRules.Tests.Execution
             DelegateProductionNode<A> productionNode = configurator.Delegate<A>(x => _called = x);
             joinNode.AddActivation(productionNode);
 
-            LeftNode<A, decimal> leftNode = configurator.Left<A, decimal>(alphaNode);
+            LeftJoinNode<A, decimal> leftNode = configurator.Left<A, decimal>(alphaNode);
             leftNode.AddActivation(joinNode);
 
             edgeAlpha.AddActivation(leftNode);

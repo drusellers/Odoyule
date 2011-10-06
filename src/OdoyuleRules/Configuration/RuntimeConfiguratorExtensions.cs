@@ -86,11 +86,11 @@ namespace OdoyuleRules
             return configurator.CreateNode(id => new AlphaNode<Token<T1, T2>>(id));
         }
 
-        public static LeftNode<T1, T2> Left<T1, T2>(
+        public static LeftJoinNode<T1, T2> Left<T1, T2>(
             this RuntimeConfigurator configurator, RightActivation<T1> rightActivation)
             where T1 : class
         {
-            return configurator.CreateNode(id => new LeftNode<T1, T2>(id, rightActivation));
+            return configurator.CreateNode(id => new LeftJoinNode<T1, T2>(id, rightActivation));
         }
 
         public static JoinNode<T> Join<T>(this RuntimeConfigurator configurator,

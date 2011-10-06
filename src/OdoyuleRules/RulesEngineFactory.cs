@@ -39,7 +39,7 @@ namespace OdoyuleRules
             }
             catch (Exception ex)
             {
-                throw new ConfigurationException(result, "An exception was thrown during service bus creation", ex);
+                throw new ConfigurationException(result, "An exception was thrown during rules engine creation", ex);
             }
         }
     }
