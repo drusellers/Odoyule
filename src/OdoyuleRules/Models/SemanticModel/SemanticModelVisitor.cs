@@ -42,8 +42,10 @@ namespace OdoyuleRules.Models.SemanticModel
                                  Func<SemanticModelVisitor, bool> next)
             where T : class;
 
-        bool Visit<T>(PredicateCondition<T> condition, Func<SemanticModelVisitor, bool> next);
+        bool Visit<T>(PredicateCondition<T> condition, Func<SemanticModelVisitor, bool> next)
+            where T : class;
 
-        bool Visit<T>(DelegateConsequence<T> consequence, Func<SemanticModelVisitor, bool> next);
+        bool Visit<T>(DelegateConsequence<T> consequence, Func<SemanticModelVisitor, bool> next)
+            where T : class;
     }
 }

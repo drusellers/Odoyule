@@ -12,10 +12,14 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Compiling
 {
+    using System;
+    using Models.RuntimeModel;
     using Models.SemanticModel;
 
     public interface RuleConditionCompiler :
         SemanticModelVisitor
     {
+        void MatchJoinNode<T>(Action<JoinNode<T>> callback)
+            where T : class;
     }
 }

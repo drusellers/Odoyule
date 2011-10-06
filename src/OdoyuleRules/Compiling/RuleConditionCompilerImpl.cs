@@ -19,92 +19,88 @@ namespace OdoyuleRules.Compiling
     using Models.SemanticModel;
 
     public class RuleConditionCompilerImpl :
+        SemanticModelVisitorImpl,
         RuleConditionCompiler
     {
-        RuntimeConfigurator _configurator;
-        IList<object> _alphaNodes;
+        readonly IList<ConditionAlphaNode> _alphaNodes;
+        readonly RuntimeConfigurator _configurator;
 
         public RuleConditionCompilerImpl(RuntimeConfigurator configurator)
         {
             _configurator = configurator;
-            _alphaNodes = new List<object>();
-
+            _alphaNodes = new List<ConditionAlphaNode>();
         }
 
-        public bool Visit(Rule rule, Func<SemanticModelVisitor, bool> next)
-        {
-            return true;
-        }
-
-        public bool Visit<T, TProperty>(PropertyEqualCondition<T, TProperty> condition,
-                                        Func<SemanticModelVisitor, bool> next) where T : class
+        public override bool Visit<T, TProperty>(PropertyEqualCondition<T, TProperty> condition,
+                                                 Func<SemanticModelVisitor, bool> next)
         {
             _configurator.MatchEqualNode<T, TProperty>(condition.PropertyInfo, node =>
                 {
-                    var alpha = _configurator.Alpha<T,TProperty>();
-                    _alphaNodes.Add(alpha);
+                    AlphaNode<Token<T, TProperty>> alpha = _configurator.Alpha<T, TProperty>();
+
+                    _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(alpha));
 
                     node.AddActivation(condition.Value, alpha);
                 });
 
-            return true;
+            return base.Visit(condition, next);
         }
 
-        public bool Visit<T, TProperty>(PropertyNotEqualCondition<T, TProperty> condition,
-                                        Func<SemanticModelVisitor, bool> next) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit<T, TProperty>(PropertyLessThanCondition<T, TProperty> condition,
-                                        Func<SemanticModelVisitor, bool> next) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit<T, TProperty>(PropertyLessThanOrEqualCondition<T, TProperty> condition,
-                                        Func<SemanticModelVisitor, bool> next) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit<T, TProperty>(PropertyGreaterThanCondition<T, TProperty> condition,
-                                        Func<SemanticModelVisitor, bool> next) 
-            where T : class
-            where TProperty : IComparable<TProperty>
+        public override bool Visit<T, TProperty>(PropertyGreaterThanCondition<T, TProperty> condition,
+                                                 Func<SemanticModelVisitor, bool> next)
         {
             _configurator.MatchPropertyNode<T, TProperty>(condition.PropertyInfo, node =>
-            {
-                var alpha = _configurator.Alpha<T, TProperty>();
-                _alphaNodes.Add(alpha);
+                {
+                    AlphaNode<Token<T, TProperty>> alpha = _configurator.Alpha<T, TProperty>();
+                    _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(alpha));
 
-                var conditionNode = new ConditionNode<Token<T, TProperty>>((x,accept) =>
+                    var conditionNode = new ConditionNode<Token<T, TProperty>>((x, accept) =>
+                        {
+                            if (x.Item2.CompareTo(condition.Value) > 0)
+                                accept();
+                        });
+                    conditionNode.AddActivation(alpha);
+
+                    node.AddActivation(conditionNode);
+                });
+
+            return base.Visit(condition, next);
+        }
+
+        public void MatchJoinNode<T>(Action<JoinNode<T>> callback)
+            where T : class
+        {
+            if (_alphaNodes.Count == 0)
+                return;
+
+            _alphaNodes[0].Select<T>(alpha =>
+                {
+                    if (_alphaNodes.Count == 1)
                     {
-                        if(x.Item2.CompareTo(condition.Value) > 0)
-                            accept();
-                    });
-                conditionNode.AddActivation(alpha);
+                        _configurator.MatchJoinNode(alpha, callback);
+                        return;
+                    }
 
-                node.AddActivation(conditionNode);
-            });
+                    MemoryNode<T> left = alpha;
 
-            return true;
-        }
-
-        public bool Visit<T, TProperty>(PropertyGreaterThanOrEqualCondition<T, TProperty> condition,
-                                        Func<SemanticModelVisitor, bool> next) where T : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit<T>(PredicateCondition<T> condition, Func<SemanticModelVisitor, bool> next)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Visit<T>(DelegateConsequence<T> consequence, Func<SemanticModelVisitor, bool> next)
-        {
-            throw new NotImplementedException();
+                    for (int i = 1; i < _alphaNodes.Count; i++)
+                    {
+                        _alphaNodes[i].Select<T>(right =>
+                            {
+                                _configurator.MatchJoinNode(left, right, join =>
+                                    {
+                                        if (i + 1 < _alphaNodes.Count)
+                                        {
+                                            left = join;
+                                        }
+                                        else
+                                        {
+                                            callback(join);
+                                        }
+                                    });
+                            });
+                    }
+                });
         }
     }
 }

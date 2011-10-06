@@ -51,6 +51,13 @@ namespace OdoyuleRules.Compiling
             {
                 condition.Accept(conditionCompiler);
             }
+
+            var consequenceCompiler = new RuleConsequenceCompilerImpl(_configurator, conditionCompiler);
+
+            foreach (var consequence in rule.Consequences)
+            {
+                consequence.Accept(consequenceCompiler);
+            }
         }
     }
 }

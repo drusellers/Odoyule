@@ -1,0 +1,6 @@
+<Configuration>
+  <NamespaceFolders>
+    <SkipFolder>75BB63FF-AFD7-458F-9276-1A32F2F150BE/d:Models/d:SemanticModel/d:Conditions</SkipFolder>
+    <SkipFolder>75BB63FF-AFD7-458F-9276-1A32F2F150BE/d:Models/d:SemanticModel/d:Consequences</SkipFolder>
+  </NamespaceFolders>
+</Configuration>

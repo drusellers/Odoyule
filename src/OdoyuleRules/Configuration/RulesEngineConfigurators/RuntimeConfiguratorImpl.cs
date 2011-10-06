@@ -66,5 +66,19 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
             var locator = new EqualNodeLocator<T, TProperty>(this, propertyInfo);
             locator.Find(callback);
         }
+
+        public void MatchJoinNode<T>(MemoryNode<T> left, Action<JoinNode<T>> callback) 
+            where T : class
+        {
+            var locator = new JoinNodeLocator<T>(this, left);
+            locator.Find(callback);
+        }
+
+        public void MatchJoinNode<T>(MemoryNode<T> left, MemoryNode<T> right, Action<JoinNode<T>> callback) 
+            where T : class
+        {
+            var locator = new JoinNodeLocator<T>(this, left, right);
+            locator.Find(callback);
+        }
     }
 }

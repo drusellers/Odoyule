@@ -35,11 +35,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compiling\ConditionAlphaNode.cs" />
     <Compile Include="Compiling\ExpressionNormalizer.cs" />
     <Compile Include="Compiling\OdoyuleRuleCompiler.cs" />
     <Compile Include="Compiling\RuleCompiler.cs" />
     <Compile Include="Compiling\RuleConditionCompiler.cs" />
     <Compile Include="Compiling\RuleConditionCompilerImpl.cs" />
+    <Compile Include="Compiling\RuleConsequenceCompiler.cs" />
+    <Compile Include="Compiling\RuleConsequenceCompilerImpl.cs" />
+    <Compile Include="Compiling\SemanticModelVisitorImpl.cs" />
     <Compile Include="Configuration\Builders\RuleBuilder.cs" />
     <Compile Include="Configuration\Builders\RulesEngineBuilder.cs" />
     <Compile Include="Configuration\Builders\RulesEngineBuilderImpl.cs" />
@@ -61,6 +65,7 @@
     <Compile Include="Configuration\RuleConfigurators\RuleConfigurator.cs" />
     <Compile Include="Configuration\RuleConfigurators\RuleConfiguratorImpl.cs" />
     <Compile Include="Configuration\RuleConfigurators\RuleConsequenceConfigurator.cs" />
+    <Compile Include="Configuration\RulesEngineConfigurators\JoinNodeLocator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\NodeLocator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\EqualNodeLocator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\PropertyNodeLocator.cs" />

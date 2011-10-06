@@ -23,7 +23,9 @@ namespace OdoyuleRules.Models.SemanticModel
     /// </summary>
     /// <typeparam name="T">The fact type for the expression</typeparam>
     public class PredicateExpressionCondition<T> :
-        PredicateCondition<T>, IEquatable<PredicateExpressionCondition<T>>
+        PredicateCondition<T>, 
+        IEquatable<PredicateExpressionCondition<T>>
+        where T : class
     {
         readonly Expression<Func<T, bool>> _predicateExpression;
 

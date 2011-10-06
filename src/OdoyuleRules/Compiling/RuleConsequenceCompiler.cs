@@ -1,4 +1,4 @@
-﻿// Copyright 2011 Chris Patterson
+// Copyright 2011 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -10,29 +10,12 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Models.SemanticModel
+namespace OdoyuleRules.Compiling
 {
-    using System;
+    using Models.SemanticModel;
 
-    public class DelegateConsequence<T> :
-        RuleConsequence<T>
-        where T : class
+    public interface RuleConsequenceCompiler :
+        SemanticModelVisitor
     {
-        readonly Action<T> _callback;
-
-        public DelegateConsequence(Action<T> callback)
-        {
-            _callback = callback;
-        }
-
-        public Action<T> Callback
-        {
-            get { return _callback; }
-        }
-
-        public bool Accept(SemanticModelVisitor visitor)
-        {
-            return visitor.Visit(this, x => true);
-        }
     }
 }

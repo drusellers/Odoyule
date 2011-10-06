@@ -24,6 +24,7 @@ namespace OdoyuleRules.Models.SemanticModel
     public class PredicateCondition<T> :
         RuleCondition<T>,
         IEquatable<PredicateCondition<T>>
+        where T : class
     {
         readonly Func<T, bool> _predicate;
 
