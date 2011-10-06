@@ -93,7 +93,8 @@ namespace OdoyuleRules.Compiling
         public void AddLeftJoin<TOutput,TDiscard>(AlphaNode<Token<TOutput, TDiscard>> previousNode) 
             where TOutput : class
         {
-            LeftJoinNode<TOutput, TDiscard> left = _configurator.Left<TOutput, TDiscard>(new ConstantNode<TOutput>());
+            var constantNode = _configurator.Constant<TOutput>();
+            LeftJoinNode<TOutput, TDiscard> left = _configurator.Left<TOutput, TDiscard>(constantNode);
 
             var self = this as ConditionAlphaNode<TOutput>;
             if(self == null)

@@ -17,11 +17,19 @@ namespace OdoyuleRules.Models.RuntimeModel
     public abstract class Node<T>
         where T : class
     {
+        readonly int _id;
+
         readonly ActivationList<T> _successors;
 
-        protected Node()
+        protected Node(int id)
         {
+            _id = id;
             _successors = new ActivationList<T>();
+        }
+
+        public int Id
+        {
+            get { return _id; }
         }
 
         public virtual void Activate(ActivationContext<T> context)

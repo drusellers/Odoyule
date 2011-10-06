@@ -32,9 +32,9 @@ namespace OdoyuleRules.Tests.Execution
         {
             _called = null;
 
-            var productionNode = new DelegateProductionNode<A>(x => _called = x);
+            var productionNode = new DelegateProductionNode<A>(16, x => _called = x);
 
-            var constantNode = new ConstantNode<A>();
+            var constantNode = new ConstantNode<A>(42);
 
             var joinNode = new JoinNode<A>(69, constantNode);
             joinNode.AddActivation(productionNode);
@@ -74,13 +74,13 @@ namespace OdoyuleRules.Tests.Execution
 
             var configurator = new RuntimeConfiguratorImpl();
 
-            var productionNode = new DelegateProductionNode<A>(x => _called = x);
+            var productionNode = new DelegateProductionNode<A>(16, x => _called = x);
 
-            var constantNode = new ConstantNode<A>();
+            var constantNode = new ConstantNode<A>(42);
 
             var joinNode = configurator.CreateNode(id => new JoinNode<A>(id, constantNode));
 
-            var constantNode2 = new ConstantNode<A>();
+            var constantNode2 = new ConstantNode<A>(27);
 
             var joinNode2 = configurator.CreateNode(id => new JoinNode<A>(id, constantNode2));
             joinNode2.AddActivation(productionNode);

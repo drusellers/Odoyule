@@ -10,31 +10,20 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Models.RuntimeModel
+namespace OdoyuleRules.Visualizer
 {
-    using System;
+    using Graphing;
 
-    public class ConditionNode<T> :
-        Node<T>,
-        Activation<T>
-        where T : class
+    public static class RulesEngineVisualizerExtensions
     {
-        readonly Action<T, Action> _condition;
-
-        public ConditionNode(int id, Action<T, Action> condition)
-            : base(id)
+        public static void ShowVisualizer(this RulesEngine engine)
         {
-            _condition = condition;
-        }
+            var visitor = new GraphRulesEngineVisitor();
+            engine.Accept(visitor);
 
-        public override void Activate(ActivationContext<T> context)
-        {
-            _condition(context.Fact, () => base.Activate(context));
-        }
+            RulesEngineGraph graph = visitor.Graph;
 
-        public bool Accept(RuntimeModelVisitor visitor)
-        {
-            return visitor.Visit(this, Successors);
+            RulesEngineDebugVisualizer.Show(graph);
         }
     }
 }

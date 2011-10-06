@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System.Linq;
+    using Configuration.RulesEngineConfigurators;
     using Util.Caching;
 
 
@@ -20,10 +21,19 @@ namespace OdoyuleRules.Models.RuntimeModel
         Activation<Token<T, TProperty>>
         where T : class
     {
+        readonly int _id;
+        readonly RuntimeConfigurator _configurator;
         readonly Cache<TProperty, ValueNode<T, TProperty>> _values;
 
-        public EqualNode()
+        public int Id
         {
+            get { return _id; }
+        }
+
+        public EqualNode(int id, RuntimeConfigurator configurator)
+        {
+            _id = id;
+            _configurator = configurator;
             _values = new DictionaryCache<TProperty, ValueNode<T, TProperty>>(CreateValueNode);
         }
 
@@ -39,9 +49,9 @@ namespace OdoyuleRules.Models.RuntimeModel
             return visitor.Visit(this, x => _values.All(value => value.Accept(x)));
         }
 
-        static ValueNode<T, TProperty> CreateValueNode(TProperty value)
+        ValueNode<T, TProperty> CreateValueNode(TProperty value)
         {
-            return new ValueNode<T, TProperty>(value);
+            return _configurator.CreateNode(id => new ValueNode<T, TProperty>(id,value));
         }
 
         public void AddActivation(TProperty value, Activation<Token<T, TProperty>> activation)

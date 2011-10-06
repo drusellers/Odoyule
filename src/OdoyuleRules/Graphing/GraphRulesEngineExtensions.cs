@@ -1,5 +1,5 @@
-// Copyright 2011 Chris Patterson
-// 
+// Copyright 2011 Chris Patterson, Dru Sellers
+//  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
@@ -10,29 +10,17 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Models.RuntimeModel
+namespace OdoyuleRules.Graphing
 {
-    public class ValueNode<T, TProperty> :
-        Node<Token<T, TProperty>>,
-        Activation<Token<T, TProperty>>
-        where T : class
+    public static class GraphRulesEngineExtensions
     {
-        readonly TProperty _value;
-
-        public ValueNode(int id, TProperty value)
-            : base(id)
+        public static RulesEngineGraph GetGraph(this OdoyuleRulesEngine rulesEngine)
         {
-            _value = value;
-        }
+            var inspector = new GraphRulesEngineVisitor();
 
-        public TProperty Value
-        {
-            get { return _value; }
-        }
+            rulesEngine.Accept(inspector);
 
-        public bool Accept(RuntimeModelVisitor visitor)
-        {
-            return visitor.Visit(this, Successors);
+            return inspector.Graph;
         }
     }
 }

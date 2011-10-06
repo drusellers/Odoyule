@@ -30,7 +30,8 @@ namespace OdoyuleRules.Models.RuntimeModel
         readonly Action<T, Action<TProperty>> _propertyMatch;
         FastProperty<T, TProperty> _property;
 
-        public PropertyNode(PropertyInfo propertyInfo)
+        public PropertyNode(int id, PropertyInfo propertyInfo)
+            : base(id)
         {
             _property = new FastProperty<T, TProperty>(propertyInfo);
 

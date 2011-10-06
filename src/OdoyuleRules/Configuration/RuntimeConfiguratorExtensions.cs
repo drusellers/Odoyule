@@ -28,7 +28,7 @@ namespace OdoyuleRules
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
             PropertyNode<T, TProperty> propertyNode =
-                configurator.CreateNode(id => new PropertyNode<T, TProperty>(propertyInfo));
+                configurator.CreateNode(id => new PropertyNode<T, TProperty>(id, propertyInfo));
 
             return propertyNode;
         }
@@ -38,7 +38,7 @@ namespace OdoyuleRules
             where T : class
         {
             PropertyNode<T, TProperty> propertyNode =
-                configurator.CreateNode(id => new PropertyNode<T, TProperty>(propertyInfo));
+                configurator.CreateNode(id => new PropertyNode<T, TProperty>(id, propertyInfo));
 
             return propertyNode;
         }
@@ -46,9 +46,16 @@ namespace OdoyuleRules
         public static EqualNode<T, TProperty> Equal<T, TProperty>(this RuntimeConfigurator configurator)
             where T : class
         {
-            EqualNode<T, TProperty> propertyNode = configurator.CreateNode(id => new EqualNode<T, TProperty>());
+            EqualNode<T, TProperty> propertyNode = configurator.CreateNode(id => new EqualNode<T, TProperty>(id, configurator));
 
             return propertyNode;
+        }
+
+
+        public static ConstantNode<T> Constant<T>(this RuntimeConfigurator configurator) 
+            where T : class
+        {
+            return configurator.CreateNode(id => new ConstantNode<T>(id));
         }
 
         public static ConditionNode<T> Condition<T>(
@@ -56,7 +63,7 @@ namespace OdoyuleRules
             where T : class
         {
             ConditionNode<T> conditionNode = configurator.CreateNode(
-                id => new ConditionNode<T>((value, next) =>
+                id => new ConditionNode<T>(id, (value, next) =>
                     {
                         if (condition(value))
                             next();
@@ -70,7 +77,7 @@ namespace OdoyuleRules
             where T1 : class
         {
             ConditionNode<Token<T1, T2>> conditionNode = configurator.CreateNode(
-                id => new ConditionNode<Token<T1, T2>>((value, next) =>
+                id => new ConditionNode<Token<T1, T2>>(id, (value, next) =>
                     {
                         if (condition(value.Item2))
                             next();
@@ -105,7 +112,7 @@ namespace OdoyuleRules
                                                             Action<T> callback)
             where T : class
         {
-            return configurator.CreateNode(() => new DelegateProductionNode<T>(callback));
+            return configurator.CreateNode(id => new DelegateProductionNode<T>(id, callback));
         }
     }
 }

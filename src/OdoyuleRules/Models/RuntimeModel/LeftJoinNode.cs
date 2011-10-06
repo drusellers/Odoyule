@@ -29,6 +29,11 @@ namespace OdoyuleRules.Models.RuntimeModel
             _rightActivation = rightActivation;
         }
 
+        public RightActivation<T> RightActivation
+        {
+            get { return _rightActivation; }
+        }
+
         public void Activate(ActivationContext<Token<T, TDiscard>> context)
         {
             _rightActivation.RightActivate(context.Fact.Item1, match => base.Activate(context.Fact.Item1));
@@ -36,7 +41,8 @@ namespace OdoyuleRules.Models.RuntimeModel
 
         public bool Accept(RuntimeModelVisitor visitor)
         {
-            return visitor.Visit(this, next => Successors.All(activation => activation.Accept(next)));
+            return visitor.Visit(this, next => _rightActivation.Accept(next)
+                                               && Successors.All(activation => activation.Accept(next)));
         }
 
         public void RightActivate(ActivationContext context,

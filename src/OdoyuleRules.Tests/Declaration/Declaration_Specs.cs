@@ -17,6 +17,7 @@ namespace OdoyuleRules.Tests.Declaration
     using Models.SemanticModel;
     using NUnit.Framework;
     using Visualization;
+    using Visualizer;
 
     [TestFixture]
     public class Defining_a_rule_using_the_semantic_model
@@ -50,6 +51,15 @@ namespace OdoyuleRules.Tests.Declaration
         public void Should_have_the_proper_consequence_count()
         {
             Assert.AreEqual(1, _rule.Consequences.Count());
+        }
+
+        [Test]
+        [Explicit]
+        public void Show_me_the_goods()
+        {
+            RulesEngine rulesEngine = RulesEngineFactory.New(x => { x.Add(_rule); });
+
+            rulesEngine.ShowVisualizer();
         }
 
         Rule _rule;

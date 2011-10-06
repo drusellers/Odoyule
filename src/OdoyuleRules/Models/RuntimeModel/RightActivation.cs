@@ -18,6 +18,8 @@ namespace OdoyuleRules.Models.RuntimeModel
         AcceptRuntimeModelVisitor
         where T : class
     {
+        int Id { get; }
+
         /// <summary>
         /// Performs a join operation between the two messages, performing the callback for
         /// every activation on the right node until the callback returns false

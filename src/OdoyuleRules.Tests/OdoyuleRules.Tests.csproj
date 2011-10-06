@@ -53,6 +53,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OdoyuleRules.Visualizer\OdoyuleRules.Visualizer.csproj">
+      <Project>{7F50D7AB-DB82-42EF-AE55-60B7BED7D6CD}</Project>
+      <Name>OdoyuleRules.Visualizer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OdoyuleRules\OdoyuleRules.csproj">
       <Project>{75BB63FF-AFD7-458F-9276-1A32F2F150BE}</Project>
       <Name>OdoyuleRules</Name>

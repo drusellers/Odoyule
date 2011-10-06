@@ -10,12 +10,11 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Configuration.RulesEngineConfigurators
+namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
-    using Models.RuntimeModel;
 
-    public abstract class NodeLocator :
+    public abstract class RuntimeModelVisitorImpl :
         RuntimeModelVisitor
     {
         public virtual bool Visit(RulesEngine rulesEngine, Func<RuntimeModelVisitor, bool> next)
@@ -23,13 +22,7 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
             return next(this);
         }
 
-        public bool Visit<T>(JoinNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
-        {
-            return next(this);
-        }
-
-        public virtual bool Visit<T>(MemoryNode<T> node, Func<RuntimeModelVisitor, bool> next)
-            where T : class
+        public virtual bool Visit<T>(JoinNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
         {
             return next(this);
         }

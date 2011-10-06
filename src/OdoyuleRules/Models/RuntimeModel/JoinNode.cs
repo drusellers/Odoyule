@@ -14,7 +14,6 @@ namespace OdoyuleRules.Models.RuntimeModel
 {
     using System.Linq;
 
-
     public class JoinNode<T> :
         MemoryNode<T>,
         Activation<T>,
@@ -41,7 +40,8 @@ namespace OdoyuleRules.Models.RuntimeModel
 
         public bool Accept(RuntimeModelVisitor visitor)
         {
-            return visitor.Visit(this, next => Successors.All(activation => activation.Accept(next)));
+            return visitor.Visit(this, next => _rightActivation.Accept(next)
+                                               && Successors.All(activation => activation.Accept(next)));
         }
     }
 }

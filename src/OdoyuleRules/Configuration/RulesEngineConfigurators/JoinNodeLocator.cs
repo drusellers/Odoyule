@@ -17,26 +17,26 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
     using Models.RuntimeModel;
 
     public class JoinNodeLocator<T> :
-        NodeLocator
+        RuntimeModelVisitorImpl
         where T : class
     {
         readonly MemoryNode<T> _left;
         readonly Func<RightActivation<T>, bool> _matchRight;
         readonly Func<RightActivation<T>> _rightActivation;
-        readonly RuntimeConfigurator _runtimeConfigurator;
+        readonly RuntimeConfigurator _configurator;
         JoinNode<T> _node;
 
         public JoinNodeLocator(RuntimeConfigurator runtimeConfigurator, MemoryNode<T> left)
         {
-            _runtimeConfigurator = runtimeConfigurator;
+            _configurator = runtimeConfigurator;
             _left = left;
             _matchRight = MatchConstantNode;
-            _rightActivation = CreateConstantNode;
+            _rightActivation = _configurator.Constant<T>;
         }
 
         public JoinNodeLocator(RuntimeConfigurator runtimeConfigurator, MemoryNode<T> left, MemoryNode<T> right)
         {
-            _runtimeConfigurator = runtimeConfigurator;
+            _configurator = runtimeConfigurator;
             _left = left;
             _matchRight = node => MatchNode(node, right);
             _rightActivation = () => right as RightActivation<T>;
@@ -55,18 +55,13 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
                     _node = joinNode;
                 else
                 {
-                    _node = _runtimeConfigurator.Join(_rightActivation());
+                    _node = _configurator.Join(_rightActivation());
                     _left.AddActivation(_node);
                 }
             }
 
             if (_node != null)
                 callback(_node);
-        }
-
-        static RightActivation<T> CreateConstantNode()
-        {
-            return new ConstantNode<T>();
         }
 
         static bool MatchNode(RightActivation<T> node, MemoryNode<T> right)

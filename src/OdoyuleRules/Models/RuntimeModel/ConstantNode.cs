@@ -18,6 +18,18 @@ namespace OdoyuleRules.Models.RuntimeModel
         RightActivation<T>
         where T : class
     {
+        readonly int _id;
+
+        public ConstantNode(int id)
+        {
+            _id = id;
+        }
+
+        public int Id
+        {
+            get { return _id; }
+        }
+
         public void RightActivate(ActivationContext context, Func<ActivationContext<T>, bool> callback)
         {
             // constant nodes are never activated by an alpha node, so they would never have pending joins

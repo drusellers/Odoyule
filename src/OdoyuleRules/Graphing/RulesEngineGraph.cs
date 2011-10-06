@@ -1,4 +1,4 @@
-﻿// Copyright 2011 Chris Patterson
+// Copyright 2011 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -10,31 +10,32 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Models.RuntimeModel
+namespace OdoyuleRules.Graphing
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-    public class ConditionNode<T> :
-        Node<T>,
-        Activation<T>
-        where T : class
+    [Serializable]
+    public class RulesEngineGraph
     {
-        readonly Action<T, Action> _condition;
+        readonly Edge[] _edges;
+        readonly Vertex[] _vertices;
 
-        public ConditionNode(int id, Action<T, Action> condition)
-            : base(id)
+        public RulesEngineGraph(IEnumerable<Vertex> vertices, IEnumerable<Edge> edges)
         {
-            _condition = condition;
+            _vertices = vertices.ToArray();
+            _edges = edges.ToArray();
         }
 
-        public override void Activate(ActivationContext<T> context)
+        public IEnumerable<Vertex> Vertices
         {
-            _condition(context.Fact, () => base.Activate(context));
+            get { return _vertices; }
         }
 
-        public bool Accept(RuntimeModelVisitor visitor)
+        public IEnumerable<Edge> Edges
         {
-            return visitor.Visit(this, Successors);
+            get { return _edges; }
         }
     }
 }

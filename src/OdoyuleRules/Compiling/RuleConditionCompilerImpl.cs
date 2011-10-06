@@ -54,11 +54,12 @@ namespace OdoyuleRules.Compiling
                     AlphaNode<Token<T, TProperty>> alpha = _configurator.Alpha<T, TProperty>();
                     _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(_configurator, alpha));
 
-                    var conditionNode = new ConditionNode<Token<T, TProperty>>((x, accept) =>
-                        {
-                            if (x.Item2.CompareTo(condition.Value) > 0)
-                                accept();
-                        });
+                    ConditionNode<Token<T, TProperty>> conditionNode =
+                        _configurator.CreateNode(id => new ConditionNode<Token<T, TProperty>>(id, (x, accept) =>
+                            {
+                                if (x.Item2.CompareTo(condition.Value) > 0)
+                                    accept();
+                            }));
                     conditionNode.AddActivation(alpha);
 
                     node.AddActivation(conditionNode);

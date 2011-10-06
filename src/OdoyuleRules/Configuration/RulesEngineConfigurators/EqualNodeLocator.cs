@@ -17,7 +17,7 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
     using Models.RuntimeModel;
 
     public class EqualNodeLocator<T, TProperty> :
-        NodeLocator
+        RuntimeModelVisitorImpl
         where T : class
     {
         readonly RuntimeConfigurator _configurator;

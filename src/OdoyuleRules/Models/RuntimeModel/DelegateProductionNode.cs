@@ -19,12 +19,19 @@ namespace OdoyuleRules.Models.RuntimeModel
         where T : class
     {
         readonly Action<T> _callback;
+        readonly int _id;
         int _priority;
 
-        public DelegateProductionNode(Action<T> callback)
+        public DelegateProductionNode(int id, Action<T> callback)
         {
+            _id = id;
             _callback = callback;
             _priority = 0;
+        }
+
+        public int Id
+        {
+            get { return _id; }
         }
 
         public void Activate(ActivationContext<T> context)
