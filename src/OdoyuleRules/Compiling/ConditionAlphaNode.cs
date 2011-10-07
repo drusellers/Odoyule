@@ -18,26 +18,55 @@ namespace OdoyuleRules.Compiling
 
     public interface ConditionAlphaNode
     {
-        void Select<T>(Action<AlphaNode<T>> callback)
-            where T : class;
+        void Select<TSelect>(Action<ActivationNode<TSelect>> callback)
+            where TSelect : class;
 
-        void AddLeftJoin<TOutput,TDiscard>(AlphaNode<Token<TOutput, TDiscard>> previousNode) 
-            where TOutput : class;
+        Activation<TSelect> Node<TSelect>() 
+            where TSelect : class;
     }
+
+    public class ConditionAlphaNode<T, TDiscard> :
+        ConditionAlphaNode
+        where T : class
+    {
+        RuntimeConfigurator _configurator;
+        LeftJoinNode<T, TDiscard> _node;
+
+        public ConditionAlphaNode(RuntimeConfigurator configurator)
+        {
+            _configurator = configurator;
+            _node = configurator.Left<T, TDiscard>(configurator.Constant<T>());
+        }
+
+        public void Select<TSelect>(Action<ActivationNode<TSelect>> callback)
+            where TSelect : class
+        {
+            var node = _node as ActivationNode<TSelect>;
+            if (node != null)
+            {
+                callback(node);
+                return;
+            }
+        }
+
+        public Activation<TSelect> Node<TSelect>() where TSelect : class
+        {
+            var result = _node as Activation<TSelect>;
+            if(result == null)
+                throw new RulesEngineException("Unable to cast " + typeof (T) + " to " + typeof (TSelect));
+
+            return result;
+        }
+    }
+
 
     public class ConditionAlphaNode<T> :
         ConditionAlphaNode
         where T : class
     {
-        AlphaNode<T> _node;
         readonly RuntimeConfigurator _configurator;
+        readonly AlphaNode<T> _node;
         ConditionAlphaNode _parent;
-
-        public ConditionAlphaNode(RuntimeConfigurator configurator)
-        {
-            _configurator = configurator;
-            _node = _configurator.CreateNode(id => new AlphaNode<T>(id));
-        }
 
         public ConditionAlphaNode(RuntimeConfigurator configurator, AlphaNode<T> node)
         {
@@ -45,66 +74,60 @@ namespace OdoyuleRules.Compiling
             _configurator = configurator;
         }
 
-        public void Select<TSelect>(Action<AlphaNode<TSelect>> callback)
+        public void Select<TSelect>(Action<ActivationNode<TSelect>> callback)
             where TSelect : class
         {
-            var self = this as ConditionAlphaNode<TSelect>;
-            if (self != null)
+            var node = _node as ActivationNode<TSelect>;
+            if (node != null)
             {
-                callback(self._node);
+                callback(node);
                 return;
             }
 
-            SearchTokenChain(callback);
-        }
-
-        public void SearchTokenChain<TSelect>(Action<AlphaNode<TSelect>> callback) 
-            where TSelect : class
-        {
-            if (!typeof (T).IsGenericType || typeof (T).GetGenericTypeDefinition() != typeof (Token<,>)) 
-                return;
-
-            if (_parent != null)
+            if (_parent == null)
             {
-                _parent.Select(callback);
-                return;
+                if (!typeof (T).IsGenericType || typeof (T).GetGenericTypeDefinition() != typeof (Token<,>))
+                    throw new RulesEngineException("Unable to map " + typeof (T) + " to " + typeof (TSelect));
+
+                Type[] arguments = typeof (T).GetGenericArguments();
+
+                _parent = (ConditionAlphaNode) Activator.CreateInstance(
+                    typeof (ConditionAlphaNode<,>).MakeGenericType(arguments),
+                    _configurator);
             }
-            
-            Type[] arguments = typeof (T).GetGenericArguments();
-            Type parentType = arguments[0];
 
-            var parent =
-                (ConditionAlphaNode)
-                Activator.CreateInstance(typeof (ConditionAlphaNode<>).MakeGenericType(parentType),
-                                         _configurator);
-
-            parent.Select<TSelect>(alphaNode =>
+            _parent.Select<TSelect>(x =>
                 {
-                    typeof (ConditionAlphaNode).GetMethod("AddLeftJoin")
-                        .MakeGenericMethod(arguments)
-                        .Invoke(parent, new[]{_node});
+                    _node.AddActivation(_parent.Node<T>());
 
-                    _parent = parent;
-
-                    callback(alphaNode);
+                    callback(x);
                 });
         }
 
-        public void AddLeftJoin<TOutput,TDiscard>(AlphaNode<Token<TOutput, TDiscard>> previousNode) 
+        public void AddLeftJoin<TOutput, TDiscard>(AlphaNode<Token<TOutput, TDiscard>> previousNode)
             where TOutput : class
         {
-            var constantNode = _configurator.Constant<TOutput>();
+            ConstantNode<TOutput> constantNode = _configurator.Constant<TOutput>();
             LeftJoinNode<TOutput, TDiscard> left = _configurator.Left<TOutput, TDiscard>(constantNode);
 
             var self = this as ConditionAlphaNode<TOutput>;
-            if(self == null)
+            if (self == null)
                 throw new InvalidOperationException("I'm stupid, but it should always work");
 
             left.AddActivation(self._node);
 
-            Activation<Token<TOutput,TDiscard>> x = left;
+            Activation<Token<TOutput, TDiscard>> x = left;
 
-               previousNode.AddActivation(x);
+            previousNode.AddActivation(x);
+        }
+
+        public Activation<TSelect> Node<TSelect>() where TSelect : class
+        {
+            var result = _node as Activation<TSelect>;
+            if (result == null)
+                throw new RulesEngineException("Unable to cast " + typeof(T) + " to " + typeof(TSelect));
+
+            return result;
         }
     }
 }

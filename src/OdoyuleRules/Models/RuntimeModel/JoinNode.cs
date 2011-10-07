@@ -16,8 +16,8 @@ namespace OdoyuleRules.Models.RuntimeModel
 
     public class JoinNode<T> :
         MemoryNode<T>,
-        Activation<T>,
-        RightActivation<T>
+        RightActivation<T>,
+        ActivationNode<T>
         where T : class
     {
         readonly RightActivation<T> _rightActivation;

@@ -29,6 +29,7 @@ namespace OdoyuleRules.Visualizer
     {
         static readonly Cache<Type, Color> _bg;
         static readonly Cache<Type, Color> _fg;
+        static readonly Cache<Type, Shape> _shape;
 
         static RulesEngineGraphGenerator()
         {
@@ -50,14 +51,25 @@ namespace OdoyuleRules.Visualizer
             _fg = new DictionaryCache<Type, Color>(key => defaultFg)
                 {
                     {typeof (AlphaNode<>), Color.Black},
-                    {typeof (PropertyNode<,>), Color.Yellow},
+                    {typeof (PropertyNode<,>), Color.White},
                     {typeof (EqualNode<,>), Color.White},
                     {typeof (ValueNode<,>), Color.White},
-                    {typeof (JoinNode<>), Color.Yellow},
-                   {typeof (LeftJoinNode<,>), Color.Black},
+                    {typeof (JoinNode<>), Color.White},
+                    {typeof (LeftJoinNode<,>), Color.Black},
                     {typeof (ConditionNode<>), Color.White},
                     {typeof (DelegateProductionNode<>), Color.Black},
                     {typeof (ConstantNode<>), Color.Black},
+                };
+
+            Shape defaultShape = Shape.Ellipse;
+            _shape = new DictionaryCache<Type, Shape>(key => defaultShape)
+                {
+                    {typeof (RulesEngine), Shape.Ellipse},
+                    {typeof (AlphaNode<>), Shape.Ellipse},
+                    {typeof (ConstantNode<>), Shape.Circle},
+                    {typeof (JoinNode<>), Shape.Ellipse},
+                    {typeof (LeftJoinNode<,>), Shape.Ellipse},
+                    {typeof (DelegateProductionNode<>), Shape.DoubleCircle},
                 };
         }
 
@@ -98,12 +110,12 @@ namespace OdoyuleRules.Visualizer
 
             args.Node.Attr.Fillcolor = color;
 
-            args.Node.Attr.Shape = Shape.Box;
+            args.Node.Attr.Shape = _shape[args.Vertex.VertexType];
             args.Node.Attr.Fontcolor = _fg[args.Vertex.VertexType];
             args.Node.Attr.Fontsize = 8;
             args.Node.Attr.FontName = "Arial";
             args.Node.Attr.Label = args.Vertex.Title;
-            args.Node.Attr.Padding = 1.2;
+            args.Node.Attr.Padding = 1.1;
         }
 
         static void EdgeStyler(object sender, GleeEdgeEventArgs<Vertex, Edge<Vertex>> e)

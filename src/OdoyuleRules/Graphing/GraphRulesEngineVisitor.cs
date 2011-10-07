@@ -25,6 +25,7 @@ namespace OdoyuleRules.Graphing
         readonly Cache<int, Vertex> _vertices;
 
         Vertex _current;
+        int _rightActivation;
 
         public GraphRulesEngineVisitor()
         {
@@ -56,9 +57,8 @@ namespace OdoyuleRules.Graphing
 
         public override bool Visit<T, TProperty>(PropertyNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
-            _current = _vertices.Get(node.Id,
-                                     id =>
-                                     new Vertex(typeof (PropertyNode<,>), typeof (TProperty), node.PropertyInfo.Name));
+            _current = _vertices.Get(node.Id, id => new Vertex(typeof (PropertyNode<,>), typeof (TProperty),
+                                                               Tokens<T>() + "." + node.PropertyInfo.Name));
 
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
@@ -99,38 +99,43 @@ namespace OdoyuleRules.Graphing
 
         public override bool Visit<T>(ConstantNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
-            _current = _vertices.Get(node.Id, id => new Vertex(typeof (ConstantNode<>), typeof (T), "C"));
-
-            if (_stack.Count > 0)
-                _edges.Add(new Edge(_current, _stack.Peek(), _current.TargetType.Name));
+            if (!_vertices.Has(node.Id))
+            {
+                _current = _vertices.Get(node.Id, id => new Vertex(typeof (ConstantNode<>), typeof (T), "" /*"\x22A9"*/));
+               
+                if (_stack.Count > 0 && _rightActivation == node.Id)
+                    _edges.Add(new Edge(_current, _stack.Peek(), _current.TargetType.Name));
+            }
 
             return Next(() => base.Visit(node, next));
         }
 
         public override bool Visit<T>(JoinNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
-            _current = _vertices.Get(node.Id, id => new Vertex(typeof (LeftJoinNode<,>), typeof (T), Tokens<T>()));
+            _current = _vertices.Get(node.Id, id => new Vertex(typeof (JoinNode<>), typeof (T), Tokens<T>()));
 
-            _vertices.WithValue(node.RightActivation.Id,
-                                right => _edges.Add(new Edge(right, _current, _current.TargetType.Name)));
-
-            if (_stack.Count > 0)
+            if (_rightActivation == node.Id)
+            {
+                _edges.Add(new Edge(_current, _stack.Peek(), _current.TargetType.Name));
+            }
+            else if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
 
-            return Next(() => base.Visit(node, next));
+            return Next(node.RightActivation.Id, () => base.Visit(node, next));
         }
 
         public override bool Visit<T, TDiscard>(LeftJoinNode<T, TDiscard> node, Func<RuntimeModelVisitor, bool> next)
         {
             _current = _vertices.Get(node.Id, id => new Vertex(typeof (LeftJoinNode<,>), typeof (T), Tokens<T>()));
 
-            _vertices.WithValue(node.RightActivation.Id,
-                                right => _edges.Add(new Edge(right, _current, _current.TargetType.Name)));
-
-            if (_stack.Count > 0)
+            if (_rightActivation == node.Id)
+            {
+                _edges.Add(new Edge(_current, _stack.Peek(), _current.TargetType.Name));
+            }
+            else if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
 
-            return Next(() => base.Visit(node, next));
+            return Next(node.RightActivation.Id, () => base.Visit(node, next));
         }
 
         public override bool Visit<TInput, TOutput>(ConvertNode<TInput, TOutput> node,
@@ -157,6 +162,22 @@ namespace OdoyuleRules.Graphing
                 _stack.Push(_current);
                 bool result = callback();
                 _stack.Pop();
+                return result;
+            }
+
+            return callback();
+        }
+
+        bool Next(int rightActivation, Func<bool> callback)
+        {
+            if (_current != null)
+            {
+                int previous = _rightActivation;
+                _rightActivation = rightActivation;
+                _stack.Push(_current);
+                bool result = callback();
+                _stack.Pop();
+                _rightActivation = previous;
                 return result;
             }
 

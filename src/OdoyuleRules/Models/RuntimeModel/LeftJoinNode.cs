@@ -18,6 +18,7 @@ namespace OdoyuleRules.Models.RuntimeModel
     public class LeftJoinNode<T, TDiscard> :
         MemoryNode<T>,
         Activation<Token<T, TDiscard>>,
+        ActivationNode<T>,
         RightActivation<Token<T, TDiscard>>
         where T : class
     {

@@ -93,6 +93,7 @@
     <Compile Include="Models\RuntimeModel\Activation.cs" />
     <Compile Include="Models\RuntimeModel\ActivationContext.cs" />
     <Compile Include="Models\RuntimeModel\ActivationList.cs" />
+    <Compile Include="Models\RuntimeModel\ActivationNode.cs" />
     <Compile Include="Models\RuntimeModel\ActivationTypeProxy.cs" />
     <Compile Include="Models\RuntimeModel\ActivationTypeProxyImpl.cs" />
     <Compile Include="Models\RuntimeModel\EqualNode.cs" />

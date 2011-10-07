@@ -25,6 +25,8 @@ namespace OdoyuleRules.Tests.Declaration
         [Test]
         public void Should_compile_and_execute()
         {
+            _result = null;
+
             RulesEngine rulesEngine = RulesEngineFactory.New(x => { x.Add(_rule); });
 
             using (StatefulSession session = rulesEngine.CreateSession())
@@ -39,6 +41,48 @@ namespace OdoyuleRules.Tests.Declaration
             Console.WriteLine(visitor);
 
             Assert.IsNotNull(_result);
+        }
+
+        [Test]
+        public void Should_not_activate_for_only_one_side()
+        {
+            _result = null;
+
+            RulesEngine rulesEngine = RulesEngineFactory.New(x => { x.Add(_rule); });
+
+            using (StatefulSession session = rulesEngine.CreateSession())
+            {
+                session.Add(new A {Name = "JOE", Amount = 9999.0m});
+                session.Run();
+            }
+
+            var visitor = new TextRuntimeModelVisitor();
+            rulesEngine.Accept(visitor);
+
+            Console.WriteLine(visitor);
+
+            Assert.IsNull(_result);
+        }
+
+        [Test]
+        public void Should_not_activate_for_only_other_side()
+        {
+            _result = null;
+
+            RulesEngine rulesEngine = RulesEngineFactory.New(x => { x.Add(_rule); });
+
+            using (StatefulSession session = rulesEngine.CreateSession())
+            {
+                session.Add(new A {Name = "MAMA", Amount = 10001.0m});
+                session.Run();
+            }
+
+            var visitor = new TextRuntimeModelVisitor();
+            rulesEngine.Accept(visitor);
+
+            Console.WriteLine(visitor);
+
+            Assert.IsNull(_result);
         }
 
         [Test]

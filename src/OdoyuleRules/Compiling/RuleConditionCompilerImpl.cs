@@ -82,7 +82,7 @@ namespace OdoyuleRules.Compiling
                         return;
                     }
 
-                    MemoryNode<T> left = alpha;
+                    ActivationNode<T> left = alpha;
 
                     for (int i = 1; i < _alphaNodes.Count; i++)
                     {
