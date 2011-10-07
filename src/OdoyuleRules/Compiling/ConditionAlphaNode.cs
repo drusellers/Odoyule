@@ -25,43 +25,15 @@ namespace OdoyuleRules.Compiling
             where TSelect : class;
     }
 
-    public class ConditionAlphaNode<T, TDiscard> :
-        ConditionAlphaNode
-        where T : class
+    public interface ReverseConditionAlphaNode
     {
-        RuntimeConfigurator _configurator;
-        LeftJoinNode<T, TDiscard> _node;
-
-        public ConditionAlphaNode(RuntimeConfigurator configurator)
-        {
-            _configurator = configurator;
-            _node = configurator.Left<T, TDiscard>(configurator.Constant<T>());
-        }
-
-        public void Select<TSelect>(Action<MemoryNode<TSelect>> callback)
-            where TSelect : class
-        {
-            var node = _node as MemoryNode<TSelect>;
-            if (node != null)
-            {
-                callback(node);
-                return;
-            }
-        }
-
-        public Activation<TSelect> Node<TSelect>() where TSelect : class
-        {
-            var result = _node as Activation<TSelect>;
-            if(result == null)
-                throw new RulesEngineException("Unable to cast " + typeof (T) + " to " + typeof (TSelect));
-
-            return result;
-        }
+        void MatchLeftJoinNode<TT, TTDiscard>(Action<LeftJoinNode<TT, TTDiscard>> callback) 
+            where TT : class;
     }
 
-
     public class ConditionAlphaNode<T> :
-        ConditionAlphaNode
+        ConditionAlphaNode,
+        ReverseConditionAlphaNode
         where T : class
     {
         readonly RuntimeConfigurator _configurator;
@@ -94,36 +66,10 @@ namespace OdoyuleRules.Compiling
 
                 _parent = (ConditionAlphaNode) Activator.CreateInstance(
                     typeof (ConditionAlphaNode<,>).MakeGenericType(arguments),
-                    _configurator);
+                    _configurator, this);
             }
 
-            _parent.Select<TSelect>(x =>
-                {
-                    if (_add)
-                    {
-                        _node.AddActivation(_parent.Node<T>());
-                        _add = false;
-                    }
-
-                    callback(x);
-                });
-        }
-
-        public void AddLeftJoin<TOutput, TDiscard>(AlphaNode<Token<TOutput, TDiscard>> previousNode)
-            where TOutput : class
-        {
-            ConstantNode<TOutput> constantNode = _configurator.Constant<TOutput>();
-            LeftJoinNode<TOutput, TDiscard> left = _configurator.Left<TOutput, TDiscard>(constantNode);
-
-            var self = this as ConditionAlphaNode<TOutput>;
-            if (self == null)
-                throw new InvalidOperationException("I'm stupid, but it should always work");
-
-            left.AddActivation(self._node);
-
-            Activation<Token<TOutput, TDiscard>> x = left;
-
-            previousNode.AddActivation(x);
+            _parent.Select<TSelect>(callback);
         }
 
         public Activation<TSelect> Node<TSelect>() where TSelect : class
@@ -131,6 +77,57 @@ namespace OdoyuleRules.Compiling
             var result = _node as Activation<TSelect>;
             if (result == null)
                 throw new RulesEngineException("Unable to cast " + typeof(T) + " to " + typeof(TSelect));
+
+            return result;
+        }
+
+        public void MatchLeftJoinNode<TT, TTDiscard>(Action<LeftJoinNode<TT, TTDiscard>> callback)
+            where TT : class
+        {
+            var self = this as ConditionAlphaNode<Token<TT, TTDiscard>>;
+            if (self != null)
+            {
+                _configurator.MatchLeftJoinNode<TT, TTDiscard>(self._node, callback);
+            }
+        }
+    }
+
+    public class ConditionAlphaNode<T, TDiscard> :
+        ConditionAlphaNode
+        where T : class
+    {
+        RuntimeConfigurator _configurator;
+        readonly ReverseConditionAlphaNode _reverse;
+        LeftJoinNode<T, TDiscard> _node;
+
+        public ConditionAlphaNode(RuntimeConfigurator configurator, ReverseConditionAlphaNode reverse)
+        {
+            _configurator = configurator;
+            _reverse = reverse;
+//            _node = configurator.Left<T, TDiscard>(configurator.Constant<T>());
+        }
+
+        public void Select<TSelect>(Action<MemoryNode<TSelect>> callback)
+            where TSelect : class
+        {
+            if(typeof(TSelect) == typeof(T) && _node == null)
+            {
+                _reverse.MatchLeftJoinNode<T, TDiscard>(n => _node = n);
+            }
+
+            var node = _node as MemoryNode<TSelect>;
+            if (node != null)
+            {
+                callback(node);
+                return;
+            }
+        }
+
+        public Activation<TSelect> Node<TSelect>() where TSelect : class
+        {
+            var result = _node as Activation<TSelect>;
+            if(result == null)
+                throw new RulesEngineException("Unable to cast " + typeof (T) + " to " + typeof (TSelect));
 
             return result;
         }

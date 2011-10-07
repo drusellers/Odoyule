@@ -73,6 +73,12 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
             locator.Find(callback);
         }
 
+        public void MatchLeftJoinNode<T,TDiscard>(MemoryNode<Token<T, TDiscard>> start, Action<LeftJoinNode<T,TDiscard>> callback)
+            where T : class
+        {
+            var locator = new LeftJoinNodeLocator<T, TDiscard>(this, start);
+            locator.Find(callback);
+        }
 
         public void MatchJoinNode<T>(MemoryNode<T> left, Action<JoinNode<T>> callback) 
             where T : class

@@ -40,5 +40,8 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 
         void MatchJoinNode<T>(MemoryNode<T> left, MemoryNode<T> right, Action<JoinNode<T>> action) 
             where T : class;
+
+        void MatchLeftJoinNode<T,TDiscard>(MemoryNode<Token<T, TDiscard>> start, Action<LeftJoinNode<T,TDiscard>> callback)
+            where T : class;
     }
 }

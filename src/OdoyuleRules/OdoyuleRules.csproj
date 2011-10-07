@@ -68,6 +68,7 @@
     <Compile Include="Configuration\RulesEngineConfigurators\AlphaNodeLocator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\JoinNodeLocator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\EqualNodeLocator.cs" />
+    <Compile Include="Configuration\RulesEngineConfigurators\LeftJoinNodeLocator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\PropertyNodeLocator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\RulesEngineBuilderConfigurator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\RulesEngineConfigurator.cs" />
