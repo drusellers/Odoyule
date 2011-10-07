@@ -41,6 +41,7 @@ namespace OdoyuleRules.Tests.Declaration
             Console.WriteLine(visitor);
 
             Assert.IsNotNull(_result);
+            Assert.IsNotNull(_resultB);
         }
 
         [Test]
@@ -94,7 +95,7 @@ namespace OdoyuleRules.Tests.Declaration
         [Test]
         public void Should_have_the_proper_consequence_count()
         {
-            Assert.AreEqual(1, _rule.Consequences.Count());
+            Assert.AreEqual(2, _rule.Consequences.Count());
         }
 
         [Test]
@@ -108,6 +109,7 @@ namespace OdoyuleRules.Tests.Declaration
 
         Rule _rule;
         A _result;
+        A _resultB;
 
         [TestFixtureSetUp]
         public void Define_rule()
@@ -121,6 +123,7 @@ namespace OdoyuleRules.Tests.Declaration
             var consequences = new RuleConsequence[]
                 {
                     Consequences.Delegate<A>(x => { _result = x; }),
+                    Consequences.Delegate<A>(x => { _resultB = x; }),
                 };
 
             _rule = new OdoyuleRule("RuleA", conditions, consequences);

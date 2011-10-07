@@ -67,6 +67,7 @@ namespace OdoyuleRules.Compiling
         readonly RuntimeConfigurator _configurator;
         readonly AlphaNode<T> _node;
         ConditionAlphaNode _parent;
+        bool _add = true;
 
         public ConditionAlphaNode(RuntimeConfigurator configurator, AlphaNode<T> node)
         {
@@ -98,7 +99,11 @@ namespace OdoyuleRules.Compiling
 
             _parent.Select<TSelect>(x =>
                 {
-                    _node.AddActivation(_parent.Node<T>());
+                    if (_add)
+                    {
+                        _node.AddActivation(_parent.Node<T>());
+                        _add = false;
+                    }
 
                     callback(x);
                 });
