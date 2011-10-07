@@ -21,7 +21,7 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
         RuntimeConfigurator
     {
         int _nextNodeId;
-        OdoyuleRulesEngine _rulesEngine;
+        readonly OdoyuleRulesEngine _rulesEngine;
 
         public RuntimeConfiguratorImpl()
         {
@@ -67,14 +67,21 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
             locator.Find(callback);
         }
 
-        public void MatchJoinNode<T>(ActivationNode<T> left, Action<JoinNode<T>> callback) 
+        public void MatchAlphaNode<T>(Node<T> start, Action<AlphaNode<T>> callback) where T : class
+        {
+            var locator = new AlphaNodeLocator<T>(this, start);
+            locator.Find(callback);
+        }
+
+
+        public void MatchJoinNode<T>(MemoryNode<T> left, Action<JoinNode<T>> callback) 
             where T : class
         {
             var locator = new JoinNodeLocator<T>(this, left);
             locator.Find(callback);
         }
 
-        public void MatchJoinNode<T>(ActivationNode<T> left, ActivationNode<T> right, Action<JoinNode<T>> callback) 
+        public void MatchJoinNode<T>(MemoryNode<T> left, MemoryNode<T> right, Action<JoinNode<T>> callback) 
             where T : class
         {
             var locator = new JoinNodeLocator<T>(this, left, right);

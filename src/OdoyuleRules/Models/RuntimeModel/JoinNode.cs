@@ -15,9 +15,8 @@ namespace OdoyuleRules.Models.RuntimeModel
     using System.Linq;
 
     public class JoinNode<T> :
-        MemoryNode<T>,
-        RightActivation<T>,
-        ActivationNode<T>
+        MemoryNodeImpl<T>,
+        MemoryNode<T>
         where T : class
     {
         readonly RightActivation<T> _rightActivation;

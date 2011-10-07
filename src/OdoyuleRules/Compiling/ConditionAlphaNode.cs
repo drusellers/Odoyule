@@ -18,7 +18,7 @@ namespace OdoyuleRules.Compiling
 
     public interface ConditionAlphaNode
     {
-        void Select<TSelect>(Action<ActivationNode<TSelect>> callback)
+        void Select<TSelect>(Action<MemoryNode<TSelect>> callback)
             where TSelect : class;
 
         Activation<TSelect> Node<TSelect>() 
@@ -38,10 +38,10 @@ namespace OdoyuleRules.Compiling
             _node = configurator.Left<T, TDiscard>(configurator.Constant<T>());
         }
 
-        public void Select<TSelect>(Action<ActivationNode<TSelect>> callback)
+        public void Select<TSelect>(Action<MemoryNode<TSelect>> callback)
             where TSelect : class
         {
-            var node = _node as ActivationNode<TSelect>;
+            var node = _node as MemoryNode<TSelect>;
             if (node != null)
             {
                 callback(node);
@@ -75,10 +75,10 @@ namespace OdoyuleRules.Compiling
             _configurator = configurator;
         }
 
-        public void Select<TSelect>(Action<ActivationNode<TSelect>> callback)
+        public void Select<TSelect>(Action<MemoryNode<TSelect>> callback)
             where TSelect : class
         {
-            var node = _node as ActivationNode<TSelect>;
+            var node = _node as MemoryNode<TSelect>;
             if (node != null)
             {
                 callback(node);

@@ -54,14 +54,9 @@ namespace OdoyuleRules.Models.RuntimeModel
             return _configurator.CreateNode(id => new ValueNode<T, TProperty>(id,value));
         }
 
-        public void AddActivation(TProperty value, Activation<Token<T, TProperty>> activation)
+        public ValueNode<T, TProperty> this[TProperty value]
         {
-            _values[value].AddActivation(activation);
-        }
-
-        public void RemoveActivation(TProperty value, Activation<Token<T, TProperty>> activation)
-        {
-            _values[value].RemoveActivation(activation);
+            get { return _values[value]; }
         }
     }
 }

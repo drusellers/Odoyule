@@ -16,10 +16,9 @@ namespace OdoyuleRules.Models.RuntimeModel
     using System.Linq;
 
     public class AlphaNode<T> :
+        MemoryNodeImpl<T>,
         MemoryNode<T>,
-        Activation,
-        RightActivation<T>,
-        ActivationNode<T>
+        Activation
         where T : class
     {
         public AlphaNode(int id)

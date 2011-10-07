@@ -31,7 +31,7 @@ namespace OdoyuleRules.Tests.Declaration
 
             using (StatefulSession session = rulesEngine.CreateSession())
             {
-                session.Add(new A {Name = "JOE", Amount = 10001.0m});
+                session.Add(new Order {Name = "JOE", Amount = 10001.0m});
                 session.Run();
             }
 
@@ -53,7 +53,7 @@ namespace OdoyuleRules.Tests.Declaration
 
             using (StatefulSession session = rulesEngine.CreateSession())
             {
-                session.Add(new A {Name = "JOE", Amount = 9999.0m});
+                session.Add(new Order {Name = "JOE", Amount = 9999.0m});
                 session.Run();
             }
 
@@ -74,7 +74,7 @@ namespace OdoyuleRules.Tests.Declaration
 
             using (StatefulSession session = rulesEngine.CreateSession())
             {
-                session.Add(new A {Name = "MAMA", Amount = 10001.0m});
+                session.Add(new Order {Name = "MAMA", Amount = 10001.0m});
                 session.Run();
             }
 
@@ -102,34 +102,52 @@ namespace OdoyuleRules.Tests.Declaration
         [Explicit]
         public void Show_me_the_goods()
         {
-            RulesEngine rulesEngine = RulesEngineFactory.New(x => { x.Add(_rule); });
+            RulesEngine rulesEngine = RulesEngineFactory.New(x =>
+                {
+                    x.Add(_rule);
+                });
+
+            rulesEngine.ShowVisualizer();
+        }
+
+        [Test]
+        [Explicit]
+        public void Show_me_the_goods_x2()
+        {
+            RulesEngine rulesEngine = RulesEngineFactory.New(x =>
+                {
+                    x.Add(_rule);
+                    x.Add(_rule2);
+                });
 
             rulesEngine.ShowVisualizer();
         }
 
         Rule _rule;
-        A _result;
-        A _resultB;
+        Order _result;
+        Order _resultB;
+        Rule _rule2;
 
         [TestFixtureSetUp]
         public void Define_rule()
         {
             var conditions = new RuleCondition[]
                 {
-                    Conditions.Equal((A x) => x.Name, "JOE"),
-                    Conditions.GreaterThan((A x) => x.Amount, 10000.0m),
+                    Conditions.Equal((Order x) => x.Name, "JOE"),
+                    Conditions.GreaterThan((Order x) => x.Amount, 10000.0m),
                 };
 
             var consequences = new RuleConsequence[]
                 {
-                    Consequences.Delegate<A>(x => { _result = x; }),
-                    Consequences.Delegate<A>(x => { _resultB = x; }),
+                    Consequences.Delegate<Order>(x => { _result = x; }),
+                    Consequences.Delegate<Order>(x => { _resultB = x; }),
                 };
 
             _rule = new OdoyuleRule("RuleA", conditions, consequences);
+            _rule2 = new OdoyuleRule("RuleB", conditions, consequences);
         }
 
-        class A
+        class Order
         {
             public string Name { get; set; }
             public decimal Amount { get; set; }

@@ -36,11 +36,12 @@ namespace OdoyuleRules.Compiling
         {
             _configurator.MatchEqualNode<T, TProperty>(condition.PropertyInfo, node =>
                 {
-                    AlphaNode<Token<T, TProperty>> alpha = _configurator.Alpha<T, TProperty>();
+                    var valueNode = node[condition.Value];
 
-                    _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(_configurator, alpha));
-
-                    node.AddActivation(condition.Value, alpha);
+                    _configurator.MatchAlphaNode(valueNode, alpha =>
+                        {
+                            _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(_configurator, alpha));
+                        });
                 });
 
             return base.Visit(condition, next);
@@ -82,7 +83,7 @@ namespace OdoyuleRules.Compiling
                         return;
                     }
 
-                    ActivationNode<T> left = alpha;
+                    MemoryNode<T> left = alpha;
 
                     for (int i = 1; i < _alphaNodes.Count; i++)
                     {

@@ -23,7 +23,7 @@ namespace OdoyuleRules.Models.RuntimeModel
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TProperty"></typeparam>
     public class PropertyNode<T, TProperty> :
-        Node<Token<T, TProperty>>,
+        NodeImpl<Token<T, TProperty>>,
         Activation<T>
         where T : class
     {

@@ -16,9 +16,9 @@ namespace OdoyuleRules.Models.RuntimeModel
     using System.Linq;
 
     public class LeftJoinNode<T, TDiscard> :
-        MemoryNode<T>,
+        MemoryNodeImpl<T>,
         Activation<Token<T, TDiscard>>,
-        ActivationNode<T>,
+        MemoryNode<T>,
         RightActivation<Token<T, TDiscard>>
         where T : class
     {

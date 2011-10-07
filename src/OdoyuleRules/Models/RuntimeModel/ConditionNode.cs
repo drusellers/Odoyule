@@ -15,8 +15,8 @@ namespace OdoyuleRules.Models.RuntimeModel
     using System;
 
     public class ConditionNode<T> :
-        Node<T>,
-        Activation<T>
+        NodeImpl<T>,
+        Node<T>
         where T : class
     {
         readonly Action<T, Action> _condition;

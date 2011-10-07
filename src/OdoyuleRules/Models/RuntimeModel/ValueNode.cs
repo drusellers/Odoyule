@@ -13,8 +13,8 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     public class ValueNode<T, TProperty> :
-        Node<Token<T, TProperty>>,
-        Activation<Token<T, TProperty>>
+        NodeImpl<Token<T, TProperty>>,
+        Node<Token<T, TProperty>>
         where T : class
     {
         readonly TProperty _value;
