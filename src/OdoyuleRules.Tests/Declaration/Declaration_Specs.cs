@@ -118,15 +118,17 @@ namespace OdoyuleRules.Tests.Declaration
                 {
                     x.Add(_rule);
                     x.Add(_rule2);
+                    x.Add(_rule3);
                 });
 
             rulesEngine.ShowVisualizer();
         }
 
-        Rule _rule;
         Order _result;
         Order _resultB;
+        Rule _rule;
         Rule _rule2;
+        Rule _rule3;
 
         [TestFixtureSetUp]
         public void Define_rule()
@@ -145,12 +147,30 @@ namespace OdoyuleRules.Tests.Declaration
 
             _rule = new OdoyuleRule("RuleA", conditions, consequences);
             _rule2 = new OdoyuleRule("RuleB", conditions, consequences);
+
+            conditions = new RuleCondition[]
+                {
+                    Conditions.Equal((Account a) => a.Name, "JOE"),
+                };
+
+            consequences = new RuleConsequence[]
+                {
+                    Consequences.Delegate((Account a) => { }),
+                };
+
+            _rule3 = new OdoyuleRule("RuleC", conditions, consequences);
         }
 
         class Order
         {
             public string Name { get; set; }
             public decimal Amount { get; set; }
+        }
+
+        class Account
+        {
+            public string Name { get; set; }
+            public decimal CreditLimit { get; set; }
         }
     }
 }
