@@ -116,6 +116,14 @@ namespace OdoyuleRules.Visualization
             return Indent(next);
         }
 
+        public bool Visit<T, TProperty>(CompareNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
+            where T : class
+        {
+            Append("CompareNode[{0},{1}] {2} {3}", Tokens<T>(), typeof (TProperty).Name, node.Comparator.ToString(), node.Value.ToString());
+
+            return Indent(next);
+        }
+
         void Append(string format, params object[] args)
         {
             Append(string.Format(format, args));

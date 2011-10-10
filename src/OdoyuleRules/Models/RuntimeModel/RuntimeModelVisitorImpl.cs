@@ -81,5 +81,10 @@ namespace OdoyuleRules.Models.RuntimeModel
         {
             return next(this);
         }
+
+        public virtual bool Visit<T, TProperty>(CompareNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        {
+            return next(this);
+        }
     }
 }

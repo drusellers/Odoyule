@@ -29,6 +29,12 @@ namespace OdoyuleRules.Compiling
             return next(this);
         }
 
+        public bool Visit<T, TProperty>(PropertyCompareCondition<T, TProperty> condition,
+                                        Func<SemanticModelVisitor, bool> next) where T : class
+        {
+            return next(this);
+        }
+
         public virtual bool Visit<T, TProperty>(PropertyNotEqualCondition<T, TProperty> condition,
                                                 Func<SemanticModelVisitor, bool> next) where T : class
         {
@@ -60,12 +66,14 @@ namespace OdoyuleRules.Compiling
             return next(this);
         }
 
-        public virtual bool Visit<T>(PredicateCondition<T> condition, Func<SemanticModelVisitor, bool> next) where T : class
+        public virtual bool Visit<T>(PredicateCondition<T> condition, Func<SemanticModelVisitor, bool> next)
+            where T : class
         {
             return next(this);
         }
 
-        public virtual bool Visit<T>(DelegateConsequence<T> consequence, Func<SemanticModelVisitor, bool> next) where T : class
+        public virtual bool Visit<T>(DelegateConsequence<T> consequence, Func<SemanticModelVisitor, bool> next)
+            where T : class
         {
             return next(this);
         }

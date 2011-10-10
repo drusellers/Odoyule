@@ -97,6 +97,17 @@ namespace OdoyuleRules.Graphing
             return Next(() => base.Visit(node, next));
         }
 
+        public override bool Visit<T, TProperty>(CompareNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+        {
+            _current = _vertices.Get(node.Id, id => new Vertex(typeof (CompareNode<,>), typeof (Token<T, TProperty>),
+                                                               string.Format("{0} {1}", node.Comparator, node.Value)));
+
+            if (_stack.Count > 0)
+                _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
+
+            return Next(() => base.Visit(node, next));
+        }
+
         public override bool Visit<T>(ConstantNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
             if (!_vertices.Has(node.Id))

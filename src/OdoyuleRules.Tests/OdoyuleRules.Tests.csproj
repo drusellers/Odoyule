@@ -44,6 +44,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Conditional_Specs.cs" />
     <Compile Include="Declaration\Declaration_Specs.cs" />
     <Compile Include="Execution\Condition_Specs.cs" />
     <Compile Include="Execution\Production_Specs.cs" />

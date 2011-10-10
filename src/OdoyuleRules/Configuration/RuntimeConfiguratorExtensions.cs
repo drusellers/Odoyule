@@ -15,6 +15,7 @@ namespace OdoyuleRules
     using System;
     using System.Linq.Expressions;
     using System.Reflection;
+    using Conditionals;
     using Configuration.RulesEngineConfigurators;
     using Models.RuntimeModel;
     using Util;
@@ -113,6 +114,29 @@ namespace OdoyuleRules
             where T : class
         {
             return configurator.CreateNode(id => new DelegateProductionNode<T>(id, callback));
+        }
+
+        public static CompareNode<T,TProperty> Compare<T,TProperty>(this RuntimeConfigurator configurator,
+            Comparator<TProperty, TProperty> comparator, TProperty value) 
+            where T : class
+        {
+            Value<TProperty> rightValue = Conditional.Constant(value);
+            TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
+
+            return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
+        }
+
+        public static CompareNode<T,TProperty> GreaterThan<T,TProperty>(this RuntimeConfigurator configurator,
+            TProperty value) 
+            where T : class
+            where TProperty : IComparable<TProperty>
+        {
+            Value<TProperty> rightValue = Conditional.Constant(value);
+            TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
+
+            var comparator = new GreaterThanValueComparator<TProperty>();
+
+            return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
         }
     }
 }
