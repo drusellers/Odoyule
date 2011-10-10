@@ -68,10 +68,10 @@ namespace OdoyuleRules.Graphing
 
         public override bool Visit<T, TProperty>(EqualNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
-            _current = _vertices.Get(node.Id, id => new Vertex(typeof (EqualNode<,>), typeof (TProperty), "=="));
-
-            if (_stack.Count > 0)
-                _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
+//            _current = _vertices.Get(node.Id, id => new Vertex(typeof (EqualNode<,>), typeof (TProperty), "=="));
+//
+//            if (_stack.Count > 0)
+//                _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
 
             return Next(() => base.Visit(node, next));
         }
@@ -79,7 +79,7 @@ namespace OdoyuleRules.Graphing
         public override bool Visit<T, TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
             _current = _vertices.Get(node.Id,
-                                     id => new Vertex(typeof (ValueNode<,>), typeof (TProperty), node.Value.ToString()));
+                                     id => new Vertex(typeof (ValueNode<,>), typeof (TProperty), "== " + node.Value.ToString()));
 
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));

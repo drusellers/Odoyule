@@ -50,15 +50,14 @@ namespace OdoyuleRules.Compiling
         public override bool Visit<T, TProperty>(PropertyGreaterThanCondition<T, TProperty> condition,
                                                  Func<SemanticModelVisitor, bool> next)
         {
-            _configurator.MatchPropertyNode<T, TProperty>(condition.PropertyInfo, node =>
+            var compareNode = _configurator.GreaterThan<T, TProperty>(condition.Value);
+
+            _configurator.MatchCompareNode(condition.PropertyInfo, compareNode, node =>
                 {
-                    AlphaNode<Token<T, TProperty>> alpha = _configurator.Alpha<T, TProperty>();
-                    _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(_configurator, alpha));
-
-                    var compareNode = _configurator.GreaterThan<T, TProperty>(condition.Value);
-                    compareNode.AddActivation(alpha);
-
-                    node.AddActivation(compareNode);
+                    _configurator.MatchAlphaNode(node, alpha =>
+                    {
+                        _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(_configurator, alpha));
+                    });
                 });
 
             return base.Visit(condition, next);

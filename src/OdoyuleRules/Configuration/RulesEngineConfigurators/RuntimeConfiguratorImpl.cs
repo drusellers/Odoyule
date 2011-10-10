@@ -59,6 +59,14 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
             locator.Find(callback);
         }
 
+        public void MatchCompareNode<T,TProperty>(PropertyInfo propertyInfo,CompareNode<T,TProperty> compareNode,
+            Action<CompareNode<T,TProperty>> callback)
+            where T : class
+        {
+            var locator = new CompareNodeLocator<T, TProperty>(this, propertyInfo, compareNode);
+            locator.Find(callback);
+        }
+
         public void MatchEqualNode<T, TProperty>(PropertyInfo propertyInfo,
                                                  Action<EqualNode<T, TProperty>> callback)
             where T : class

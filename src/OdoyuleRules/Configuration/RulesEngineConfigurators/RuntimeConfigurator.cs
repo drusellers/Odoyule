@@ -32,16 +32,22 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
         void MatchEqualNode<T, TProperty>(PropertyInfo propertyInfo, Action<EqualNode<T, TProperty>> callback)
             where T : class;
 
+        void MatchCompareNode<T, TProperty>(PropertyInfo propertyInfo,
+                                            CompareNode<T, TProperty> compareNode,
+                                            Action<CompareNode<T, TProperty>> callback)
+            where T : class;
+
         void MatchAlphaNode<T>(Node<T> start, Action<AlphaNode<T>> callback)
             where T : class;
 
-        void MatchJoinNode<T>(MemoryNode<T> left, Action<JoinNode<T>> callback) 
+        void MatchJoinNode<T>(MemoryNode<T> left, Action<JoinNode<T>> callback)
             where T : class;
 
-        void MatchJoinNode<T>(MemoryNode<T> left, MemoryNode<T> right, Action<JoinNode<T>> action) 
+        void MatchJoinNode<T>(MemoryNode<T> left, MemoryNode<T> right, Action<JoinNode<T>> action)
             where T : class;
 
-        void MatchLeftJoinNode<T,TDiscard>(MemoryNode<Token<T, TDiscard>> start, Action<LeftJoinNode<T,TDiscard>> callback)
+        void MatchLeftJoinNode<T, TDiscard>(MemoryNode<Token<T, TDiscard>> start,
+                                            Action<LeftJoinNode<T, TDiscard>> callback)
             where T : class;
     }
 }

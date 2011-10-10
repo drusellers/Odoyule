@@ -15,7 +15,7 @@ namespace OdoyuleRules.Conditionals
     using System;
 
     public class ConstantValue<T> :
-        Value<T>
+        Value<T>, IEquatable<ConstantValue<T>>
         where T : struct
     {
         readonly T _value;
@@ -28,6 +28,36 @@ namespace OdoyuleRules.Conditionals
         public void Match(Action<T> valueCallback)
         {
             valueCallback(_value);
+        }
+
+        public bool Equals(ConstantValue<T> other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return other._value.Equals(_value);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof (ConstantValue<T>)) return false;
+            return Equals((ConstantValue<T>) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return _value.GetHashCode();
+        }
+
+        public static bool operator ==(ConstantValue<T> left, ConstantValue<T> right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(ConstantValue<T> left, ConstantValue<T> right)
+        {
+            return !Equals(left, right);
         }
 
         public override string ToString()

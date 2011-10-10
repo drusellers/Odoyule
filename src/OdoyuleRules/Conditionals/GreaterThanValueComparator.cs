@@ -15,9 +15,15 @@ namespace OdoyuleRules.Conditionals
     using System;
 
     public class GreaterThanValueComparator<T> :
-        ValueComparator<T>
+        ValueComparator<T>,
+        IEquatable<GreaterThanValueComparator<T>>
         where T : IComparable<T>
     {
+        public bool Equals(GreaterThanValueComparator<T> other)
+        {
+            return !ReferenceEquals(null, other);
+        }
+
         protected override bool Compare(T left, T right)
         {
             return left.CompareTo(right) > 0;
@@ -26,6 +32,29 @@ namespace OdoyuleRules.Conditionals
         public override string ToString()
         {
             return ">";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof (GreaterThanValueComparator<T>)) return false;
+            return Equals((GreaterThanValueComparator<T>) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
+        }
+
+        public static bool operator ==(GreaterThanValueComparator<T> left, GreaterThanValueComparator<T> right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(GreaterThanValueComparator<T> left, GreaterThanValueComparator<T> right)
+        {
+            return !Equals(left, right);
         }
     }
 }

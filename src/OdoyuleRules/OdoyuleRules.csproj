@@ -84,6 +84,7 @@
     <Compile Include="Configuration\RuleConfigurators\RuleConfiguratorImpl.cs" />
     <Compile Include="Configuration\RuleConfigurators\RuleConsequenceConfigurator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\AlphaNodeLocator.cs" />
+    <Compile Include="Configuration\RulesEngineConfigurators\CompareNodeLocator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\JoinNodeLocator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\EqualNodeLocator.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\LeftJoinNodeLocator.cs" />
