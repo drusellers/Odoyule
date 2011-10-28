@@ -44,14 +44,28 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayNodeSelector.cs" />
+    <Compile Include="ArrayNodeSelectorFactory.cs" />
     <Compile Include="Conditional_Specs.cs" />
     <Compile Include="Declaration\Declaration_Specs.cs" />
+    <Compile Include="Declaration\Deep_Specs.cs" />
     <Compile Include="Execution\Condition_Specs.cs" />
     <Compile Include="Execution\Production_Specs.cs" />
     <Compile Include="Factory_Specs.cs" />
+    <Compile Include="ListNodeSelector.cs" />
+    <Compile Include="ListNodeSelectorFactory.cs" />
+    <Compile Include="NodeSelector.cs" />
+    <Compile Include="NodeSelectorFactory.cs" />
     <Compile Include="Parser_Specs.cs" />
     <Compile Include="Production_Specs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyExpressionVisitor.cs" />
+    <Compile Include="PropertyNodeSelector.cs" />
+    <Compile Include="PropertyNodeSelectorFactory.cs" />
+    <Compile Include="Property_Specs.cs" />
+    <Compile Include="TestDisplayExtensions.cs" />
+    <Compile Include="TypeNodeSelector.cs" />
+    <Compile Include="TypeNodeSelectorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OdoyuleRules.Visualizer\OdoyuleRules.Visualizer.csproj">

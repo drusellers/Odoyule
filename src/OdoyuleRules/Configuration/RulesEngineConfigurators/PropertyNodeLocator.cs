@@ -34,19 +34,13 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
         {
             if (_node == null)
             {
-                if (typeof (T).IsGenericType && typeof (T).GetGenericTypeDefinition() == typeof (Token<,>))
-                {
-                }
-                else
-                {
-                    AlphaNode<T> alphaNode = _configurator.GetAlphaNode<T>();
-                    alphaNode.Accept(this);
+                AlphaNode<T> alphaNode = _configurator.GetAlphaNode<T>();
+                alphaNode.Accept(this);
 
-                    if (_node == null)
-                    {
-                        _node = _configurator.Property<T, TProperty>(_propertyInfo);
-                        alphaNode.AddActivation(_node);
-                    }
+                if (_node == null)
+                {
+                    _node = _configurator.Property<T, TProperty>(_propertyInfo);
+                    alphaNode.AddActivation(_node);
                 }
             }
 

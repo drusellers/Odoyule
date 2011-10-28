@@ -46,6 +46,10 @@ namespace OdoyuleRules.Models.SemanticModel
                                  Func<SemanticModelVisitor, bool> next)
             where T : class;
 
+        bool Visit<T, TProperty>(PropertyNotNullCondition<T, TProperty> condition,
+                                 Func<SemanticModelVisitor, bool> next)
+            where T : class;
+
         bool Visit<T>(PredicateCondition<T> condition, Func<SemanticModelVisitor, bool> next)
             where T : class;
 

@@ -66,6 +66,12 @@ namespace OdoyuleRules.Compiling
             return next(this);
         }
 
+        public virtual bool Visit<T, TProperty>(PropertyNotNullCondition<T, TProperty> condition,
+                                                Func<SemanticModelVisitor, bool> next) where T : class
+        {
+            return next(this);
+        }
+
         public virtual bool Visit<T>(PredicateCondition<T> condition, Func<SemanticModelVisitor, bool> next)
             where T : class
         {

@@ -161,6 +161,7 @@
     <Compile Include="Models\SemanticModel\Conditions\PropertyLessThanCondition.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PropertyLessThanOrEqualCondition.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PropertyNotEqualCondition.cs" />
+    <Compile Include="Models\SemanticModel\Conditions\PropertyNotNullCondition.cs" />
     <Compile Include="Models\SemanticModel\Consequences.cs" />
     <Compile Include="Models\SemanticModel\Consequences\DelegateConsequence.cs" />
     <Compile Include="Models\SemanticModel\DynamicRuleSet.cs" />
