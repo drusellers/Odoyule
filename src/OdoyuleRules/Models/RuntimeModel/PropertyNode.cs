@@ -38,7 +38,11 @@ namespace OdoyuleRules.Models.RuntimeModel
 
             var fastProperty = new FastProperty<T, TProperty>(propertyInfo);
 
-            _propertyMatch = (x, next) => next(fastProperty.Get(x));
+            _propertyMatch = (x, next) =>
+                {
+                    if(x != null)
+                        next(fastProperty.Get(x));
+                };
         }
 
         public PropertyNode(int id, PropertyInfo propertyInfo, Action<T,Action<TProperty>> propertyMatch)

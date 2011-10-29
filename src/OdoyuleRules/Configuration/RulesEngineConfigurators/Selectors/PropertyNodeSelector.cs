@@ -117,6 +117,7 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators.Selectors
         RuntimeModelVisitorImpl,
         NodeSelector
         where T1 : class
+        where T2 : class
     {
         readonly NodeSelector _next;
         readonly RuntimeConfigurator _configurator;
@@ -152,7 +153,11 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators.Selectors
                 var fastProperty = new FastProperty<T2, TProperty>(Property);
 
                 PropertyNode<Token<T1, T2>, TProperty> propertyNode =
-                    _configurator.Property<Token<T1, T2>, TProperty>(Property, (x, next) => next(fastProperty.Get(x.Item2)));
+                    _configurator.Property<Token<T1, T2>, TProperty>(Property, (x, next) =>
+                        {
+                            if(x.Item2 != null)
+                                next(fastProperty.Get(x.Item2));
+                        });
 
                 var parentNode = node as Node<Token<T1,T2>>;
                 if (parentNode == null)
@@ -177,7 +182,11 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators.Selectors
                 var fastProperty = new FastProperty<T2, TProperty>(Property);
 
                 PropertyNode<Token<T1, T2>, TProperty> propertyNode =
-                    _configurator.Property<Token<T1, T2>, TProperty>(Property, (x, next) => next(fastProperty.Get(x.Item2)));
+                    _configurator.Property<Token<T1, T2>, TProperty>(Property, (x, next) =>
+                    {
+                        if (x.Item2 != null)
+                            next(fastProperty.Get(x.Item2));
+                    });
 
                 var parentNode = node as MemoryNode<Token<T1, T2>>;
                 if (parentNode == null)
@@ -217,6 +226,7 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators.Selectors
 
         bool VisitTokenPropertyNode<TT1,TT2,TTProperty>(PropertyNode<Token<TT1,TT2>,TTProperty> node, Func<RuntimeModelVisitor, bool> next)
             where TT1 : class
+            where TT2 : class
         {
             var locator = this as PropertyNodeSelector<TT1,TT2, TTProperty>;
             if (locator != null)

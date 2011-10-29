@@ -19,12 +19,11 @@
 
             using (StatefulSession session = rulesEngine.CreateSession())
             {
-                session.Add(new Order { Name = "JOE", Amount = 10001.0m });
+                session.Add(new Order { Name = "JOE", Amount = 10001.0m , Purchaser = new Customer{AccountNumber = "DIRT"}});
                 session.Run();
             }
 
             Assert.IsNotNull(_result);
-            Assert.IsNotNull(_resultB);
         }
 
         [Test]
