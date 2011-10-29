@@ -10,9 +10,11 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Tests
+namespace OdoyuleRules.Configuration.RulesEngineConfigurators.Selectors
 {
     using System;
+    using Models.RuntimeModel;
+    using Visualization;
 
     public class ListNodeSelector<T, TElement> :
         NodeSelector
@@ -34,6 +36,21 @@ namespace OdoyuleRules.Tests
         public NodeSelector Next
         {
             get { return _next; }
+        }
+
+        public void Select()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Select<TNode>(Node<TNode> node) where TNode : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Select<TNode>(MemoryNode<TNode> node) where TNode : class
+        {
+            throw new NotImplementedException();
         }
 
         public override string ToString()

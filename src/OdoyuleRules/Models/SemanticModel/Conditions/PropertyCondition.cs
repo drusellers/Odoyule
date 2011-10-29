@@ -13,17 +13,25 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System;
+    using System.Linq.Expressions;
     using System.Reflection;
 
-    public abstract class PropertyCondition<T, TProperty> : 
+    public abstract class PropertyCondition<T, TProperty> :
         IEquatable<PropertyCondition<T, TProperty>>
         where T : class
     {
+        readonly Expression<Func<T, TProperty>> _propertyExpression;
         readonly PropertyInfo _propertyInfo;
 
-        protected PropertyCondition(PropertyInfo propertyInfo)
+        protected PropertyCondition(PropertyInfo propertyInfo, Expression<Func<T, TProperty>> propertyExpression)
         {
             _propertyInfo = propertyInfo;
+            _propertyExpression = propertyExpression;
+        }
+
+        public Expression<Func<T, TProperty>> PropertyExpression
+        {
+            get { return _propertyExpression; }
         }
 
         public PropertyInfo PropertyInfo

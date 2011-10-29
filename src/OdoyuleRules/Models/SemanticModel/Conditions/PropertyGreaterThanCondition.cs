@@ -13,26 +13,29 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     public class PropertyGreaterThanCondition<T, TProperty> :
         PropertyCondition<T, TProperty>,
-        RuleCondition<T>, 
+        RuleCondition<T>,
         IEquatable<PropertyGreaterThanCondition<T, TProperty>>
         where T : class
         where TProperty : IComparable<TProperty>
     {
         readonly TProperty _value;
 
+        public PropertyGreaterThanCondition(PropertyInfo propertyInfo,
+                                            Expression<Func<T, TProperty>> propertyExpression,
+                                            TProperty value)
+            : base(propertyInfo, propertyExpression)
+        {
+            _value = value;
+        }
+
         public TProperty Value
         {
             get { return _value; }
-        }
-
-        public PropertyGreaterThanCondition(PropertyInfo propertyInfo, TProperty value)
-            : base(propertyInfo)
-        {
-            _value = value;
         }
 
         public bool Equals(PropertyGreaterThanCondition<T, TProperty> other)
@@ -40,6 +43,11 @@ namespace OdoyuleRules.Models.SemanticModel
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return base.Equals(other) && Equals(other._value, _value);
+        }
+
+        public bool Accept(SemanticModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => true);
         }
 
         public override bool Equals(object obj)
@@ -57,17 +65,14 @@ namespace OdoyuleRules.Models.SemanticModel
             }
         }
 
-        public bool Accept(SemanticModelVisitor visitor)
-        {
-            return visitor.Visit(this, x => true);
-        }
-
-        public static bool operator ==(PropertyGreaterThanCondition<T, TProperty> left, PropertyGreaterThanCondition<T, TProperty> right)
+        public static bool operator ==(
+            PropertyGreaterThanCondition<T, TProperty> left, PropertyGreaterThanCondition<T, TProperty> right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(PropertyGreaterThanCondition<T, TProperty> left, PropertyGreaterThanCondition<T, TProperty> right)
+        public static bool operator !=(
+            PropertyGreaterThanCondition<T, TProperty> left, PropertyGreaterThanCondition<T, TProperty> right)
         {
             return !Equals(left, right);
         }

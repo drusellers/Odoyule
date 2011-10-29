@@ -15,6 +15,8 @@ namespace OdoyuleRules.Tests
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
+    using Configuration.RuleConfigurators;
+    using Configuration.RulesEngineConfigurators.Selectors;
     using Models.RuntimeModel;
     using NUnit.Framework;
 
@@ -26,7 +28,7 @@ namespace OdoyuleRules.Tests
         {
             Expression<Func<A, A>> propertyExpression = (A a) => a;
 
-            PropertyExpressionVisitor visitor = new PropertyExpressionVisitor<A>();
+            PropertyExpressionVisitor visitor = new PropertyExpressionVisitor<A>(null);
 
             NodeSelector selector = visitor.CreateSelector(propertyExpression.Body);
 
@@ -41,7 +43,7 @@ namespace OdoyuleRules.Tests
         {
             Expression<Func<A, B>> propertyExpression = (A a) => a.TheB;
 
-            PropertyExpressionVisitor visitor = new PropertyExpressionVisitor<A>();
+            PropertyExpressionVisitor visitor = new PropertyExpressionVisitor<A>(null);
 
             NodeSelector selector = visitor.CreateSelector(propertyExpression.Body);
 
@@ -57,7 +59,7 @@ namespace OdoyuleRules.Tests
         {
             Expression<Func<A, int>> propertyExpression = (A a) => a.TheB.TheC.Value.Length;
 
-            var visitor = new PropertyExpressionVisitor<A>();
+            var visitor = new PropertyExpressionVisitor<A>(null);
 
             NodeSelector selector = visitor.CreateSelector(propertyExpression.Body);
 
@@ -78,7 +80,7 @@ namespace OdoyuleRules.Tests
         {
             Expression<Func<A, C>> propertyExpression = (A a) => a.TheB.TheC;
 
-            var visitor = new PropertyExpressionVisitor<A>();
+            var visitor = new PropertyExpressionVisitor<A>(null);
 
             NodeSelector selector = visitor.CreateSelector(propertyExpression.Body);
 
@@ -95,7 +97,7 @@ namespace OdoyuleRules.Tests
         {
             Expression<Func<A, string>> propertyExpression = (A a) => a.TheB.TheC.Value;
 
-            var visitor = new PropertyExpressionVisitor<A>();
+            var visitor = new PropertyExpressionVisitor<A>(null);
 
             NodeSelector selector = visitor.CreateSelector(propertyExpression.Body);
 
@@ -113,7 +115,7 @@ namespace OdoyuleRules.Tests
         {
             Expression<Func<A, int>> propertyExpression = (A a) => a.TheB.Values[1];
 
-            var visitor = new PropertyExpressionVisitor<A>();
+            var visitor = new PropertyExpressionVisitor<A>(null);
 
             NodeSelector selector = visitor.CreateSelector(propertyExpression.Body);
 
@@ -131,7 +133,7 @@ namespace OdoyuleRules.Tests
         {
             Expression<Func<A, double>> propertyExpression = (A a) => a.Amounts[1];
 
-            var visitor = new PropertyExpressionVisitor<A>();
+            var visitor = new PropertyExpressionVisitor<A>(null);
 
             NodeSelector selector = visitor.CreateSelector(propertyExpression.Body);
 

@@ -10,12 +10,12 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Tests
+namespace OdoyuleRules.Visualization
 {
     using System;
     using Models.RuntimeModel;
 
-    public static class TestDisplayExtensions
+    public static class VisualizationExtensions
     {
         public static string Tokens(this Type type)
         {
@@ -27,17 +27,6 @@ namespace OdoyuleRules.Tests
             }
 
             return type.Name;
-        }
-
-
-        public static void ConsoleWriteLine(this NodeSelector selector)
-        {
-            Console.WriteLine("Selector: {0}", selector);
-            while (selector.Next != null)
-            {
-                Console.WriteLine("Next: {0}", selector.Next);
-                selector = selector.Next;
-            }
         }
     }
 }

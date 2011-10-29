@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System;
+    using System.Linq.Expressions;
     using System.Reflection;
     using Conditionals;
 
@@ -26,9 +27,10 @@ namespace OdoyuleRules.Models.SemanticModel
         readonly Value<TProperty> _value;
 
         public PropertyCompareCondition(PropertyInfo propertyInfo,
+                                        Expression<Func<T, TProperty>> propertyExpression,
                                         Comparator<TProperty, TProperty> comparator,
                                         Value<TProperty> value)
-            : base(propertyInfo)
+            : base(propertyInfo, propertyExpression)
         {
             _comparator = comparator;
             _value = value;

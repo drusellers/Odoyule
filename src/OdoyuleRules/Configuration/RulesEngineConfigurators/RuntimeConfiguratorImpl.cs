@@ -13,7 +13,6 @@
 namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 {
     using System;
-    using System.Reflection;
     using System.Threading;
     using Models.RuntimeModel;
 
@@ -49,36 +48,6 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
             where T : class
         {
             return _rulesEngine.GetAlphaNode<T>();
-        }
-
-        public void MatchPropertyNode<T, TProperty>(PropertyInfo propertyInfo,
-                                                    Action<PropertyNode<T, TProperty>> callback)
-            where T : class
-        {
-            var locator = new PropertyNodeLocator<T, TProperty>(this, propertyInfo);
-            locator.Find(callback);
-        }
-
-        public void MatchCompareNode<T,TProperty>(PropertyInfo propertyInfo,CompareNode<T,TProperty> compareNode,
-            Action<CompareNode<T,TProperty>> callback)
-            where T : class
-        {
-            var locator = new CompareNodeLocator<T, TProperty>(this, propertyInfo, compareNode);
-            locator.Find(callback);
-        }
-
-        public void MatchEqualNode<T, TProperty>(PropertyInfo propertyInfo,
-                                                 Action<EqualNode<T, TProperty>> callback)
-            where T : class
-        {
-            var locator = new EqualNodeLocator<T, TProperty>(this, propertyInfo);
-            locator.Find(callback);
-        }
-
-        public void MatchAlphaNode<T>(Node<T> start, Action<AlphaNode<T>> callback) where T : class
-        {
-            var locator = new AlphaNodeLocator<T>(this, start);
-            locator.Find(callback);
         }
 
         public void MatchLeftJoinNode<T,TDiscard>(MemoryNode<Token<T, TDiscard>> start, Action<LeftJoinNode<T,TDiscard>> callback)

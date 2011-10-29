@@ -13,18 +13,21 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     public class PropertyLessThanCondition<T, TProperty> :
         PropertyCondition<T, TProperty>,
-        RuleCondition<T>, 
+        RuleCondition<T>,
         IEquatable<PropertyLessThanCondition<T, TProperty>>
         where T : class
     {
         readonly TProperty _value;
 
-        public PropertyLessThanCondition(PropertyInfo propertyInfo, TProperty value)
-            : base(propertyInfo)
+        public PropertyLessThanCondition(PropertyInfo propertyInfo,
+                                         Expression<Func<T, TProperty>> propertyExpression,
+                                         TProperty value)
+            : base(propertyInfo, propertyExpression)
         {
             _value = value;
         }
@@ -39,6 +42,11 @@ namespace OdoyuleRules.Models.SemanticModel
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return base.Equals(other) && Equals(other._value, _value);
+        }
+
+        public bool Accept(SemanticModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => true);
         }
 
         public override bool Equals(object obj)
@@ -56,18 +64,15 @@ namespace OdoyuleRules.Models.SemanticModel
             }
         }
 
-        public bool Accept(SemanticModelVisitor visitor)
-        {
-            return visitor.Visit(this, x => true);
-        }
 
-
-        public static bool operator ==(PropertyLessThanCondition<T, TProperty> left, PropertyLessThanCondition<T, TProperty> right)
+        public static bool operator ==(
+            PropertyLessThanCondition<T, TProperty> left, PropertyLessThanCondition<T, TProperty> right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(PropertyLessThanCondition<T, TProperty> left, PropertyLessThanCondition<T, TProperty> right)
+        public static bool operator !=(
+            PropertyLessThanCondition<T, TProperty> left, PropertyLessThanCondition<T, TProperty> right)
         {
             return !Equals(left, right);
         }

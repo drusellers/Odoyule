@@ -13,7 +13,6 @@
 namespace OdoyuleRules.Configuration.RulesEngineConfigurators
 {
     using System;
-    using System.Reflection;
     using Models.RuntimeModel;
 
     public interface RuntimeConfigurator
@@ -24,20 +23,6 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
         T CreateNode<T>(Func<T> nodeFactory);
 
         AlphaNode<T> GetAlphaNode<T>()
-            where T : class;
-
-        void MatchPropertyNode<T, TProperty>(PropertyInfo propertyInfo, Action<PropertyNode<T, TProperty>> callback)
-            where T : class;
-
-        void MatchEqualNode<T, TProperty>(PropertyInfo propertyInfo, Action<EqualNode<T, TProperty>> callback)
-            where T : class;
-
-        void MatchCompareNode<T, TProperty>(PropertyInfo propertyInfo,
-                                            CompareNode<T, TProperty> compareNode,
-                                            Action<CompareNode<T, TProperty>> callback)
-            where T : class;
-
-        void MatchAlphaNode<T>(Node<T> start, Action<AlphaNode<T>> callback)
             where T : class;
 
         void MatchJoinNode<T>(MemoryNode<T> left, Action<JoinNode<T>> callback)

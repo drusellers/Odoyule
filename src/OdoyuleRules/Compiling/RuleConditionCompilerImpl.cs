@@ -14,7 +14,9 @@ namespace OdoyuleRules.Compiling
 {
     using System;
     using System.Collections.Generic;
+    using Configuration.RuleConfigurators;
     using Configuration.RulesEngineConfigurators;
+    using Configuration.RulesEngineConfigurators.Selectors;
     using Models.RuntimeModel;
     using Models.SemanticModel;
 
@@ -34,15 +36,16 @@ namespace OdoyuleRules.Compiling
         public override bool Visit<T, TProperty>(PropertyEqualCondition<T, TProperty> condition,
                                                  Func<SemanticModelVisitor, bool> next)
         {
-            _configurator.MatchEqualNode<T, TProperty>(condition.PropertyInfo, node =>
-                {
-                    var valueNode = node[condition.Value];
+            var conditionFactory = new ConditionAlphaNodeSelectorFactory(_configurator, node => _alphaNodes.Add(node));
 
-                    _configurator.MatchAlphaNode(valueNode, alpha =>
-                        {
-                            _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(_configurator, alpha));
-                        });
-                });
+            var alphaFactory = new AlphaNodeSelectorFactory(conditionFactory, _configurator);
+
+            var equalFactory = new EqualNodeSelectorFactory<TProperty>(alphaFactory, _configurator, condition.Value);
+
+            var visitor = new PropertyExpressionVisitor<T>(equalFactory, _configurator);
+            var selector = visitor.CreateSelector(condition.PropertyExpression.Body);
+
+            selector.Select();
 
             return base.Visit(condition, next);
         }
@@ -50,15 +53,18 @@ namespace OdoyuleRules.Compiling
         public override bool Visit<T, TProperty>(PropertyGreaterThanCondition<T, TProperty> condition,
                                                  Func<SemanticModelVisitor, bool> next)
         {
+            var conditionFactory = new ConditionAlphaNodeSelectorFactory(_configurator, node => _alphaNodes.Add(node));
+
+            var alphaFactory = new AlphaNodeSelectorFactory(conditionFactory, _configurator);
+
             var compareNode = _configurator.GreaterThan<T, TProperty>(condition.Value);
 
-            _configurator.MatchCompareNode(condition.PropertyInfo, compareNode, node =>
-                {
-                    _configurator.MatchAlphaNode(node, alpha =>
-                    {
-                        _alphaNodes.Add(new ConditionAlphaNode<Token<T, TProperty>>(_configurator, alpha));
-                    });
-                });
+            var compareFactory = new CompareNodeSelectorFactory<TProperty>(alphaFactory, _configurator, compareNode.Comparator, compareNode.Value);
+
+            var visitor = new PropertyExpressionVisitor<T>(compareFactory, _configurator);
+            var selector = visitor.CreateSelector(condition.PropertyExpression.Body);
+
+            selector.Select();
 
             return base.Visit(condition, next);
         }

@@ -29,19 +29,28 @@ namespace OdoyuleRules.Models.RuntimeModel
         where T : class
     {
         readonly Action<T, Action<TProperty>> _propertyMatch;
-        FastProperty<T, TProperty> _property;
+        readonly PropertyInfo _property;
 
         public PropertyNode(int id, PropertyInfo propertyInfo)
             : base(id)
         {
-            _property = new FastProperty<T, TProperty>(propertyInfo);
+            _property = propertyInfo;
 
-            _propertyMatch = (x, next) => next(_property.Get(x));
+            var fastProperty = new FastProperty<T, TProperty>(propertyInfo);
+
+            _propertyMatch = (x, next) => next(fastProperty.Get(x));
+        }
+
+        public PropertyNode(int id, PropertyInfo propertyInfo, Action<T,Action<TProperty>> propertyMatch)
+            : base(id)
+        {
+            _property = propertyInfo;
+            _propertyMatch = propertyMatch;
         }
 
         public PropertyInfo PropertyInfo
         {
-            get { return _property.Property; }
+            get { return _property; }
         }
 
         public void Activate(ActivationContext<T> context)

@@ -13,18 +13,21 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     public class PropertyGreaterThanOrEqualCondition<T, TProperty> :
         PropertyCondition<T, TProperty>,
-        RuleCondition<T>, 
+        RuleCondition<T>,
         IEquatable<PropertyGreaterThanOrEqualCondition<T, TProperty>>
         where T : class
     {
         readonly TProperty _value;
 
-        public PropertyGreaterThanOrEqualCondition(PropertyInfo propertyInfo, TProperty value)
-            : base(propertyInfo)
+        public PropertyGreaterThanOrEqualCondition(PropertyInfo propertyInfo,
+                                                   Expression<Func<T, TProperty>> propertyExpression,
+                                                   TProperty value)
+            : base(propertyInfo, propertyExpression)
         {
             _value = value;
         }
@@ -41,6 +44,11 @@ namespace OdoyuleRules.Models.SemanticModel
             return base.Equals(other) && Equals(other._value, _value);
         }
 
+        public bool Accept(SemanticModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => true);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -54,11 +62,6 @@ namespace OdoyuleRules.Models.SemanticModel
             {
                 return (base.GetHashCode()*397) ^ _value.GetHashCode();
             }
-        }
-
-        public bool Accept(SemanticModelVisitor visitor)
-        {
-            return visitor.Visit(this, x => true);
         }
 
 

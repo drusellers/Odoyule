@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     public class PropertyNotNullCondition<T, TProperty> :
@@ -21,8 +22,8 @@ namespace OdoyuleRules.Models.SemanticModel
         IEquatable<PropertyNotNullCondition<T, TProperty>>
         where T : class
     {
-        public PropertyNotNullCondition(PropertyInfo propertyInfo)
-            : base(propertyInfo)
+        public PropertyNotNullCondition(PropertyInfo propertyInfo, Expression<Func<T, TProperty>> propertyExpression)
+            : base(propertyInfo, propertyExpression)
         {
         }
 

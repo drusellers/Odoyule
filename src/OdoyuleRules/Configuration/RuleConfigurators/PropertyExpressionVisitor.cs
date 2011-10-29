@@ -10,12 +10,14 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Tests
+namespace OdoyuleRules.Configuration.RuleConfigurators
 {
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Reflection;
+    using RulesEngineConfigurators;
+    using RulesEngineConfigurators.Selectors;
 
     public interface PropertyExpressionVisitor
     {
@@ -30,14 +32,17 @@ namespace OdoyuleRules.Tests
     {
         NodeSelectorFactory _factory;
         NodeSelector _selector;
+        RuntimeConfigurator _configurator;
 
-        public PropertyExpressionVisitor()
+        public PropertyExpressionVisitor(RuntimeConfigurator configurator)
         {
+            _configurator = configurator;
         }
 
-        public PropertyExpressionVisitor(NodeSelectorFactory factory)
+        public PropertyExpressionVisitor(NodeSelectorFactory factory, RuntimeConfigurator configurator)
         {
             _factory = factory;
+            _configurator = configurator;
         }
 
         public NodeSelector Selector
@@ -74,7 +79,7 @@ namespace OdoyuleRules.Tests
                     (NodeSelectorFactory) Activator.CreateInstance(factoryType, _factory, constantExpression.Value);
 
                 Type visitorType = typeof (PropertyExpressionVisitor<>).MakeGenericType(node.Left.Type);
-                var visitor = (PropertyExpressionVisitor) Activator.CreateInstance(visitorType, nodeSelectorFactory);
+                var visitor = (PropertyExpressionVisitor) Activator.CreateInstance(visitorType, nodeSelectorFactory, _configurator);
                 _selector = visitor.CreateSelector(node.Left);
 
                 return node;
@@ -85,7 +90,7 @@ namespace OdoyuleRules.Tests
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
-            var factory = new TypeNodeSelectorFactory(_factory);
+            var factory = new TypeNodeSelectorFactory(_factory, _configurator);
 
             _selector = factory.Create<T>();
 
@@ -110,7 +115,7 @@ namespace OdoyuleRules.Tests
 
                         Type visitorType = typeof (PropertyExpressionVisitor<>).MakeGenericType(node.Object.Type);
                         var visitor =
-                            (PropertyExpressionVisitor) Activator.CreateInstance(visitorType, nodeSelectorFactory);
+                            (PropertyExpressionVisitor) Activator.CreateInstance(visitorType, nodeSelectorFactory, _configurator);
                         _selector = visitor.CreateSelector(node.Object);
 
                         return node;
@@ -130,10 +135,10 @@ namespace OdoyuleRules.Tests
             Type factoryType = typeof (PropertyNodeSelectorFactory<>).MakeGenericType(propertyInfo.PropertyType);
 
             var nodeSelectorFactory =
-                (NodeSelectorFactory) Activator.CreateInstance(factoryType, _factory, propertyInfo);
+                (NodeSelectorFactory) Activator.CreateInstance(factoryType, _factory, _configurator, propertyInfo);
 
             Type visitorType = typeof (PropertyExpressionVisitor<>).MakeGenericType(memberExpression.Expression.Type);
-            var visitor = (PropertyExpressionVisitor) Activator.CreateInstance(visitorType, nodeSelectorFactory);
+            var visitor = (PropertyExpressionVisitor) Activator.CreateInstance(visitorType, nodeSelectorFactory, _configurator);
             _selector = visitor.CreateSelector(memberExpression.Expression);
 
             return memberExpression;

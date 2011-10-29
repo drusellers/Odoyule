@@ -44,6 +44,16 @@ namespace OdoyuleRules
             return propertyNode;
         }
 
+        public static PropertyNode<T, TProperty> Property<T, TProperty>(
+            this RuntimeConfigurator configurator, PropertyInfo propertyInfo, Action<T,Action<TProperty>> propertyMatch)
+            where T : class
+        {
+            PropertyNode<T, TProperty> propertyNode =
+                configurator.CreateNode(id => new PropertyNode<T, TProperty>(id, propertyInfo, propertyMatch));
+
+            return propertyNode;
+        }
+
         public static EqualNode<T, TProperty> Equal<T, TProperty>(this RuntimeConfigurator configurator)
             where T : class
         {
@@ -85,6 +95,12 @@ namespace OdoyuleRules
                     }));
 
             return conditionNode;
+        }
+
+        public static AlphaNode<T> Alpha<T>(this RuntimeConfigurator configurator)
+            where T : class
+        {
+            return configurator.CreateNode(id => new AlphaNode<T>(id));
         }
 
         public static AlphaNode<Token<T1, T2>> Alpha<T1, T2>(

@@ -31,7 +31,7 @@ namespace OdoyuleRules.Models.SemanticModel
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
-            return new PropertyEqualCondition<T, TProperty>(propertyInfo, value);
+            return new PropertyEqualCondition<T, TProperty>(propertyInfo, propertyExpression, value);
         }
 
         public static PropertyNotEqualCondition<T, TProperty> NotEqual<T, TProperty>(
@@ -40,7 +40,7 @@ namespace OdoyuleRules.Models.SemanticModel
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
-            return new PropertyNotEqualCondition<T, TProperty>(propertyInfo, value);
+            return new PropertyNotEqualCondition<T, TProperty>(propertyInfo, propertyExpression, value);
         }
 
         public static PropertyGreaterThanCondition<T, TProperty> GreaterThan<T, TProperty>(
@@ -50,7 +50,7 @@ namespace OdoyuleRules.Models.SemanticModel
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
-            return new PropertyGreaterThanCondition<T, TProperty>(propertyInfo, value);
+            return new PropertyGreaterThanCondition<T, TProperty>(propertyInfo, propertyExpression, value);
         }
 
         public static PropertyGreaterThanOrEqualCondition<T, TProperty> GreaterThanOrEqual<T, TProperty>(
@@ -59,7 +59,7 @@ namespace OdoyuleRules.Models.SemanticModel
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
-            return new PropertyGreaterThanOrEqualCondition<T, TProperty>(propertyInfo, value);
+            return new PropertyGreaterThanOrEqualCondition<T, TProperty>(propertyInfo, propertyExpression, value);
         }
 
         public static PropertyLessThanCondition<T, TProperty> LessThan<T, TProperty>(
@@ -68,7 +68,7 @@ namespace OdoyuleRules.Models.SemanticModel
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
-            return new PropertyLessThanCondition<T, TProperty>(propertyInfo, value);
+            return new PropertyLessThanCondition<T, TProperty>(propertyInfo, propertyExpression, value);
         }
 
         public static PropertyLessThanOrEqualCondition<T, TProperty> LessThanOrEqual<T, TProperty>(
@@ -77,7 +77,7 @@ namespace OdoyuleRules.Models.SemanticModel
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
-            return new PropertyLessThanOrEqualCondition<T, TProperty>(propertyInfo, value);
+            return new PropertyLessThanOrEqualCondition<T, TProperty>(propertyInfo, propertyExpression, value);
         }
 
         public static PropertyNotNullCondition<T, TProperty> NotNull<T, TProperty>(
@@ -86,7 +86,7 @@ namespace OdoyuleRules.Models.SemanticModel
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
-            return new PropertyNotNullCondition<T, TProperty>(propertyInfo);
+            return new PropertyNotNullCondition<T, TProperty>(propertyInfo, propertyExpression);
         }
     }
 }

@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     public class PropertyLessThanOrEqualCondition<T, TProperty> :
@@ -23,8 +24,10 @@ namespace OdoyuleRules.Models.SemanticModel
     {
         readonly TProperty _value;
 
-        public PropertyLessThanOrEqualCondition(PropertyInfo propertyInfo, TProperty value)
-            : base(propertyInfo)
+        public PropertyLessThanOrEqualCondition(PropertyInfo propertyInfo,
+                                                Expression<Func<T, TProperty>> propertyExpression,
+                                                TProperty value)
+            : base(propertyInfo, propertyExpression)
         {
             _value = value;
         }

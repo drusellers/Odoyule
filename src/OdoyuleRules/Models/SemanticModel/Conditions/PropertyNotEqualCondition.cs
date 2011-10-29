@@ -13,18 +13,21 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System;
+    using System.Linq.Expressions;
     using System.Reflection;
 
     public class PropertyNotEqualCondition<T, TProperty> :
         PropertyCondition<T, TProperty>,
-        RuleCondition<T>, 
+        RuleCondition<T>,
         IEquatable<PropertyNotEqualCondition<T, TProperty>>
         where T : class
     {
         readonly TProperty _value;
 
-        public PropertyNotEqualCondition(PropertyInfo propertyInfo, TProperty value)
-            : base(propertyInfo)
+        public PropertyNotEqualCondition(PropertyInfo propertyInfo,
+                                         Expression<Func<T, TProperty>> propertyExpression,
+                                         TProperty value)
+            : base(propertyInfo, propertyExpression)
         {
             _value = value;
         }
@@ -39,6 +42,11 @@ namespace OdoyuleRules.Models.SemanticModel
             return base.Equals(other);
         }
 
+        public bool Accept(SemanticModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => true);
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -51,17 +59,14 @@ namespace OdoyuleRules.Models.SemanticModel
             return base.GetHashCode();
         }
 
-        public bool Accept(SemanticModelVisitor visitor)
-        {
-            return visitor.Visit(this, x => true);
-        }
-
-        public static bool operator ==(PropertyNotEqualCondition<T, TProperty> left, PropertyNotEqualCondition<T, TProperty> right)
+        public static bool operator ==(
+            PropertyNotEqualCondition<T, TProperty> left, PropertyNotEqualCondition<T, TProperty> right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(PropertyNotEqualCondition<T, TProperty> left, PropertyNotEqualCondition<T, TProperty> right)
+        public static bool operator !=(
+            PropertyNotEqualCondition<T, TProperty> left, PropertyNotEqualCondition<T, TProperty> right)
         {
             return !Equals(left, right);
         }

@@ -10,21 +10,18 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Tests
+namespace OdoyuleRules.Configuration.RulesEngineConfigurators.Selectors
 {
-    using System;
-    using Models.RuntimeModel;
-
-    public class ArrayNodeSelectorFactory<TElement> :
+    public class AlphaNodeSelectorFactory :
         NodeSelectorFactory
     {
-        readonly int _index;
         readonly NodeSelectorFactory _nextFactory;
+        RuntimeConfigurator _configurator;
 
-        public ArrayNodeSelectorFactory(NodeSelectorFactory nextFactory, int index)
+        public AlphaNodeSelectorFactory(NodeSelectorFactory nextFactory, RuntimeConfigurator configurator)
         {
             _nextFactory = nextFactory;
-            _index = index;
+            _configurator = configurator;
         }
 
         public NodeSelector Create<T>()
@@ -32,10 +29,9 @@ namespace OdoyuleRules.Tests
         {
             NodeSelector next = null;
             if (_nextFactory != null)
-                next = _nextFactory.Create<Token<T, TElement>>();
+                next = _nextFactory.Create<T>();
 
-            Type type = typeof (ArrayNodeSelector<,>).MakeGenericType(typeof (T), typeof (TElement));
-            var selector = (NodeSelector) Activator.CreateInstance(type, next, _index);
+            var selector = new AlphaNodeSelector<T>(next, _configurator);
 
             return selector;
         }

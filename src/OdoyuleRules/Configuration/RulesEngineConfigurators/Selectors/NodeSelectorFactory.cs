@@ -10,31 +10,11 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Tests
+namespace OdoyuleRules.Configuration.RulesEngineConfigurators.Selectors
 {
-    using System;
-
-    public class TypeNodeSelector<T> :
-        NodeSelector
+    public interface NodeSelectorFactory
     {
-        readonly NodeSelector _next;
-
-        public TypeNodeSelector(NodeSelector next)
-        {
-            _next = next;
-            NodeType = typeof (T);
-        }
-
-        public Type NodeType { get; private set; }
-
-        public NodeSelector Next
-        {
-            get { return _next; }
-        }
-
-        public override string ToString()
-        {
-            return string.Format("Type: [{0}]", typeof (T).Tokens());
-        }
+        NodeSelector Create<T>()
+            where T : class;
     }
 }

@@ -10,32 +10,28 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Tests
+namespace OdoyuleRules.Configuration.RulesEngineConfigurators.Selectors
 {
     using System;
-    using Models.RuntimeModel;
+    using Compiling;
 
-    public class ListNodeSelectorFactory<TElement> :
+    public class ConditionAlphaNodeSelectorFactory :
         NodeSelectorFactory
     {
-        readonly int _index;
-        readonly NodeSelectorFactory _nextFactory;
+        readonly RuntimeConfigurator _configurator;
+        readonly Action<ConditionAlphaNode> _nodeCallback;
 
-        public ListNodeSelectorFactory(NodeSelectorFactory nextFactory, int index)
+        public ConditionAlphaNodeSelectorFactory(RuntimeConfigurator configurator,
+                                                 Action<ConditionAlphaNode> nodeCallback)
         {
-            _nextFactory = nextFactory;
-            _index = index;
+            _configurator = configurator;
+            _nodeCallback = nodeCallback;
         }
 
         public NodeSelector Create<T>()
             where T : class
         {
-            NodeSelector next = null;
-            if (_nextFactory != null)
-                next = _nextFactory.Create<Token<T, TElement>>();
-
-            Type type = typeof (ListNodeSelector<,>).MakeGenericType(typeof (T), typeof (TElement));
-            var selector = (NodeSelector) Activator.CreateInstance(type, next, _index);
+            var selector = new ConditionAlphaNodeSelector<T>(_configurator, _nodeCallback);
 
             return selector;
         }
