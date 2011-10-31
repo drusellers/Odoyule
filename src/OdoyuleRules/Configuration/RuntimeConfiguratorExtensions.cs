@@ -201,6 +201,15 @@ namespace OdoyuleRules
             var comparator = new LessThanOrEqualValueComparator<TProperty>();
 
             return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
+        }    
+        
+        public static NotNullNode<T, TProperty> NotNull<T,TProperty>(this RuntimeConfigurator configurator) 
+            where T : class
+            where TProperty : class
+        {
+            TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
+
+            return configurator.CreateNode(id => new NotNullNode<T, TProperty>(id, tokenValue));
         }
     }
 }

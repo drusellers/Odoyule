@@ -108,6 +108,8 @@
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\ListNodeSelectorFactory.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\NodeSelector.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\NodeSelectorFactory.cs" />
+    <Compile Include="Configuration\RulesEngineConfigurators\Selectors\NotNullNodeSelector.cs" />
+    <Compile Include="Configuration\RulesEngineConfigurators\Selectors\NotNullNodeSelectorFactory.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\PropertyNodeSelector.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\PropertyNodeSelectorFactory.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\TypeNodeSelector.cs" />
@@ -153,6 +155,7 @@
     <Compile Include="Models\RuntimeModel\Node.cs" />
     <Compile Include="Models\RuntimeModel\NodeImpl.cs" />
     <Compile Include="Models\RuntimeModel\DelegateProductionNode.cs" />
+    <Compile Include="Models\RuntimeModel\NotNullNode.cs" />
     <Compile Include="Models\RuntimeModel\PropertyNode.cs" />
     <Compile Include="Models\RuntimeModel\RightActivation.cs" />
     <Compile Include="Models\RuntimeModel\RuntimeModelVisitor.cs" />

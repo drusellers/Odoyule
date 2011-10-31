@@ -34,19 +34,20 @@ namespace OdoyuleRules.Compiling
             _alphaNodes = new List<ConditionAlphaNode>();
         }
 
+        public override bool Visit<T, TProperty>(PropertyNotNullCondition<T, TProperty> condition,
+                                                 Func<SemanticModelVisitor, bool> next)
+        {
+            RunNodeSelector(condition.PropertyExpression,
+                            x => new NotNullNodeSelectorFactory<TProperty>(x, _configurator));
+
+            return base.Visit(condition, next);
+        }
+
         public override bool Visit<T, TProperty>(PropertyEqualCondition<T, TProperty> condition,
                                                  Func<SemanticModelVisitor, bool> next)
         {
-            var conditionFactory = new ConditionAlphaNodeSelectorFactory(_configurator, node => _alphaNodes.Add(node));
-
-            var alphaFactory = new AlphaNodeSelectorFactory(conditionFactory, _configurator);
-
-            var equalFactory = new EqualNodeSelectorFactory<TProperty>(alphaFactory, _configurator, condition.Value);
-
-            var visitor = new PropertyExpressionVisitor<T>(equalFactory, _configurator);
-            NodeSelector selector = visitor.CreateSelector(condition.PropertyExpression.Body);
-
-            selector.Select();
+            RunNodeSelector(condition.PropertyExpression,
+                            x => new EqualNodeSelectorFactory<TProperty>(x, _configurator, condition.Value));
 
             return base.Visit(condition, next);
         }
@@ -139,7 +140,27 @@ namespace OdoyuleRules.Compiling
                                                                            compareNode.Comparator,
                                                                            compareNode.Value);
 
-            new PropertyExpressionVisitor<T>(compareFactory, _configurator)
+            RunNodeSelector(propertyExpression, compareFactory);
+        }
+
+        void RunNodeSelector<T, TProperty>(Expression<Func<T, TProperty>> propertyExpression,
+                                           Func<NodeSelectorFactory, NodeSelectorFactory> selectorConfigurator)
+            where T : class
+        {
+            var conditionFactory = new ConditionAlphaNodeSelectorFactory(_configurator, node => _alphaNodes.Add(node));
+
+            var alphaFactory = new AlphaNodeSelectorFactory(conditionFactory, _configurator);
+
+            NodeSelectorFactory factory = selectorConfigurator(alphaFactory);
+
+            RunNodeSelector(propertyExpression, factory);
+        }
+
+        void RunNodeSelector<T, TProperty>(Expression<Func<T, TProperty>> propertyExpression,
+                                           NodeSelectorFactory selectorFactory)
+            where T : class
+        {
+            new PropertyExpressionVisitor<T>(selectorFactory, _configurator)
                 .CreateSelector(propertyExpression.Body)
                 .Select();
         }

@@ -16,6 +16,7 @@ namespace OdoyuleRules.Tests
     using NUnit.Framework;
 
     [TestFixture]
+    [Explicit]
     public class Submitting_a_context_matching_a_production
     {
         [Test]

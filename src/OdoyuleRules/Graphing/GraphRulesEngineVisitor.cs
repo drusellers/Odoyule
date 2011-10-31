@@ -108,6 +108,16 @@ namespace OdoyuleRules.Graphing
             return Next(() => base.Visit(node, next));
         }
 
+        public override bool Visit<T, TProperty>(NotNullNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+        {
+            _current = _vertices.Get(node.Id, id => new Vertex(typeof(NotNullNode<,>), typeof(Token<T, TProperty>), "not null"));
+
+            if (_stack.Count > 0)
+                _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
+
+            return Next(() => base.Visit(node, next));
+        }
+
         public override bool Visit<T>(ConstantNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
             if (!_vertices.Has(node.Id))

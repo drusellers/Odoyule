@@ -17,12 +17,12 @@ namespace OdoyuleRules.Visualization
     using Models.RuntimeModel;
 
     public class TextRuntimeModelVisitor :
-        RuntimeModelVisitor
+        RuntimeModelVisitorImpl
     {
         const int PaddingWidth = 2;
         int _depth;
         string _padding;
-        StringBuilder _sb;
+        readonly StringBuilder _sb;
 
         public TextRuntimeModelVisitor()
         {
@@ -32,94 +32,96 @@ namespace OdoyuleRules.Visualization
             _padding = "";
         }
 
-        public virtual bool Visit(RulesEngine rulesEngine, Func<RuntimeModelVisitor, bool> next)
+        public override bool Visit(RulesEngine rulesEngine, Func<RuntimeModelVisitor, bool> next)
         {
             Append("Rules Engine");
 
             return Indent(next);
         }
 
-        public virtual bool Visit<T>(JoinNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        public override bool Visit<T>(JoinNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
             Append("JoinNode[{0}]", Tokens<T>());
 
             return Indent(next);
         }
 
-        public bool Visit<T, TOutput>(LeftJoinNode<T, TOutput> node, Func<RuntimeModelVisitor, bool> next)
-            where T : class
+        public override bool Visit<T, TOutput>(LeftJoinNode<T, TOutput> node, Func<RuntimeModelVisitor, bool> next)
         {
             Append("LeftJoinNode[{0}] => {1}", Tokens<T>(), Tokens<TOutput>());
 
             return Indent(next);
         }
 
-        public virtual bool Visit<T>(AlphaNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        public override bool Visit<T>(AlphaNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
             Append("AlphaNode[{0}]", Tokens<T>());
 
             return Indent(next);
         }
 
-        public virtual bool Visit<TInput, TOutput>(ConvertNode<TInput, TOutput> node,
-                                                   Func<RuntimeModelVisitor, bool> next) where TInput : class, TOutput
-            where TOutput : class
+        public override bool Visit<TInput, TOutput>(ConvertNode<TInput, TOutput> node,
+                                                   Func<RuntimeModelVisitor, bool> next)
         {
             Append("ConvertNode[{0}] => {1}", Tokens<TInput>(), Tokens<TOutput>());
 
             return Indent(next);
         }
 
-        public virtual bool Visit<T>(DelegateProductionNode<T> node, Func<RuntimeModelVisitor, bool> next)
-            where T : class
+        public override bool Visit<T>(DelegateProductionNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
             Append("DelegateProductionNode[{0}]", Tokens<T>());
 
             return Indent(next);
         }
 
-        public virtual bool Visit<T, TProperty>(PropertyNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
-            where T : class
+        public override bool Visit<T, TProperty>(PropertyNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
             Append("PropertyNode[{0}].{1} ({2})", Tokens<T>(), node.PropertyInfo.Name, typeof (TProperty).Name);
 
             return Indent(next);
         }
 
-        public virtual bool Visit<T>(ConstantNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        public override bool Visit<T>(ConstantNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
             Append("v[{0}]", Tokens<T>());
 
             return Indent(next);
         }
 
-        public virtual bool Visit<T>(ConditionNode<T> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        public override bool Visit<T>(ConditionNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
             Append("ConditionNode[{0}]", Tokens<T>());
 
             return Indent(next);
         }
 
-        public virtual bool Visit<T, TProperty>(EqualNode<T, TProperty> node,
-                                                Func<RuntimeModelVisitor, bool> next) where T : class
+        public override bool Visit<T, TProperty>(EqualNode<T, TProperty> node,
+                                                Func<RuntimeModelVisitor, bool> next)
         {
             Append("EqualNode[{0}] ({1})", Tokens<T>(), typeof (TProperty).Name);
 
             return Indent(next);
         }
 
-        public bool Visit<T, TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
-            where T : class
+        public override bool Visit<T, TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
             Append("ValueNode[{0}] == {1}", Tokens<T>(), node.Value);
 
             return Indent(next);
         }
 
-        public bool Visit<T, TProperty>(CompareNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
-            where T : class
+        public override bool Visit<T, TProperty>(CompareNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
-            Append("CompareNode[{0},{1}] {2} {3}", Tokens<T>(), typeof (TProperty).Name, node.Comparator.ToString(), node.Value.ToString());
+            Append("CompareNode[{0},{1}] {2} {3}", Tokens<T>(), typeof (TProperty).Name, node.Comparator.ToString(),
+                   node.Value.ToString());
+
+            return Indent(next);
+        }
+
+        public override bool Visit<T, TProperty>(NotNullNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+        {
+            Append("NotNullNode[{0}] != null", Tokens<T>());
 
             return Indent(next);
         }
