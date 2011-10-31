@@ -54,6 +54,7 @@
     <Compile Include="ConditionTests\Reference_Specs.cs" />
     <Compile Include="Declaration\Declaration_Specs.cs" />
     <Compile Include="Declaration\Deep_Specs.cs" />
+    <Compile Include="Declaration\Each_Specs.cs" />
     <Compile Include="Declaration\Exists_Specs.cs" />
     <Compile Include="Execution\Condition_Specs.cs" />
     <Compile Include="Execution\Production_Specs.cs" />

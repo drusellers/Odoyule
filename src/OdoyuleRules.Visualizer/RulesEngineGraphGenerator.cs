@@ -38,6 +38,7 @@ namespace OdoyuleRules.Visualizer
                 {
                     {typeof (AlphaNode<>), Color.Yellow},
                     {typeof (PropertyNode<,>), Color.Red},
+                    {typeof (EachNode<,,>), Color.Red},
                     {typeof (EqualNode<,>), Color.Blue},
                     {typeof (ValueNode<,>), Color.Blue},
                     {typeof (CompareNode<,>), Color.Blue},
@@ -55,6 +56,7 @@ namespace OdoyuleRules.Visualizer
                 {
                     {typeof (AlphaNode<>), Color.Black},
                     {typeof (PropertyNode<,>), Color.White},
+                    {typeof (EachNode<,,>), Color.White},
                     {typeof (EqualNode<,>), Color.White},
                     {typeof (ValueNode<,>), Color.White},
                     {typeof (CompareNode<,>), Color.White},

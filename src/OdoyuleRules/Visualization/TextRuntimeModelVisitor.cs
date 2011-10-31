@@ -133,6 +133,14 @@ namespace OdoyuleRules.Visualization
             return Indent(next);
         }
 
+        public override bool Visit<T, TProperty, TElement>(EachNode<T, TProperty, TElement> node,
+                                                           Func<RuntimeModelVisitor, bool> next)
+        {
+            Append("EachNode[{0}]", Tokens<T>());
+
+            return Indent(next);
+        }
+
         void Append(string format, params object[] args)
         {
             Append(string.Format(format, args));

@@ -22,7 +22,7 @@ namespace OdoyuleRules.Models.RuntimeModel
         bool Visit<T>(JoinNode<T> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
-        bool Visit<T, TDiscard>(LeftJoinNode<T,TDiscard> node, Func<RuntimeModelVisitor, bool> next)
+        bool Visit<T, TDiscard>(LeftJoinNode<T, TDiscard> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
         bool Visit<T>(AlphaNode<T> node, Func<RuntimeModelVisitor, bool> next)
@@ -38,27 +38,31 @@ namespace OdoyuleRules.Models.RuntimeModel
         bool Visit<T, TProperty>(PropertyNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
-        bool Visit<T>(ConstantNode<T> node, Func<RuntimeModelVisitor, bool> next) 
+        bool Visit<T>(ConstantNode<T> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
-        bool Visit<T>(ConditionNode<T> node, Func<RuntimeModelVisitor, bool> next) 
+        bool Visit<T>(ConditionNode<T> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
-        bool Visit<T,TProperty>(EqualNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
+        bool Visit<T, TProperty>(EqualNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
-        bool Visit<T,TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
+        bool Visit<T, TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
-        bool Visit<T,TProperty>(CompareNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
+        bool Visit<T, TProperty>(CompareNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
             where T : class;
 
-        bool Visit<T,TProperty>(NotNullNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
-            where T : class 
+        bool Visit<T, TProperty>(NotNullNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
             where TProperty : class;
 
-        bool Visit<T,TProperty>(ExistsNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
-            where T : class 
+        bool Visit<T, TProperty>(ExistsNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
+            where TProperty : class, IEnumerable;
+
+        bool Visit<T, TProperty, TElement>(EachNode<T, TProperty, TElement> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
             where TProperty : class, IEnumerable;
     }
 }

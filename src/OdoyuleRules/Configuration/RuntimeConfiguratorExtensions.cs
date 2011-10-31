@@ -46,7 +46,7 @@ namespace OdoyuleRules
         }
 
         public static PropertyNode<T, TProperty> Property<T, TProperty>(
-            this RuntimeConfigurator configurator, PropertyInfo propertyInfo, Action<T,Action<TProperty>> propertyMatch)
+            this RuntimeConfigurator configurator, PropertyInfo propertyInfo, Action<T, Action<TProperty>> propertyMatch)
             where T : class
         {
             PropertyNode<T, TProperty> propertyNode =
@@ -58,13 +58,14 @@ namespace OdoyuleRules
         public static EqualNode<T, TProperty> Equal<T, TProperty>(this RuntimeConfigurator configurator)
             where T : class
         {
-            EqualNode<T, TProperty> propertyNode = configurator.CreateNode(id => new EqualNode<T, TProperty>(id, configurator));
+            EqualNode<T, TProperty> propertyNode =
+                configurator.CreateNode(id => new EqualNode<T, TProperty>(id, configurator));
 
             return propertyNode;
         }
 
 
-        public static ConstantNode<T> Constant<T>(this RuntimeConfigurator configurator) 
+        public static ConstantNode<T> Constant<T>(this RuntimeConfigurator configurator)
             where T : class
         {
             return configurator.CreateNode(id => new ConstantNode<T>(id));
@@ -133,8 +134,9 @@ namespace OdoyuleRules
             return configurator.CreateNode(id => new DelegateProductionNode<T>(id, callback));
         }
 
-        public static CompareNode<T,TProperty> Compare<T,TProperty>(this RuntimeConfigurator configurator,
-            Comparator<TProperty, TProperty> comparator, TProperty value) 
+        public static CompareNode<T, TProperty> Compare<T, TProperty>(this RuntimeConfigurator configurator,
+                                                                      Comparator<TProperty, TProperty> comparator,
+                                                                      TProperty value)
             where T : class
         {
             Value<TProperty> rightValue = Conditional.Constant(value);
@@ -143,8 +145,9 @@ namespace OdoyuleRules
             return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
         }
 
-        public static CompareNode<T,TProperty> Compare<T,TProperty>(this RuntimeConfigurator configurator,
-            Comparator<TProperty, TProperty> comparator, Value<TProperty> value) 
+        public static CompareNode<T, TProperty> Compare<T, TProperty>(this RuntimeConfigurator configurator,
+                                                                      Comparator<TProperty, TProperty> comparator,
+                                                                      Value<TProperty> value)
             where T : class
         {
             TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
@@ -152,8 +155,8 @@ namespace OdoyuleRules
             return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, value));
         }
 
-        public static CompareNode<T,TProperty> GreaterThan<T,TProperty>(this RuntimeConfigurator configurator,
-            TProperty value) 
+        public static CompareNode<T, TProperty> GreaterThan<T, TProperty>(this RuntimeConfigurator configurator,
+                                                                          TProperty value)
             where T : class
             where TProperty : IComparable<TProperty>
         {
@@ -165,8 +168,8 @@ namespace OdoyuleRules
             return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
         }
 
-        public static CompareNode<T,TProperty> GreaterThanOrEqual<T,TProperty>(this RuntimeConfigurator configurator,
-            TProperty value) 
+        public static CompareNode<T, TProperty> GreaterThanOrEqual<T, TProperty>(this RuntimeConfigurator configurator,
+                                                                                 TProperty value)
             where T : class
             where TProperty : IComparable<TProperty>
         {
@@ -176,10 +179,10 @@ namespace OdoyuleRules
             var comparator = new GreaterThanOrEqualValueComparator<TProperty>();
 
             return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
-        }       
-        
-        public static CompareNode<T,TProperty> LessThan<T,TProperty>(this RuntimeConfigurator configurator,
-            TProperty value) 
+        }
+
+        public static CompareNode<T, TProperty> LessThan<T, TProperty>(this RuntimeConfigurator configurator,
+                                                                       TProperty value)
             where T : class
             where TProperty : IComparable<TProperty>
         {
@@ -191,8 +194,8 @@ namespace OdoyuleRules
             return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
         }
 
-        public static CompareNode<T,TProperty> LessThanOrEqual<T,TProperty>(this RuntimeConfigurator configurator,
-            TProperty value) 
+        public static CompareNode<T, TProperty> LessThanOrEqual<T, TProperty>(this RuntimeConfigurator configurator,
+                                                                              TProperty value)
             where T : class
             where TProperty : IComparable<TProperty>
         {
@@ -202,9 +205,9 @@ namespace OdoyuleRules
             var comparator = new LessThanOrEqualValueComparator<TProperty>();
 
             return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
-        }    
-        
-        public static NotNullNode<T, TProperty> NotNull<T,TProperty>(this RuntimeConfigurator configurator) 
+        }
+
+        public static NotNullNode<T, TProperty> NotNull<T, TProperty>(this RuntimeConfigurator configurator)
             where T : class
             where TProperty : class
         {
@@ -213,13 +216,24 @@ namespace OdoyuleRules
             return configurator.CreateNode(id => new NotNullNode<T, TProperty>(id, tokenValue));
         }
 
-        public static ExistsNode<T, TProperty> Exists<T,TProperty>(this RuntimeConfigurator configurator) 
+        public static ExistsNode<T, TProperty> Exists<T, TProperty>(this RuntimeConfigurator configurator)
             where T : class
             where TProperty : class, IEnumerable
         {
             TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
 
             return configurator.CreateNode(id => new ExistsNode<T, TProperty>(id, tokenValue));
+        }
+
+        public static EachNode<T, TProperty, TElement> Each<T, TProperty, TElement>(
+            this RuntimeConfigurator configurator,
+            Action<TProperty, Action<TElement, int>> elementMatch)
+            where T : class
+            where TProperty : class, IEnumerable
+        {
+            TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
+
+            return configurator.CreateNode(id => new EachNode<T, TProperty, TElement>(id, tokenValue, elementMatch));
         }
     }
 }

@@ -57,7 +57,12 @@ namespace OdoyuleRules.Models.SemanticModel
         bool Visit<T, TProperty>(PropertyExistsCondition<T, TProperty> condition,
                                  Func<SemanticModelVisitor, bool> next)
             where T : class 
-            where TProperty : IEnumerable;
+            where TProperty : class, IEnumerable;
+
+        bool Visit<T, TProperty, TElement>(PropertyEachCondition<T, TProperty, TElement> condition,
+                                 Func<SemanticModelVisitor, bool> next)
+            where T : class 
+            where TProperty : class, IEnumerable;
 
         bool Visit<T>(PredicateCondition<T> condition, Func<SemanticModelVisitor, bool> next)
             where T : class;

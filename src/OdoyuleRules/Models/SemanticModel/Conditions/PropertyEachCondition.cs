@@ -17,19 +17,19 @@ namespace OdoyuleRules.Models.SemanticModel
     using System.Linq.Expressions;
     using System.Reflection;
 
-    public class PropertyExistsCondition<T, TProperty> :
+    public class PropertyEachCondition<T, TProperty, TElement> :
         PropertyCondition<T, TProperty>,
-        RuleCondition<T>, 
-        IEquatable<PropertyExistsCondition<T, TProperty>>
+        RuleCondition<T>,
+        IEquatable<PropertyEachCondition<T, TProperty, TElement>>
         where T : class
         where TProperty : class, IEnumerable
     {
-        public PropertyExistsCondition(PropertyInfo propertyInfo, Expression<Func<T, TProperty>> propertyExpression)
+        public PropertyEachCondition(PropertyInfo propertyInfo, Expression<Func<T, TProperty>> propertyExpression)
             : base(propertyInfo, propertyExpression)
         {
         }
 
-        public bool Equals(PropertyExistsCondition<T, TProperty> other)
+        public bool Equals(PropertyEachCondition<T, TProperty, TElement> other)
         {
             return true;
         }
@@ -43,7 +43,7 @@ namespace OdoyuleRules.Models.SemanticModel
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as PropertyExistsCondition<T, TProperty>);
+            return Equals(obj as PropertyEachCondition<T, TProperty, TElement>);
         }
 
         public override int GetHashCode()

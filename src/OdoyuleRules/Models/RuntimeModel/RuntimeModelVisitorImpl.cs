@@ -28,7 +28,7 @@ namespace OdoyuleRules.Models.RuntimeModel
             return next(this);
         }
 
-        public virtual bool Visit<T, TDiscard>(LeftJoinNode<T, TDiscard> node, Func<RuntimeModelVisitor, bool> next) 
+        public virtual bool Visit<T, TDiscard>(LeftJoinNode<T, TDiscard> node, Func<RuntimeModelVisitor, bool> next)
             where T : class
         {
             return next(this);
@@ -72,31 +72,41 @@ namespace OdoyuleRules.Models.RuntimeModel
             return next(this);
         }
 
-        public virtual bool Visit<T, TProperty>(EqualNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
+        public virtual bool Visit<T, TProperty>(EqualNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
             where T : class
         {
             return next(this);
         }
 
-        public virtual bool Visit<T, TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        public virtual bool Visit<T, TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
         {
             return next(this);
         }
 
-        public virtual bool Visit<T, TProperty>(CompareNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) where T : class
+        public virtual bool Visit<T, TProperty>(CompareNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
         {
             return next(this);
         }
 
-        public virtual bool Visit<T, TProperty>(NotNullNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
-            where T : class 
+        public virtual bool Visit<T, TProperty>(NotNullNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
             where TProperty : class
         {
             return next(this);
         }
 
-        public virtual bool Visit<T, TProperty>(ExistsNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
-            where T : class 
+        public virtual bool Visit<T, TProperty>(ExistsNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
+            where TProperty : class, IEnumerable
+        {
+            return next(this);
+        }
+
+        public virtual bool Visit<T, TProperty, TElement>(EachNode<T, TProperty, TElement> node,
+                                                          Func<RuntimeModelVisitor, bool> next)
+            where T : class
             where TProperty : class, IEnumerable
         {
             return next(this);

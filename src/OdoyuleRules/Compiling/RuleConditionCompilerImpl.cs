@@ -92,10 +92,20 @@ namespace OdoyuleRules.Compiling
             return base.Visit(condition, next);
         }
 
-        public override bool Visit<T, TProperty>(PropertyExistsCondition<T, TProperty> condition, Func<SemanticModelVisitor, bool> next)
+        public override bool Visit<T, TProperty>(PropertyExistsCondition<T, TProperty> condition,
+                                                 Func<SemanticModelVisitor, bool> next)
         {
             RunNodeSelector(condition.PropertyExpression,
                             x => new ExistsNodeSelectorFactory<TProperty>(x, _configurator));
+
+            return base.Visit(condition, next);
+        }
+
+        public override bool Visit<T, TProperty, TElement>(PropertyEachCondition<T, TProperty, TElement> condition,
+                                                 Func<SemanticModelVisitor, bool> next)
+        {
+            RunNodeSelector(condition.PropertyExpression,
+                            x => new EachNodeSelectorFactory<TProperty, TElement>(x, _configurator));
 
             return base.Visit(condition, next);
         }

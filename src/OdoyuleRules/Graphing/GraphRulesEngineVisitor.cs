@@ -80,7 +80,8 @@ namespace OdoyuleRules.Graphing
         public override bool Visit<T, TProperty>(ValueNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
             _current = _vertices.Get(node.Id,
-                                     id => new Vertex(typeof (ValueNode<,>), typeof (TProperty), "== " + node.Value.ToString()));
+                                     id =>
+                                     new Vertex(typeof (ValueNode<,>), typeof (TProperty), "== " + node.Value.ToString()));
 
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
@@ -111,7 +112,8 @@ namespace OdoyuleRules.Graphing
 
         public override bool Visit<T, TProperty>(NotNullNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
-            _current = _vertices.Get(node.Id, id => new Vertex(typeof(NotNullNode<,>), typeof(Token<T, TProperty>), "not null"));
+            _current = _vertices.Get(node.Id,
+                                     id => new Vertex(typeof (NotNullNode<,>), typeof (Token<T, TProperty>), "not null"));
 
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
@@ -121,7 +123,21 @@ namespace OdoyuleRules.Graphing
 
         public override bool Visit<T, TProperty>(ExistsNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
-            _current = _vertices.Get(node.Id, id => new Vertex(typeof(ExistsNode<,>), typeof(Token<T, TProperty>), "exists"));
+            _current = _vertices.Get(node.Id,
+                                     id => new Vertex(typeof (ExistsNode<,>), typeof (Token<T, TProperty>), "exists"));
+
+            if (_stack.Count > 0)
+                _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
+
+            return Next(() => base.Visit(node, next));
+        }
+
+        public override bool Visit<T, TProperty, TElement>(EachNode<T, TProperty, TElement> node,
+                                                           Func<RuntimeModelVisitor, bool> next)
+        {
+            _current = _vertices.Get(node.Id, id => new Vertex(typeof (EachNode<,,>), typeof (TElement),
+                                                               typeof (T).Tokens() + "."
+                                                               + typeof (TProperty).GetShortName() + "[n]"));
 
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
@@ -134,7 +150,7 @@ namespace OdoyuleRules.Graphing
             if (!_vertices.Has(node.Id))
             {
                 _current = _vertices.Get(node.Id, id => new Vertex(typeof (ConstantNode<>), typeof (T), "" /*"\x22A9"*/));
-               
+
                 if (_stack.Count > 0 && _rightActivation == node.Id)
                     _edges.Add(new Edge(_current, _stack.Peek(), _current.TargetType.Name));
             }
@@ -158,7 +174,8 @@ namespace OdoyuleRules.Graphing
 
         public override bool Visit<T, TDiscard>(LeftJoinNode<T, TDiscard> node, Func<RuntimeModelVisitor, bool> next)
         {
-            _current = _vertices.Get(node.Id, id => new Vertex(typeof (LeftJoinNode<,>), typeof (T), typeof (T).Tokens()));
+            _current = _vertices.Get(node.Id,
+                                     id => new Vertex(typeof (LeftJoinNode<,>), typeof (T), typeof (T).Tokens()));
 
             if (_rightActivation == node.Id)
             {
@@ -179,7 +196,8 @@ namespace OdoyuleRules.Graphing
         public override bool Visit<T>(DelegateProductionNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
             _current = _vertices.Get(node.Id,
-                                     id => new Vertex(typeof (DelegateProductionNode<>), typeof (T), typeof (T).Tokens()));
+                                     id =>
+                                     new Vertex(typeof (DelegateProductionNode<>), typeof (T), typeof (T).Tokens()));
 
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
