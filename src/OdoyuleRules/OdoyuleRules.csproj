@@ -47,7 +47,10 @@
     <Compile Include="Conditionals\Comparator.cs" />
     <Compile Include="Conditionals\Conditional.cs" />
     <Compile Include="Conditionals\ConstantValue.cs" />
+    <Compile Include="Conditionals\GreaterThanOrEqualValueComparator.cs" />
+    <Compile Include="Conditionals\LessThanOrEqualValueComparator.cs" />
     <Compile Include="Conditionals\GreaterThanValueComparator.cs" />
+    <Compile Include="Conditionals\LessThanValueComparator.cs" />
     <Compile Include="Conditionals\NullableConstantValue.cs" />
     <Compile Include="Conditionals\NullableTokenValueFactory.cs" />
     <Compile Include="Conditionals\ReferenceConstantValue.cs" />

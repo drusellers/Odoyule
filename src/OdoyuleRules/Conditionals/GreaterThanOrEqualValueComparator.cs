@@ -14,32 +14,32 @@ namespace OdoyuleRules.Conditionals
 {
     using System;
 
-    public class GreaterThanValueComparator<T> :
+    public class GreaterThanOrEqualValueComparator<T> :
         ValueComparator<T>,
-        IEquatable<GreaterThanValueComparator<T>>
+        IEquatable<GreaterThanOrEqualValueComparator<T>>
         where T : IComparable<T>
     {
-        public bool Equals(GreaterThanValueComparator<T> other)
+        public bool Equals(GreaterThanOrEqualValueComparator<T> other)
         {
             return !ReferenceEquals(null, other);
         }
 
         protected override bool Compare(T left, T right)
         {
-            return left.CompareTo(right) > 0;
+            return left.CompareTo(right) >= 0;
         }
 
         public override string ToString()
         {
-            return ">";
+            return ">=";
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (GreaterThanValueComparator<T>)) return false;
-            return Equals((GreaterThanValueComparator<T>) obj);
+            if (obj.GetType() != typeof (GreaterThanOrEqualValueComparator<T>)) return false;
+            return Equals((GreaterThanOrEqualValueComparator<T>) obj);
         }
 
         public override int GetHashCode()

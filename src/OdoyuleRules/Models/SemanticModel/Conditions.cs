@@ -55,7 +55,8 @@ namespace OdoyuleRules.Models.SemanticModel
 
         public static PropertyGreaterThanOrEqualCondition<T, TProperty> GreaterThanOrEqual<T, TProperty>(
             Expression<Func<T, TProperty>> propertyExpression, TProperty value)
-            where T : class
+            where T : class 
+            where TProperty : IComparable<TProperty>
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
@@ -65,6 +66,7 @@ namespace OdoyuleRules.Models.SemanticModel
         public static PropertyLessThanCondition<T, TProperty> LessThan<T, TProperty>(
             Expression<Func<T, TProperty>> propertyExpression, TProperty value)
             where T : class
+            where TProperty : IComparable<TProperty>
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
@@ -74,6 +76,7 @@ namespace OdoyuleRules.Models.SemanticModel
         public static PropertyLessThanOrEqualCondition<T, TProperty> LessThanOrEqual<T, TProperty>(
             Expression<Func<T, TProperty>> propertyExpression, TProperty value)
             where T : class
+            where TProperty : IComparable<TProperty>
         {
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 

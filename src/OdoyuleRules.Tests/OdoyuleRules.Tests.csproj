@@ -45,6 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Conditional_Specs.cs" />
+    <Compile Include="ConditionTests\Equal_Specs.cs" />
+    <Compile Include="ConditionTests\GreaterThanOrEqual_Specs.cs" />
+    <Compile Include="ConditionTests\GreaterThan_Specs.cs" />
+    <Compile Include="ConditionTests\LessThanOrEqual_Specs.cs" />
+    <Compile Include="ConditionTests\LessThan_Specs.cs" />
     <Compile Include="Declaration\Declaration_Specs.cs" />
     <Compile Include="Declaration\Deep_Specs.cs" />
     <Compile Include="Execution\Condition_Specs.cs" />

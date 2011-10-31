@@ -163,5 +163,44 @@ namespace OdoyuleRules
 
             return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
         }
+
+        public static CompareNode<T,TProperty> GreaterThanOrEqual<T,TProperty>(this RuntimeConfigurator configurator,
+            TProperty value) 
+            where T : class
+            where TProperty : IComparable<TProperty>
+        {
+            Value<TProperty> rightValue = Conditional.Constant(value);
+            TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
+
+            var comparator = new GreaterThanOrEqualValueComparator<TProperty>();
+
+            return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
+        }       
+        
+        public static CompareNode<T,TProperty> LessThan<T,TProperty>(this RuntimeConfigurator configurator,
+            TProperty value) 
+            where T : class
+            where TProperty : IComparable<TProperty>
+        {
+            Value<TProperty> rightValue = Conditional.Constant(value);
+            TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
+
+            var comparator = new LessThanValueComparator<TProperty>();
+
+            return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
+        }
+
+        public static CompareNode<T,TProperty> LessThanOrEqual<T,TProperty>(this RuntimeConfigurator configurator,
+            TProperty value) 
+            where T : class
+            where TProperty : IComparable<TProperty>
+        {
+            Value<TProperty> rightValue = Conditional.Constant(value);
+            TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
+
+            var comparator = new LessThanOrEqualValueComparator<TProperty>();
+
+            return configurator.CreateNode(id => new CompareNode<T, TProperty>(id, tokenValue, comparator, rightValue));
+        }
     }
 }

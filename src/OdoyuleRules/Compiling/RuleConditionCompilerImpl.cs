@@ -14,6 +14,7 @@ namespace OdoyuleRules.Compiling
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq.Expressions;
     using Configuration.RuleConfigurators;
     using Configuration.RulesEngineConfigurators;
     using Configuration.RulesEngineConfigurators.Selectors;
@@ -43,7 +44,7 @@ namespace OdoyuleRules.Compiling
             var equalFactory = new EqualNodeSelectorFactory<TProperty>(alphaFactory, _configurator, condition.Value);
 
             var visitor = new PropertyExpressionVisitor<T>(equalFactory, _configurator);
-            var selector = visitor.CreateSelector(condition.PropertyExpression.Body);
+            NodeSelector selector = visitor.CreateSelector(condition.PropertyExpression.Body);
 
             selector.Select();
 
@@ -53,18 +54,39 @@ namespace OdoyuleRules.Compiling
         public override bool Visit<T, TProperty>(PropertyGreaterThanCondition<T, TProperty> condition,
                                                  Func<SemanticModelVisitor, bool> next)
         {
-            var conditionFactory = new ConditionAlphaNodeSelectorFactory(_configurator, node => _alphaNodes.Add(node));
+            CompareNode<T, TProperty> compareNode = _configurator.GreaterThan<T, TProperty>(condition.Value);
 
-            var alphaFactory = new AlphaNodeSelectorFactory(conditionFactory, _configurator);
+            AddCompareCondition(condition.PropertyExpression, compareNode);
 
-            var compareNode = _configurator.GreaterThan<T, TProperty>(condition.Value);
+            return base.Visit(condition, next);
+        }
 
-            var compareFactory = new CompareNodeSelectorFactory<TProperty>(alphaFactory, _configurator, compareNode.Comparator, compareNode.Value);
+        public override bool Visit<T, TProperty>(PropertyGreaterThanOrEqualCondition<T, TProperty> condition,
+                                                 Func<SemanticModelVisitor, bool> next)
+        {
+            CompareNode<T, TProperty> compareNode = _configurator.GreaterThanOrEqual<T, TProperty>(condition.Value);
 
-            var visitor = new PropertyExpressionVisitor<T>(compareFactory, _configurator);
-            var selector = visitor.CreateSelector(condition.PropertyExpression.Body);
+            AddCompareCondition(condition.PropertyExpression, compareNode);
 
-            selector.Select();
+            return base.Visit(condition, next);
+        }
+
+        public override bool Visit<T, TProperty>(PropertyLessThanCondition<T, TProperty> condition,
+                                                 Func<SemanticModelVisitor, bool> next)
+        {
+            CompareNode<T, TProperty> compareNode = _configurator.LessThan<T, TProperty>(condition.Value);
+
+            AddCompareCondition(condition.PropertyExpression, compareNode);
+
+            return base.Visit(condition, next);
+        }
+
+        public override bool Visit<T, TProperty>(PropertyLessThanOrEqualCondition<T, TProperty> condition,
+                                                 Func<SemanticModelVisitor, bool> next)
+        {
+            CompareNode<T, TProperty> compareNode = _configurator.LessThanOrEqual<T, TProperty>(condition.Value);
+
+            AddCompareCondition(condition.PropertyExpression, compareNode);
 
             return base.Visit(condition, next);
         }
@@ -103,6 +125,23 @@ namespace OdoyuleRules.Compiling
                             });
                     }
                 });
+        }
+
+        void AddCompareCondition<T, TProperty>(Expression<Func<T, TProperty>> propertyExpression,
+                                               CompareNode<T, TProperty> compareNode)
+            where T : class
+        {
+            var conditionFactory = new ConditionAlphaNodeSelectorFactory(_configurator, node => _alphaNodes.Add(node));
+
+            var alphaFactory = new AlphaNodeSelectorFactory(conditionFactory, _configurator);
+
+            var compareFactory = new CompareNodeSelectorFactory<TProperty>(alphaFactory, _configurator,
+                                                                           compareNode.Comparator,
+                                                                           compareNode.Value);
+
+            new PropertyExpressionVisitor<T>(compareFactory, _configurator)
+                .CreateSelector(propertyExpression.Body)
+                .Select();
         }
     }
 }

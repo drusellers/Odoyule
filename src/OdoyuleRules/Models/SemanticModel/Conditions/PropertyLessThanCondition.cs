@@ -21,6 +21,7 @@ namespace OdoyuleRules.Models.SemanticModel
         RuleCondition<T>,
         IEquatable<PropertyLessThanCondition<T, TProperty>>
         where T : class
+        where TProperty : IComparable<TProperty>
     {
         readonly TProperty _value;
 

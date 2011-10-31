@@ -13,7 +13,6 @@
 namespace OdoyuleRules.Tests
 {
     using Configuration;
-    using Models.SemanticModel;
     using NUnit.Framework;
 
     [TestFixture]

@@ -24,50 +24,61 @@ namespace OdoyuleRules.Compiling
         }
 
         public virtual bool Visit<T, TProperty>(PropertyEqualCondition<T, TProperty> condition,
-                                                Func<SemanticModelVisitor, bool> next) where T : class
+                                                Func<SemanticModelVisitor, bool> next)
+            where T : class
         {
             return next(this);
         }
 
         public bool Visit<T, TProperty>(PropertyCompareCondition<T, TProperty> condition,
-                                        Func<SemanticModelVisitor, bool> next) where T : class
+                                        Func<SemanticModelVisitor, bool> next)
+            where T : class
         {
             return next(this);
         }
 
         public virtual bool Visit<T, TProperty>(PropertyNotEqualCondition<T, TProperty> condition,
-                                                Func<SemanticModelVisitor, bool> next) where T : class
+                                                Func<SemanticModelVisitor, bool> next)
+            where T : class
         {
             return next(this);
         }
 
         public virtual bool Visit<T, TProperty>(PropertyLessThanCondition<T, TProperty> condition,
-                                                Func<SemanticModelVisitor, bool> next) where T : class
+                                                Func<SemanticModelVisitor, bool> next)
+            where T : class
+            where TProperty : IComparable<TProperty>
         {
             return next(this);
         }
 
         public virtual bool Visit<T, TProperty>(PropertyLessThanOrEqualCondition<T, TProperty> condition,
-                                                Func<SemanticModelVisitor, bool> next) where T : class
+                                                Func<SemanticModelVisitor, bool> next)
+            where T : class
+            where TProperty : IComparable<TProperty>
         {
             return next(this);
         }
 
         public virtual bool Visit<T, TProperty>(PropertyGreaterThanCondition<T, TProperty> condition,
-                                                Func<SemanticModelVisitor, bool> next) where T : class
+                                                Func<SemanticModelVisitor, bool> next)
+            where T : class
             where TProperty : IComparable<TProperty>
         {
             return next(this);
         }
 
         public virtual bool Visit<T, TProperty>(PropertyGreaterThanOrEqualCondition<T, TProperty> condition,
-                                                Func<SemanticModelVisitor, bool> next) where T : class
+                                                Func<SemanticModelVisitor, bool> next)
+            where T : class
+            where TProperty : IComparable<TProperty>
         {
             return next(this);
         }
 
         public virtual bool Visit<T, TProperty>(PropertyNotNullCondition<T, TProperty> condition,
-                                                Func<SemanticModelVisitor, bool> next) where T : class
+                                                Func<SemanticModelVisitor, bool> next)
+            where T : class
         {
             return next(this);
         }

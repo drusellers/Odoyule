@@ -77,6 +77,7 @@
             RulesEngine rulesEngine = RulesEngineFactory.New(x =>
             {
                 x.Add(_rule);
+                x.Add(_rule2);
             });
 
             rulesEngine.ShowVisualizer();
@@ -86,6 +87,7 @@
         Order _result;
         Order _resultB;
         Rule _rule;
+        Rule _rule2;
 
         [TestFixtureSetUp]
         public void Define_rule()
@@ -104,6 +106,7 @@
                 };
 
             _rule = new OdoyuleRule("RuleA", conditions, consequences);
+            _rule2 = new OdoyuleRule("RuleB", conditions, consequences);
         }
 
         class Customer
