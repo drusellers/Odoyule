@@ -16,6 +16,7 @@ namespace OdoyuleRules.Graphing
     using System.Collections.Generic;
     using Models.RuntimeModel;
     using Util.Caching;
+    using Visualization;
 
     public class GraphRulesEngineVisitor :
         RuntimeModelVisitorImpl
@@ -47,7 +48,7 @@ namespace OdoyuleRules.Graphing
 
         public override bool Visit<T>(AlphaNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
-            _current = _vertices.Get(node.Id, id => new Vertex(typeof (AlphaNode<>), typeof (T), Tokens<T>()));
+            _current = _vertices.Get(node.Id, id => new Vertex(typeof (AlphaNode<>), typeof (T), typeof (T).Tokens()));
 
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
@@ -58,7 +59,7 @@ namespace OdoyuleRules.Graphing
         public override bool Visit<T, TProperty>(PropertyNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
             _current = _vertices.Get(node.Id, id => new Vertex(typeof (PropertyNode<,>), typeof (TProperty),
-                                                               Tokens<T>() + "." + node.PropertyInfo.Name));
+                                                               typeof (T).Tokens() + "." + node.PropertyInfo.Name));
 
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
@@ -118,6 +119,16 @@ namespace OdoyuleRules.Graphing
             return Next(() => base.Visit(node, next));
         }
 
+        public override bool Visit<T, TProperty>(ExistsNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+        {
+            _current = _vertices.Get(node.Id, id => new Vertex(typeof(ExistsNode<,>), typeof(Token<T, TProperty>), "exists"));
+
+            if (_stack.Count > 0)
+                _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
+
+            return Next(() => base.Visit(node, next));
+        }
+
         public override bool Visit<T>(ConstantNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
             if (!_vertices.Has(node.Id))
@@ -133,7 +144,7 @@ namespace OdoyuleRules.Graphing
 
         public override bool Visit<T>(JoinNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
-            _current = _vertices.Get(node.Id, id => new Vertex(typeof (JoinNode<>), typeof (T), Tokens<T>()));
+            _current = _vertices.Get(node.Id, id => new Vertex(typeof (JoinNode<>), typeof (T), typeof (T).Tokens()));
 
             if (_rightActivation == node.Id)
             {
@@ -147,7 +158,7 @@ namespace OdoyuleRules.Graphing
 
         public override bool Visit<T, TDiscard>(LeftJoinNode<T, TDiscard> node, Func<RuntimeModelVisitor, bool> next)
         {
-            _current = _vertices.Get(node.Id, id => new Vertex(typeof (LeftJoinNode<,>), typeof (T), Tokens<T>()));
+            _current = _vertices.Get(node.Id, id => new Vertex(typeof (LeftJoinNode<,>), typeof (T), typeof (T).Tokens()));
 
             if (_rightActivation == node.Id)
             {
@@ -168,7 +179,7 @@ namespace OdoyuleRules.Graphing
         public override bool Visit<T>(DelegateProductionNode<T> node, Func<RuntimeModelVisitor, bool> next)
         {
             _current = _vertices.Get(node.Id,
-                                     id => new Vertex(typeof (DelegateProductionNode<>), typeof (T), Tokens<T>()));
+                                     id => new Vertex(typeof (DelegateProductionNode<>), typeof (T), typeof (T).Tokens()));
 
             if (_stack.Count > 0)
                 _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
@@ -203,23 +214,6 @@ namespace OdoyuleRules.Graphing
             }
 
             return callback();
-        }
-
-        string Tokens<T>()
-        {
-            return Tokens(typeof (T));
-        }
-
-        string Tokens(Type type)
-        {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Token<,>))
-            {
-                Type[] arguments = type.GetGenericArguments();
-
-                return string.Join(",", Tokens(arguments[0]), arguments[1].Name);
-            }
-
-            return type.Name;
         }
     }
 }

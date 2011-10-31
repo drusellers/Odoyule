@@ -20,9 +20,9 @@ namespace OdoyuleRules.Visualization
         RuntimeModelVisitorImpl
     {
         const int PaddingWidth = 2;
+        readonly StringBuilder _sb;
         int _depth;
         string _padding;
-        readonly StringBuilder _sb;
 
         public TextRuntimeModelVisitor()
         {
@@ -61,7 +61,7 @@ namespace OdoyuleRules.Visualization
         }
 
         public override bool Visit<TInput, TOutput>(ConvertNode<TInput, TOutput> node,
-                                                   Func<RuntimeModelVisitor, bool> next)
+                                                    Func<RuntimeModelVisitor, bool> next)
         {
             Append("ConvertNode[{0}] => {1}", Tokens<TInput>(), Tokens<TOutput>());
 
@@ -97,7 +97,7 @@ namespace OdoyuleRules.Visualization
         }
 
         public override bool Visit<T, TProperty>(EqualNode<T, TProperty> node,
-                                                Func<RuntimeModelVisitor, bool> next)
+                                                 Func<RuntimeModelVisitor, bool> next)
         {
             Append("EqualNode[{0}] ({1})", Tokens<T>(), typeof (TProperty).Name);
 
@@ -122,6 +122,13 @@ namespace OdoyuleRules.Visualization
         public override bool Visit<T, TProperty>(NotNullNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
             Append("NotNullNode[{0}] != null", Tokens<T>());
+
+            return Indent(next);
+        }
+
+        public override bool Visit<T, TProperty>(ExistsNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
+        {
+            Append("ExistsNode[{0}]", Tokens<T>());
 
             return Indent(next);
         }

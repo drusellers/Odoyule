@@ -13,6 +13,8 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Reflection;
     using Util;
@@ -90,6 +92,16 @@ namespace OdoyuleRules.Models.SemanticModel
             PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
 
             return new PropertyNotNullCondition<T, TProperty>(propertyInfo, propertyExpression);
+        }
+
+        public static PropertyExistsCondition<T, TProperty> Exists<T, TProperty>(
+            Expression<Func<T, TProperty>> propertyExpression)
+            where T : class
+            where TProperty : IEnumerable
+        {
+            PropertyInfo propertyInfo = propertyExpression.GetPropertyInfo();
+
+            return new PropertyExistsCondition<T, TProperty>(propertyInfo, propertyExpression);
         }
     }
 }

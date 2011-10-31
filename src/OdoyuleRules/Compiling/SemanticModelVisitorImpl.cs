@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Compiling
 {
     using System;
+    using System.Collections;
     using Models.SemanticModel;
 
     public class SemanticModelVisitorImpl :
@@ -79,6 +80,14 @@ namespace OdoyuleRules.Compiling
         public virtual bool Visit<T, TProperty>(PropertyNotNullCondition<T, TProperty> condition,
                                                 Func<SemanticModelVisitor, bool> next)
             where T : class
+        {
+            return next(this);
+        }
+
+        public virtual bool Visit<T, TProperty>(PropertyExistsCondition<T, TProperty> condition,
+                                                Func<SemanticModelVisitor, bool> next)
+            where T : class
+            where TProperty : IEnumerable
         {
             return next(this);
         }

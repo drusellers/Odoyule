@@ -13,6 +13,7 @@
 namespace OdoyuleRules
 {
     using System;
+    using System.Collections;
     using System.Linq.Expressions;
     using System.Reflection;
     using Conditionals;
@@ -210,6 +211,15 @@ namespace OdoyuleRules
             TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
 
             return configurator.CreateNode(id => new NotNullNode<T, TProperty>(id, tokenValue));
+        }
+
+        public static ExistsNode<T, TProperty> Exists<T,TProperty>(this RuntimeConfigurator configurator) 
+            where T : class
+            where TProperty : class, IEnumerable
+        {
+            TokenValueFactory<T, TProperty> tokenValue = Conditional.Property<T, TProperty>();
+
+            return configurator.CreateNode(id => new ExistsNode<T, TProperty>(id, tokenValue));
         }
     }
 }

@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
+    using System.Collections;
 
     public interface RuntimeModelVisitor
     {
@@ -55,5 +56,9 @@ namespace OdoyuleRules.Models.RuntimeModel
         bool Visit<T,TProperty>(NotNullNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
             where T : class 
             where TProperty : class;
+
+        bool Visit<T,TProperty>(ExistsNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next) 
+            where T : class 
+            where TProperty : class, IEnumerable;
     }
 }

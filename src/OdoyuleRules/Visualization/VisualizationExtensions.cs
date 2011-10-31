@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Visualization
 {
     using System;
+    using System.Linq;
     using Models.RuntimeModel;
 
     public static class VisualizationExtensions
@@ -23,7 +24,23 @@ namespace OdoyuleRules.Visualization
             {
                 Type[] arguments = type.GetGenericArguments();
 
-                return string.Join(",", Tokens(arguments[0]), arguments[1].Name);
+                return string.Join(",", Tokens(arguments[0]), arguments[1].GetShortName());
+            }
+
+            return type.Name;
+        }
+
+        public static string GetShortName(this Type type)
+        {
+            if (type.IsGenericType)
+            {
+                string name = type.GetGenericTypeDefinition().Name;
+                name = name.Substring(0, name.IndexOf('`'));
+
+                Type[] arguments = type.GetGenericArguments();
+                string innerTypeName = string.Join(",", arguments.Select(x => x.GetShortName()).ToArray());
+
+                return string.Format("{0}<{1}>", name, innerTypeName);
             }
 
             return type.Name;

@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.SemanticModel
 {
     using System;
+    using System.Collections;
 
     public interface SemanticModelVisitor
     {
@@ -52,6 +53,11 @@ namespace OdoyuleRules.Models.SemanticModel
         bool Visit<T, TProperty>(PropertyNotNullCondition<T, TProperty> condition,
                                  Func<SemanticModelVisitor, bool> next)
             where T : class;
+
+        bool Visit<T, TProperty>(PropertyExistsCondition<T, TProperty> condition,
+                                 Func<SemanticModelVisitor, bool> next)
+            where T : class 
+            where TProperty : IEnumerable;
 
         bool Visit<T>(PredicateCondition<T> condition, Func<SemanticModelVisitor, bool> next)
             where T : class;

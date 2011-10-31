@@ -104,6 +104,8 @@
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\ConditionAlphaNodeSelectorFactory.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\EqualNodeSelector.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\EqualNodeSelectorFactory.cs" />
+    <Compile Include="Configuration\RulesEngineConfigurators\Selectors\ExistsNodeSelector.cs" />
+    <Compile Include="Configuration\RulesEngineConfigurators\Selectors\ExistsNodeSelectorFactory.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\ListNodeSelector.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\ListNodeSelectorFactory.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\NodeSelector.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="Models\RuntimeModel\ActivationContext.cs" />
     <Compile Include="Models\RuntimeModel\ActivationList.cs" />
     <Compile Include="Models\RuntimeModel\CompareNode.cs" />
+    <Compile Include="Models\RuntimeModel\ExistsNode.cs" />
     <Compile Include="Models\RuntimeModel\MemoryNode.cs" />
     <Compile Include="Models\RuntimeModel\ActivationTypeProxy.cs" />
     <Compile Include="Models\RuntimeModel\ActivationTypeProxyImpl.cs" />
@@ -177,6 +180,7 @@
     <Compile Include="Models\SemanticModel\Conditions\PropertyCompareCondition.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PropertyCondition.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PropertyEqualCondition.cs" />
+    <Compile Include="Models\SemanticModel\Conditions\PropertyExistsCondition.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PropertyGreaterThanCondition.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PropertyGreaterThanOrEqualCondition.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PropertyLessThanCondition.cs" />
