@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using Util.Caching;
 
@@ -61,9 +62,31 @@ namespace OdoyuleRules.Models.RuntimeModel
                 _removeCallback = removeCallback;
             }
 
+            public Type FactType
+            {
+                get { return typeof (T); }
+            }
+
+            public object Object
+            {
+                get { return _fact.Fact; }
+            }
+
             public void Remove()
             {
                 _removeCallback(_factId);
+            }
+        }
+
+        public IEnumerable<T> Select<T>() 
+            where T : class
+        {
+            foreach (var factHandle in _cache)
+            {
+                if(factHandle.FactType == typeof(T))
+                {
+                    yield return factHandle.Object as T;
+                }
             }
         }
     }

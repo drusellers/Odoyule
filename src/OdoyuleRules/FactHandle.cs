@@ -12,8 +12,14 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules
 {
+    using System;
+
     public interface FactHandle
     {
+        Type FactType { get; }
+
+        object Object { get; }
+
         void Remove();
     }
 }

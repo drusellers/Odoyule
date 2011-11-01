@@ -13,6 +13,7 @@
 namespace OdoyuleRules
 {
     using System;
+    using System.Collections.Generic;
 
     public interface Session :
         IDisposable
@@ -37,5 +38,13 @@ namespace OdoyuleRules
         /// Runs the rules until completion
         /// </summary>
         void Run();
+
+        /// <summary>
+        /// Returns an enumeration of the facts matching the specified type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        IEnumerable<T> Select<T>()
+            where T : class;
     }
 }

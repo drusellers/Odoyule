@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using Util.Caching;
 
@@ -97,6 +98,12 @@ namespace OdoyuleRules.Models.RuntimeModel
             while (_agenda.Run()) ;
 
             var endedAt = Stopwatch.GetTimestamp();
+        }
+
+        public IEnumerable<T> Select<T>() 
+            where T : class
+        {
+            return _facts.Select<T>();
         }
 
         ~StatefulSessionImpl()

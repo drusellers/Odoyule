@@ -18,9 +18,9 @@ namespace OdoyuleRules.Models.SemanticModel
     public class OdoyuleRule :
         Rule
     {
+        readonly IList<RuleCondition> _conditions;
+        readonly IList<RuleConsequence> _consequences;
         readonly string _ruleName;
-        IList<RuleCondition> _conditions;
-        IList<RuleConsequence> _consequences;
 
         public OdoyuleRule(string ruleName,
                            IEnumerable<RuleCondition> conditions,

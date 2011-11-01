@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
+    using System.Collections.Generic;
     using Util.Caching;
 
     class StatelessSessionImpl :
@@ -89,6 +90,12 @@ namespace OdoyuleRules.Models.RuntimeModel
         public void Run()
         {
             _agenda.Run();
+        }
+
+        public IEnumerable<T> Select<T>() 
+            where T : class
+        {
+            return _facts.Select<T>();
         }
 
         ~StatelessSessionImpl()

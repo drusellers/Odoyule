@@ -10,16 +10,24 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Configuration.RulesEngineConfigurators
+namespace OdoyuleRules.Designer
 {
-    using Models.SemanticModel;
+    using System;
 
-    public interface RulesEngineConfigurator
+    public class ThenConfiguratorImpl<T> :
+        ThenConfigurator<T>
+        where T : class
     {
-        /// <summary>
-        /// Add rules to the rules engine (using an already generated semantic model)
-        /// </summary>
-        /// <param name="rules">The rules to add</param>
-        void Add(params Rule[] rules);
+        readonly Binding<T> _binding;
+
+        public ThenConfiguratorImpl(Binding<T> binding)
+        {
+            _binding = binding;
+        }
+
+        public void Add<TFact>(Func<T, TFact> factFactory)
+            where TFact : class
+        {
+        }
     }
 }

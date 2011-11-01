@@ -10,16 +10,15 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Configuration.RulesEngineConfigurators
+namespace OdoyuleRules.Designer
 {
-    using Models.SemanticModel;
+    using System;
+    using System.Linq.Expressions;
 
-    public interface RulesEngineConfigurator
+    public interface Binding<T>
+        where T : class
     {
-        /// <summary>
-        /// Add rules to the rules engine (using an already generated semantic model)
-        /// </summary>
-        /// <param name="rules">The rules to add</param>
-        void Add(params Rule[] rules);
+        Binding<T> When(Expression<Func<T, bool>> expression);
+        Binding<T> Then(Action<ThenConfigurator<T>> configureCallback);
     }
 }
