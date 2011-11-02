@@ -65,7 +65,7 @@ namespace OdoyuleRules.Models.RuntimeModel
             GC.SuppressFinalize(this);
         }
 
-        public FactHandle Add<T>(T fact)
+        public FactHandle<T> Add<T>(T fact)
             where T : class
         {
             ActivationContext<T> context = CreateContext(fact);
@@ -100,10 +100,10 @@ namespace OdoyuleRules.Models.RuntimeModel
             var endedAt = Stopwatch.GetTimestamp();
         }
 
-        public IEnumerable<T> Select<T>() 
+        public IEnumerable<FactHandle<T>> Facts<T>() 
             where T : class
         {
-            return _facts.Select<T>();
+            return _facts.Facts<T>();
         }
 
         ~StatefulSessionImpl()

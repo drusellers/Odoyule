@@ -22,4 +22,11 @@ namespace OdoyuleRules
 
         void Remove();
     }
+
+    public interface FactHandle<T> :
+        FactHandle
+        where T : class
+    {
+        T Fact { get; }
+    }
 }

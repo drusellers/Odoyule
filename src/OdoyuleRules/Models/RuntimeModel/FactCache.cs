@@ -14,6 +14,7 @@ namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using Util.Caching;
 
@@ -27,7 +28,7 @@ namespace OdoyuleRules.Models.RuntimeModel
             _cache = new ConcurrentCache<int, FactHandle>();
         }
 
-        public FactHandle Add<T>(ActivationContext<T> fact)
+        public FactHandle<T> Add<T>(ActivationContext<T> fact)
             where T : class
         {
             if (fact == null)
@@ -47,8 +48,15 @@ namespace OdoyuleRules.Models.RuntimeModel
             _cache.Clear();
         }
 
+        public IEnumerable<FactHandle<T>> Facts<T>()
+            where T : class
+        {
+            return _cache.Where(factHandle => factHandle.FactType == typeof (T))
+                .Cast<FactHandle<T>>();
+        }
+
         class FactHandleImpl<T> :
-            FactHandle
+            FactHandle<T>
             where T : class
         {
             readonly ActivationContext<T> _fact;
@@ -76,17 +84,10 @@ namespace OdoyuleRules.Models.RuntimeModel
             {
                 _removeCallback(_factId);
             }
-        }
 
-        public IEnumerable<T> Select<T>() 
-            where T : class
-        {
-            foreach (var factHandle in _cache)
+            public T Fact
             {
-                if(factHandle.FactType == typeof(T))
-                {
-                    yield return factHandle.Object as T;
-                }
+                get { return _fact.Fact; }
             }
         }
     }

@@ -13,6 +13,7 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using Util.Caching;
 
@@ -65,7 +66,7 @@ namespace OdoyuleRules.Models.RuntimeModel
             GC.SuppressFinalize(this);
         }
 
-        public FactHandle Add<T>(T fact)
+        public FactHandle<T> Add<T>(T fact)
             where T : class
         {
             ActivationContext<T> context = CreateContext(fact);
@@ -92,10 +93,10 @@ namespace OdoyuleRules.Models.RuntimeModel
             _agenda.Run();
         }
 
-        public IEnumerable<T> Select<T>() 
+        public IEnumerable<FactHandle<T>>  Facts<T>() 
             where T : class
         {
-            return _facts.Select<T>();
+            return _facts.Facts<T>();
         }
 
         ~StatelessSessionImpl()

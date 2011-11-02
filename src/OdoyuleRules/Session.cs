@@ -24,7 +24,7 @@ namespace OdoyuleRules
         /// <typeparam name="T">The type of the fact</typeparam>
         /// <param name="obj">The fact</param>
         /// <returns>A fact handle, which can be used to remove the fact from the session</returns>
-        FactHandle Add<T>(T obj)
+        FactHandle<T> Add<T>(T obj)
             where T : class;
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace OdoyuleRules
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        IEnumerable<T> Select<T>()
+        IEnumerable<FactHandle<T>> Facts<T>()
             where T : class;
     }
 }

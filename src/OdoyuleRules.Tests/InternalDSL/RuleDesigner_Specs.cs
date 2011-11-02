@@ -29,7 +29,7 @@ namespace OdoyuleRules.Tests.InternalDSL
                 session.Add(new Order {OrderId = "123", Amount = 10001.0m});
                 session.Run();
 
-                List<Violation> violations = session.Select<Violation>().ToList();
+                List<FactHandle<Violation>> violations = session.Facts<Violation>().ToList();
 
                 Assert.AreEqual(1, violations.Count);
             }

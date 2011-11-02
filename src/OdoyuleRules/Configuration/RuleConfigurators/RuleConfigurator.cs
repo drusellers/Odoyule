@@ -13,9 +13,7 @@
 namespace OdoyuleRules.Configuration.RuleConfigurators
 {
     using System;
-    using System.Linq.Expressions;
     using Models.SemanticModel;
-    using Parsing;
 
     public interface RuleConfigurator
     {
