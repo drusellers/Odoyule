@@ -12,22 +12,22 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Designer
 {
-    using System;
+    using Configuration.RuleConfigurators;
 
     public class ThenConfiguratorImpl<T> :
         ThenConfigurator<T>
         where T : class
     {
-        readonly Binding<T> _binding;
+        readonly BindingImpl<T> _binding;
 
-        public ThenConfiguratorImpl(Binding<T> binding)
+        public ThenConfiguratorImpl(BindingImpl<T> binding)
         {
             _binding = binding;
         }
 
-        public void Add<TFact>(Func<T, TFact> factFactory)
-            where TFact : class
+        public void AddConfigurator(RuleBuilderConfigurator configurator)
         {
+            _binding.Add(configurator);
         }
     }
 }

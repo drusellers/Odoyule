@@ -12,7 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Configuration.RuleConfigurators
 {
-    public interface RuleConsequenceConfigurator<T>
+    public interface RuleConsequenceConfigurator
+    {
+    }
+
+    public interface RuleConsequenceConfigurator<T> :
+        RuleConditionConfigurator
         where T : class
     {
     }

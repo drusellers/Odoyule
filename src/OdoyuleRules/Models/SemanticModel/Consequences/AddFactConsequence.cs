@@ -10,15 +10,30 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Configuration.RuleConfigurators
+namespace OdoyuleRules.Models.SemanticModel
 {
-    public interface RuleConditionConfigurator
-    {
-    }
+    using System;
 
-    public interface RuleConditionConfigurator<T> :
-        RuleConditionConfigurator
+    public class AddFactConsequence<T, TFact> :
+        RuleConsequence<T>
         where T : class
+        where TFact : class
     {
+        readonly Func<T, TFact> _factFactory;
+
+        public AddFactConsequence(Func<T, TFact> factFactory)
+        {
+            _factFactory = factFactory;
+        }
+
+        public Func<T, TFact> FactFactory
+        {
+            get { return _factFactory; }
+        }
+
+        public bool Accept(SemanticModelVisitor visitor)
+        {
+            return visitor.Visit(this, x => true);
+        }
     }
 }

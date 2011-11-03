@@ -65,11 +65,11 @@
     <Compile Include="Conditionals\ValueTypeTokenValue.cs" />
     <Compile Include="Conditionals\ValueTypeTokenValueFactory.cs" />
     <Compile Include="Configuration\Builders\RuleBuilder.cs" />
+    <Compile Include="Configuration\Builders\RuleBuilderImpl.cs" />
     <Compile Include="Configuration\Builders\RulesEngineBuilder.cs" />
     <Compile Include="Configuration\Builders\RulesEngineBuilderImpl.cs" />
     <Compile Include="Configuration\Builders\RuleSetBuilder.cs" />
     <Compile Include="Configuration\Builders\RuleSetBuilderImpl.cs" />
-    <Compile Include="Configuration\ConditionExtensions.cs" />
     <Compile Include="Configuration\ConfigurationException.cs" />
     <Compile Include="Configuration\Configurators\ConfigurationResult.cs" />
     <Compile Include="Configuration\Configurators\ConfigurationResultImpl.cs" />
@@ -78,9 +78,10 @@
     <Compile Include="Configuration\Configurators\ValidationResultDisposition.cs" />
     <Compile Include="Configuration\Configurators\ValidationResultExtensions.cs" />
     <Compile Include="Configuration\Configurators\ValidationResultImpl.cs" />
-    <Compile Include="Configuration\ConsequenceExtensions.cs" />
     <Compile Include="Configuration\DesignerExtensions.cs" />
     <Compile Include="Configuration\RuleConfigurators\DelegateRuleConsequenceConfigurator.cs" />
+    <Compile Include="Configuration\RuleConfigurators\RuleBuilderConfigurator.cs" />
+    <Compile Include="Configuration\RuleConsequenceExtensions.cs" />
     <Compile Include="Configuration\RulesEngineConfigurators\Selectors\PropertyExpressionVisitor.cs" />
     <Compile Include="Configuration\RuleConfigurators\RuleConditionConfigurator.cs" />
     <Compile Include="Configuration\RuleConfigurators\RuleConditionConfiguratorImpl.cs" />
@@ -132,11 +133,14 @@
     <Compile Include="Designer\ConditionExpressionExtensions.cs" />
     <Compile Include="Designer\ConditionExpressionParser.cs" />
     <Compile Include="Designer\ConditionExpressionParserImpl.cs" />
+    <Compile Include="Designer\LeftHandSideExpressionVisitor.cs" />
+    <Compile Include="Designer\RightHandSideExpressionVisitor.cs" />
     <Compile Include="Designer\RuleDefinition.cs" />
     <Compile Include="Designer\RuleDefinitionConfigurator.cs" />
+    <Compile Include="Designer\RuleConsequenceConfiguratorImpl.cs" />
+    <Compile Include="Designer\ConditionExpressionVisitor.cs" />
     <Compile Include="Designer\ThenConfigurator.cs" />
     <Compile Include="Designer\ThenConfiguratorImpl.cs" />
-    <Compile Include="Designer\ConditionExpressionVisitor.cs" />
     <Compile Include="FactHandle.cs" />
     <Compile Include="Graphing\Edge.cs" />
     <Compile Include="Graphing\GraphRulesEngineExtensions.cs" />
@@ -149,6 +153,7 @@
     <Compile Include="Models\RuntimeModel\Activation.cs" />
     <Compile Include="Models\RuntimeModel\ActivationContext.cs" />
     <Compile Include="Models\RuntimeModel\ActivationList.cs" />
+    <Compile Include="Models\RuntimeModel\AddFactProductionNode.cs" />
     <Compile Include="Models\RuntimeModel\CompareNode.cs" />
     <Compile Include="Models\RuntimeModel\EachNode.cs" />
     <Compile Include="Models\RuntimeModel\ExistsNode.cs" />
@@ -203,6 +208,7 @@
     <Compile Include="Models\SemanticModel\Conditions\PropertyNotEqualCondition.cs" />
     <Compile Include="Models\SemanticModel\Conditions\PropertyNotNullCondition.cs" />
     <Compile Include="Models\SemanticModel\Consequences.cs" />
+    <Compile Include="Models\SemanticModel\Consequences\AddFactConsequence.cs" />
     <Compile Include="Models\SemanticModel\Consequences\DelegateConsequence.cs" />
     <Compile Include="Models\SemanticModel\DynamicRuleSet.cs" />
     <Compile Include="Models\SemanticModel\OdoyuleRule.cs" />

@@ -13,7 +13,6 @@
 namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using Util.Caching;
 
@@ -26,8 +25,8 @@ namespace OdoyuleRules.Models.RuntimeModel
         readonly Cache<Type, ActivationTypeProxy> _objectCache;
         readonly RulesEngine _rulesEngine;
 
-        bool _disposed;
         Agenda _agenda;
+        bool _disposed;
 
         public StatelessSessionImpl(RulesEngine rulesEngine, Cache<Type, ActivationTypeProxy> objectCache)
         {
@@ -46,9 +45,9 @@ namespace OdoyuleRules.Models.RuntimeModel
             contextMemory.Access(callback);
         }
 
-        public void Schedule(Action operation, int priority = 0)
+        public void Schedule(Action<Session> operation, int priority = 0)
         {
-            _agenda.Schedule(operation, priority);
+            _agenda.Schedule(() => operation(this), priority);
         }
 
 
@@ -93,7 +92,7 @@ namespace OdoyuleRules.Models.RuntimeModel
             _agenda.Run();
         }
 
-        public IEnumerable<FactHandle<T>>  Facts<T>() 
+        public IEnumerable<FactHandle<T>> Facts<T>()
             where T : class
         {
             return _facts.Facts<T>();

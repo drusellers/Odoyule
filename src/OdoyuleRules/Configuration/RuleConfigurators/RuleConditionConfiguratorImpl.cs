@@ -14,40 +14,35 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
 {
     using System;
     using System.Collections.Generic;
+    using Builders;
+    using Configurators;
     using Models.SemanticModel;
 
     class RuleConditionConfiguratorImpl<T> :
-        RuleConditionConfigurator<T>
+        RuleConditionConfigurator<T>,
+        RuleBuilderConfigurator
         where T : class
     {
-        readonly IList<RuleConsequenceConfigurator<T>> _consequenceConfigurators;
-        IList<RuleCondition> _conditions;
-        readonly IList<RuleConsequence> _consequences;
+        readonly RuleCondition<T> _condition;
 
-        public RuleConditionConfiguratorImpl()
+        public RuleConditionConfiguratorImpl(RuleCondition condition)
         {
-            _consequenceConfigurators = new List<RuleConsequenceConfigurator<T>>();
-            _consequences = new List<RuleConsequence>();
-            _conditions = new List<RuleCondition>();
+            _condition = condition as RuleCondition<T>;
+            if (_condition == null)
+                throw new ArgumentException("The condition fact type must match the configurator type");
         }
 
-        public void AddCondition(RuleCondition condition)
+        public RuleBuilder Configure(RuleBuilder builder)
         {
-            _conditions.Add(condition);
+            builder.AddCondition(_condition);
+
+            return builder;
         }
 
-        public void AddConsequence(RuleConsequence consequence)
+        public IEnumerable<ValidationResult> ValidateConfiguration()
         {
-            _consequences.Add(consequence);
-        }
-
-        public RuleConsequenceConfigurator<T> Then(Action<T> callback)
-        {
-            var configurator = new DelegateRuleConsequenceConfigurator<T>(callback);
-
-            _consequenceConfigurators.Add(configurator);
-
-            return configurator;
+            if (_condition == null)
+                yield return this.Failure("Condition", "must not be null");
         }
     }
 }

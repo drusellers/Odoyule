@@ -32,7 +32,7 @@ namespace OdoyuleRules.Tests.Execution
         {
             _called = null;
 
-            var productionNode = new DelegateProductionNode<A>(16, x => _called = x);
+            var productionNode = new DelegateProductionNode<A>(16, (session,x) => _called = x);
 
             var constantNode = new ConstantNode<A>(42);
 
@@ -74,7 +74,7 @@ namespace OdoyuleRules.Tests.Execution
 
             var configurator = new RuntimeConfiguratorImpl();
 
-            var productionNode = new DelegateProductionNode<A>(16, x => _called = x);
+            var productionNode = new DelegateProductionNode<A>(16, (session,x) => _called = x);
 
             var constantNode = new ConstantNode<A>(42);
 

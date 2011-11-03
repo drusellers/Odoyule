@@ -33,7 +33,7 @@ namespace OdoyuleRules.Models.RuntimeModel
         /// </summary>
         /// <param name="operation">The operation to invoke</param>
         /// <param name="priority">The priority of the operation, should be zero</param>
-        void Schedule(Action operation, int priority = 0);
+        void Schedule(Action<Session> operation, int priority = 0);
     }
 
 

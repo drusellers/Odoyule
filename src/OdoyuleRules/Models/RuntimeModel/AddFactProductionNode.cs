@@ -1,4 +1,4 @@
-﻿// Copyright 2011 Chris Patterson
+// Copyright 2011 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -14,19 +14,19 @@ namespace OdoyuleRules.Models.RuntimeModel
 {
     using System;
 
-
-    public class DelegateProductionNode<T> :
+    public class AddFactProductionNode<T, TFact> :
         Activation<T>
         where T : class
+        where TFact : class
     {
-        readonly Action<Session, T> _callback;
+        readonly Func<T, TFact> _factFactory;
         readonly int _id;
         int _priority;
 
-        public DelegateProductionNode(int id, Action<Session, T> callback)
+        public AddFactProductionNode(int id, Func<T, TFact> factFactory)
         {
             _id = id;
-            _callback = callback;
+            _factFactory = factFactory;
             _priority = 0;
         }
 
@@ -35,14 +35,24 @@ namespace OdoyuleRules.Models.RuntimeModel
             get { return _id; }
         }
 
+
         public void Activate(ActivationContext<T> context)
         {
-            context.Schedule(session => _callback(session, context.Fact), _priority);
+            context.Schedule(session => AddFact(session, context.Fact), _priority);
         }
 
         public bool Accept(RuntimeModelVisitor visitor)
         {
             return visitor.Visit(this, next => true);
+        }
+
+        void AddFact(Session session, T fact)
+        {
+            TFact newFact = _factFactory(fact);
+            if (newFact != null)
+            {
+                session.Add(newFact);
+            }
         }
     }
 }

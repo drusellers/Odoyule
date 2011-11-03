@@ -18,20 +18,9 @@ namespace OdoyuleRules.Configuration.Builders
     {
         string RuleName { get; }
 
+        void AddCondition<T>(RuleCondition<T> condition);
+        void AddConsequence<T>(RuleConsequence<T> consequence);
+
         Rule Build();
-    }
-
-    public class RuleBuilderImpl : 
-        RuleBuilder
-    {
-        public string RuleName
-        {
-            get { throw new System.NotImplementedException(); }
-        }
-
-        public Rule Build()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

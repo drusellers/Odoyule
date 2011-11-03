@@ -13,6 +13,8 @@
 namespace OdoyuleRules.Designer
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
     using Configuration.RuleConfigurators;
 
@@ -29,6 +31,14 @@ namespace OdoyuleRules.Designer
 
         public Binding<T> When(Expression<Func<T, bool>> expression)
         {
+            IEnumerable<RuleConditionConfiguratorImpl<T>> conditions = expression.ParseConditions()
+                .Select(x => new RuleConditionConfiguratorImpl<T>(x));
+
+            foreach (var condition in conditions)
+            {
+                _configurator.AddConfigurator(condition);
+            }
+
             return this;
         }
 
@@ -39,6 +49,11 @@ namespace OdoyuleRules.Designer
             configureCallback(thenConfigurator);
 
             return this;
+        }
+
+        public void Add(RuleBuilderConfigurator configurator)
+        {
+            _configurator.AddConfigurator(configurator);
         }
     }
 }

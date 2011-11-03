@@ -48,6 +48,7 @@ namespace OdoyuleRules.Visualizer
                     {typeof (LeftJoinNode<,>), Color.LightGreen},
                     {typeof (ConditionNode<>), Color.Blue},
                     {typeof (DelegateProductionNode<>), Color.LightGray},
+                    {typeof (AddFactProductionNode<,>), Color.LightGray},
                     {typeof (ConstantNode<>), Color.Magenta},
                 };
 
@@ -66,6 +67,7 @@ namespace OdoyuleRules.Visualizer
                     {typeof (LeftJoinNode<,>), Color.Black},
                     {typeof (ConditionNode<>), Color.White},
                     {typeof (DelegateProductionNode<>), Color.Black},
+                    {typeof (AddFactProductionNode<,>), Color.Black},
                     {typeof (ConstantNode<>), Color.Black},
                 };
 

@@ -69,5 +69,9 @@ namespace OdoyuleRules.Models.SemanticModel
 
         bool Visit<T>(DelegateConsequence<T> consequence, Func<SemanticModelVisitor, bool> next)
             where T : class;
+
+        bool Visit<T,TFact>(AddFactConsequence<T,TFact> consequence, Func<SemanticModelVisitor, bool> next)
+            where T : class 
+            where TFact : class;
     }
 }

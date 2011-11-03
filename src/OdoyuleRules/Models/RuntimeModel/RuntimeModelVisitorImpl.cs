@@ -111,5 +111,12 @@ namespace OdoyuleRules.Models.RuntimeModel
         {
             return next(this);
         }
+
+        public virtual bool Visit<T, TFact>(AddFactProductionNode<T, TFact> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
+            where TFact : class
+        {
+            return next(this);
+        }
     }
 }

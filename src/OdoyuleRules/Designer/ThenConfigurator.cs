@@ -12,12 +12,11 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Designer
 {
-    using System;
+    using Configuration.RuleConfigurators;
 
     public interface ThenConfigurator<T>
         where T : class
     {
-        void Add<TFact>(Func<T, TFact> factFactory)
-            where TFact : class;
+        void AddConfigurator(RuleBuilderConfigurator consequenceConfigurator);
     }
 }

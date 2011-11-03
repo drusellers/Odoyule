@@ -14,6 +14,7 @@ namespace OdoyuleRules.Designer
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq.Expressions;
     using System.Reflection;
     using Models.SemanticModel;
@@ -57,17 +58,25 @@ namespace OdoyuleRules.Designer
         {
             switch (node.NodeType)
             {
+                case ExpressionType.Or:
+                case ExpressionType.OrAssign:
+                case ExpressionType.OrElse:
+                    throw new ArgumentException("Or conditions are not yet supported.");
+
+                case ExpressionType.NotEqual:
+                    throw new ArgumentException("Not equal is not yet supported");
+
                 case ExpressionType.Equal:
                     return ParseBinaryCondition(node, typeof (PropertyEqualCondition<,>));
 
                 case ExpressionType.LessThan:
-                    return ParseBinaryCondition(node, typeof(PropertyLessThanCondition<,>));
+                    return ParseBinaryCondition(node, typeof (PropertyLessThanCondition<,>));
 
                 case ExpressionType.LessThanOrEqual:
-                    return ParseBinaryCondition(node, typeof(PropertyLessThanOrEqualCondition<,>));
+                    return ParseBinaryCondition(node, typeof (PropertyLessThanOrEqualCondition<,>));
 
                 case ExpressionType.GreaterThan:
-                    return ParseBinaryCondition(node, typeof(PropertyGreaterThanCondition<,>));
+                    return ParseBinaryCondition(node, typeof (PropertyGreaterThanCondition<,>));
 
                 case ExpressionType.GreaterThanOrEqual:
                     return ParseBinaryCondition(node, typeof (PropertyGreaterThanOrEqualCondition<,>));
@@ -76,43 +85,66 @@ namespace OdoyuleRules.Designer
             return base.VisitBinary(node);
         }
 
-        Expression ParseBinaryCondition(BinaryExpression node, Type genericConditionType)
+        protected override Expression VisitUnary(UnaryExpression node)
         {
-            if (node.Left.NodeType == ExpressionType.MemberAccess
-                && node.Right.NodeType == ExpressionType.Constant)
+            if (node.NodeType == ExpressionType.Not)
             {
-                var memberAccess = node.Left as MemberExpression;
-                if (memberAccess == null)
-                    throw new ArgumentException();
+                Visit(Expression.MakeBinary(ExpressionType.NotEqual, node.Operand, Expression.Constant(true)));
+            }
+            else
+            {
+                Visit(node.Operand);
+            }
 
-                var propertyInfo = memberAccess.Member as PropertyInfo;
-                if (propertyInfo == null)
-                    throw new ArgumentException();
+            return node;
+        }
 
-                var constant = node.Right as ConstantExpression;
-                if (constant == null)
-                    throw new ArgumentException();
-
-                if (_parameter == null)
-                    throw new ArgumentException("The fact was not an input parameter to the expression");
-
-                var args = new[]
-                    {
-                        propertyInfo,
-                        Expression.Lambda(node.Left, _parameter),
-                        constant.Value,
-                    };
-
-                Type conditionType = genericConditionType.MakeGenericType(typeof (TFact),propertyInfo.PropertyType);
-
-                var condition = (RuleCondition) Activator.CreateInstance(conditionType, args);
-
-                _conditions.Add(condition);
-
+        protected override Expression VisitMember(MemberExpression node)
+        {
+            if(node.Type == typeof(bool))
+            {
+                Visit(Expression.MakeBinary(ExpressionType.Equal, node, Expression.Constant(true)));
                 return node;
             }
 
-            return base.VisitBinary(node);
+            return base.VisitMember(node);
+        }
+
+
+        Expression ParseBinaryCondition(BinaryExpression node, Type genericConditionType)
+        {
+            var leftVisitor = new LeftHandSideExpressionVisitor();
+            leftVisitor.Visit(node.Left);
+
+            if(leftVisitor.Member == null)
+                throw new ArgumentException("The left-hand side must be a member expression");
+
+            var propertyInfo = leftVisitor.Member.Member as PropertyInfo;
+            if (propertyInfo == null)
+                throw new ArgumentException();
+
+            var valueVisitor = new RightHandSideExpressionVisitor(propertyInfo.PropertyType);
+            valueVisitor.Visit(node.Right);
+
+            object value = valueVisitor.Value;
+
+            if (_parameter == null)
+                throw new ArgumentException("The fact was not an input parameter to the expression");
+
+            var args = new[]
+                {
+                    propertyInfo,
+                    Expression.Lambda(leftVisitor.Member, _parameter),
+                    value,
+                };
+
+            Type conditionType = genericConditionType.MakeGenericType(typeof (TFact), propertyInfo.PropertyType);
+
+            var condition = (RuleCondition) Activator.CreateInstance(conditionType, args);
+
+            _conditions.Add(condition);
+
+            return node;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace OdoyuleRules.Compiling
 {
     using System;
     using Configuration.RulesEngineConfigurators;
+    using Models.RuntimeModel;
     using Models.SemanticModel;
 
     public class RuleConsequenceCompilerImpl :
@@ -33,7 +34,19 @@ namespace OdoyuleRules.Compiling
         {
             _conditionCompiler.MatchJoinNode<T>(joinNode =>
                 {
-                    var node = _configurator.Delegate(consequence.Callback);
+                    DelegateProductionNode<T> node = _configurator.Delegate(consequence.Callback);
+                    joinNode.AddActivation(node);
+                });
+
+            return base.Visit(consequence, next);
+        }
+
+        public override bool Visit<T, TFact>(AddFactConsequence<T, TFact> consequence,
+                                             Func<SemanticModelVisitor, bool> next)
+        {
+            _conditionCompiler.MatchJoinNode<T>(joinNode =>
+                {
+                    AddFactProductionNode<T, TFact> node = _configurator.AddFact(consequence.FactFactory);
                     joinNode.AddActivation(node);
                 });
 

@@ -18,14 +18,14 @@ namespace OdoyuleRules.Models.SemanticModel
         RuleConsequence<T>
         where T : class
     {
-        readonly Action<T> _callback;
+        readonly Action<Session, T> _callback;
 
-        public DelegateConsequence(Action<T> callback)
+        public DelegateConsequence(Action<Session, T> callback)
         {
             _callback = callback;
         }
 
-        public Action<T> Callback
+        public Action<Session, T> Callback
         {
             get { return _callback; }
         }

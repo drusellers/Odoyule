@@ -110,5 +110,13 @@ namespace OdoyuleRules.Models.SemanticModel
         {
             return next(this);
         }
+
+        public virtual bool Visit<T, TFact>(AddFactConsequence<T, TFact> consequence,
+                                            Func<SemanticModelVisitor, bool> next) 
+            where T : class 
+            where TFact : class
+        {
+            return next(this);
+        }
     }
 }

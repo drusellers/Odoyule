@@ -141,8 +141,8 @@ namespace OdoyuleRules.Tests.Declaration
 
             var consequences = new RuleConsequence[]
                 {
-                    Consequences.Delegate<Order>(x => { _result = x; }),
-                    Consequences.Delegate<Order>(x => { _resultB = x; }),
+                    Consequences.Delegate<Order>((session,x) => { _result = x; }),
+                    Consequences.Delegate<Order>((session,x) => { _resultB = x; }),
                 };
 
             _rule = new OdoyuleRule("RuleA", conditions, consequences);
@@ -155,7 +155,7 @@ namespace OdoyuleRules.Tests.Declaration
 
             consequences = new RuleConsequence[]
                 {
-                    Consequences.Delegate((Account a) => { }),
+                    Consequences.Delegate((Session session, Account a) => { }),
                 };
 
             _rule3 = new OdoyuleRule("RuleC", conditions, consequences);

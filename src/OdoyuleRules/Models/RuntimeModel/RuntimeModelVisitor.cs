@@ -64,5 +64,9 @@ namespace OdoyuleRules.Models.RuntimeModel
         bool Visit<T, TProperty, TElement>(EachNode<T, TProperty, TElement> node, Func<RuntimeModelVisitor, bool> next)
             where T : class
             where TProperty : class, IEnumerable;
+
+        bool Visit<T, TFact>(AddFactProductionNode<T, TFact> node, Func<RuntimeModelVisitor, bool> next)
+            where T : class
+            where TFact : class;
     }
 }

@@ -128,10 +128,18 @@ namespace OdoyuleRules
 
 
         public static DelegateProductionNode<T> Delegate<T>(this RuntimeConfigurator configurator,
-                                                            Action<T> callback)
+                                                            Action<Session, T> callback)
             where T : class
         {
             return configurator.CreateNode(id => new DelegateProductionNode<T>(id, callback));
+        }
+
+        public static AddFactProductionNode<T,TFact> AddFact<T,TFact>(this RuntimeConfigurator configurator,
+                                                            Func<T, TFact> factFactory)
+            where T : class
+            where TFact : class
+        {
+            return configurator.CreateNode(id => new AddFactProductionNode<T,TFact>(id, factFactory));
         }
 
         public static CompareNode<T, TProperty> Compare<T, TProperty>(this RuntimeConfigurator configurator,

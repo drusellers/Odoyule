@@ -73,7 +73,7 @@ namespace OdoyuleRules.Tests.ConditionTests
 
             var consequences = new RuleConsequence[]
                 {
-                    Consequences.Delegate<Order>(x => { _result = x; }),
+                    Consequences.Delegate<Order>((session,x) => { _result = x; }),
                 };
 
             Rule rule = new OdoyuleRule("RuleA", conditions, consequences);

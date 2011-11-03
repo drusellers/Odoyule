@@ -75,6 +75,13 @@ namespace OdoyuleRules.Visualization
             return Indent(next);
         }
 
+        public override bool Visit<T, TFact>(AddFactProductionNode<T, TFact> node, Func<RuntimeModelVisitor, bool> next)
+        {
+            Append("AddFactProductionNode[{0}] => {1}", Tokens<T>(), typeof (TFact));
+
+            return base.Visit(node, next);
+        }
+
         public override bool Visit<T, TProperty>(PropertyNode<T, TProperty> node, Func<RuntimeModelVisitor, bool> next)
         {
             Append("PropertyNode[{0}].{1} ({2})", Tokens<T>(), node.PropertyInfo.Name, typeof (TProperty).Name);

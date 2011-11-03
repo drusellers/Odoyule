@@ -101,8 +101,8 @@
 
             var consequences = new RuleConsequence[]
                 {
-                    Consequences.Delegate((Order x) => { _result = x; }),
-                    Consequences.Delegate((Order x) => { _resultB = x; }),
+                    Consequences.Delegate((Session session, Order x) => { _result = x; }),
+                    Consequences.Delegate((Session session, Order x) => { _resultB = x; }),
                 };
 
             _rule = new OdoyuleRule("RuleA", conditions, consequences);

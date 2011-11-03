@@ -42,7 +42,7 @@ namespace OdoyuleRules.Models.RuntimeModel
         {
             context.Access<T>(_id, x => x.Activate(context));
 
-            context.Schedule(() => _successors.All(activation => activation.Activate(context)));
+            context.Schedule(x => _successors.All(activation => activation.Activate(context)));
         }
 
         public void RightActivate(ActivationContext context, Func<ActivationContext<T>, bool> callback)

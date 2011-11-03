@@ -12,8 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Designer
 {
-    using System;
-    using Configuration.Builders;
     using Configuration.RuleConfigurators;
     using Models.SemanticModel;
 
@@ -39,18 +37,16 @@ namespace OdoyuleRules.Designer
             return GetType().Name.Replace("Rule", "");
         }
 
-        protected Binding<T> Fact<T>() 
+        protected Binding<T> Fact<T>()
             where T : class
         {
-            var binding = _ruleConfigurator.Binding<T>();
+            Binding<T> binding = _ruleConfigurator.Binding<T>();
 
             return binding;
         }
 
         public Rule Build()
         {
-            RuleBuilder builder = new RuleBuilderImpl();
-
             return _ruleConfigurator.Configure();
         }
     }

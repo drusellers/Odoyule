@@ -97,7 +97,7 @@ namespace OdoyuleRules.Tests.Declaration
             var consequences = new RuleConsequence[]
                 {
                     Consequences.Delegate<Token<Token<Order, IList<OrderLine>>, Tuple<OrderLine, int>>>(
-                        x => _results.Add(x.Item2)),
+                        (session,x) => _results.Add(x.Item2)),
                 };
 
             Rule rule = new OdoyuleRule("RuleA", conditions, consequences);

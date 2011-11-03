@@ -24,6 +24,30 @@ namespace OdoyuleRules.Tests.InternalDSL
     public class When_parsing_predicate_expressions
     {
         [Test]
+        public void Should_parse_a_boolean_member_condition()
+        {
+            Expression<Func<A, bool>> expression = x => x.Available;
+
+            List<RuleCondition> conditions = expression.ParseConditions().ToList();
+
+            Assert.AreEqual(1, conditions.Count);
+
+            Assert.IsInstanceOf<PropertyEqualCondition<A, bool>>(conditions[0]);
+        }
+
+        [Test]
+        public void Should_parse_a_char_equals_condition()
+        {
+            Expression<Func<B, bool>> expression = x => x.Code == 'A';
+
+            List<RuleCondition> conditions = expression.ParseConditions().ToList();
+
+            Assert.AreEqual(1, conditions.Count);
+
+            Assert.IsInstanceOf<PropertyEqualCondition<B, char>>(conditions[0]);
+        }
+
+        [Test]
         public void Should_parse_a_greater_than_condition()
         {
             Expression<Func<B, bool>> expression = x => x.Value > 0;
@@ -92,15 +116,40 @@ namespace OdoyuleRules.Tests.InternalDSL
             Assert.IsInstanceOf<PropertyEqualCondition<A, string>>(conditions[1]);
         }
 
+        [Test]
+        public void Should_support_basic_math_functions()
+        {
+            Expression<Func<B, bool>> expression = x => x.Value > 3 + 4 && x.Value == 16/2;
+
+            List<RuleCondition> conditions = expression.ParseConditions().ToList();
+
+            Assert.AreEqual(2, conditions.Count);
+
+            Assert.IsInstanceOf<PropertyGreaterThanCondition<B, int>>(conditions[0]);
+            Assert.AreEqual(7, ((PropertyGreaterThanCondition<B, int>) conditions[0]).Value);
+            Assert.IsInstanceOf<PropertyEqualCondition<B, int>>(conditions[1]);
+            Assert.AreEqual(8, ((PropertyEqualCondition<B, int>) conditions[1]).Value);
+        }
+
+        [Test]
+        public void Should_support_or_at_some_point_but_not_now()
+        {
+            Expression<Func<B, bool>> expression = x => x.Value > 3 + 4 || x.Value == 16/2;
+
+            Assert.Throws<ArgumentException>(() => { expression.ParseConditions().ToList(); });
+        }
+
 
         class A
         {
             public string Name { get; set; }
             public string Gender { get; set; }
+            public bool Available { get; set; }
         }
 
         class B
         {
+            public char Code { get; set; }
             public int Value { get; set; }
         }
     }

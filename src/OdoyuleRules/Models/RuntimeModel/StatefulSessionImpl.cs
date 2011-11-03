@@ -54,9 +54,9 @@ namespace OdoyuleRules.Models.RuntimeModel
             contextMemory.Access(callback);
         }
 
-        public void Schedule(Action operation, int priority = 0)
+        public void Schedule(Action<Session> operation, int priority = 0)
         {
-            _agenda.Schedule(operation, priority);
+            _agenda.Schedule(() => operation(this), priority);
         }
 
         public void Dispose()

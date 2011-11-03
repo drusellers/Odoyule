@@ -205,6 +205,19 @@ namespace OdoyuleRules.Graphing
             return Next(() => base.Visit(node, next));
         }
 
+        public override bool Visit<T, TFact>(AddFactProductionNode<T, TFact> node, Func<RuntimeModelVisitor, bool> next)
+        {
+            _current = _vertices.Get(node.Id,
+                                     id =>
+                                     new Vertex(typeof (AddFactProductionNode<,>), typeof (TFact),
+                                                typeof (T).Tokens() + " \x279C " + typeof (TFact).GetShortName()));
+
+            if (_stack.Count > 0)
+                _edges.Add(new Edge(_stack.Peek(), _current, _current.TargetType.Name));
+
+            return base.Visit(node, next);
+        }
+
         bool Next(Func<bool> callback)
         {
             if (_current != null)

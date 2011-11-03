@@ -16,10 +16,19 @@ namespace OdoyuleRules.Models.SemanticModel
 
     public static class Consequences
     {
-        public static DelegateConsequence<T> Delegate<T>(Action<T> callback)
+        public static DelegateConsequence<T> Delegate<T>(Action<Session, T> callback)
             where T : class
         {
             var consequence = new DelegateConsequence<T>(callback);
+
+            return consequence;
+        }
+
+        public static AddFactConsequence<T, TFact> Add<T, TFact>(Func<T, TFact> factFactory) 
+            where T : class
+            where TFact : class
+        {
+            var consequence = new AddFactConsequence<T, TFact>(factFactory);
 
             return consequence;
         }

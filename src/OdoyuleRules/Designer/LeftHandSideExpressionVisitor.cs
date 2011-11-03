@@ -10,24 +10,25 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace OdoyuleRules.Configuration
+namespace OdoyuleRules.Designer
 {
-    using System;
     using System.Linq.Expressions;
-    using Models.SemanticModel;
-    using RuleConfigurators;
 
-    public static class ConditionExtensions
+    public class LeftHandSideExpressionVisitor :
+        ExpressionVisitor
     {
-        public static PredicateExpressionCondition<T> Predicate<T>(this RuleConditionConfigurator<T> configurator,
-                                                                   Expression<Func<T, bool>> predicateExpression)
-            where T : class
+        MemberExpression _member;
+
+        public MemberExpression Member
         {
-            PredicateExpressionCondition<T> condition = Conditions.Predicate(predicateExpression);
+            get { return _member; }
+        }
 
-            configurator.AddCondition(condition);
+        protected override Expression VisitMember(MemberExpression node)
+        {
+            _member = node;
 
-            return condition;
+            return node;
         }
     }
 }

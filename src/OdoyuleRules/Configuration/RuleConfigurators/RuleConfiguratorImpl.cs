@@ -12,8 +12,8 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Configuration.RuleConfigurators
 {
-    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Builders;
     using Configurators;
     using Designer;
@@ -23,12 +23,12 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
         RuleConfigurator,
         Configurator
     {
-        readonly IList<RuleConditionConfigurator> _conditionConfigurators;
+        readonly List<RuleBuilderConfigurator> _configurators;
         string _ruleName;
 
         public RuleConfiguratorImpl()
         {
-            _conditionConfigurators = new List<RuleConditionConfigurator>();
+            _configurators = new List<RuleBuilderConfigurator>();
         }
 
         public IEnumerable<ValidationResult> ValidateConfiguration()
@@ -46,45 +46,26 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
             return this;
         }
 
-        public RuleConditionConfigurator<T> When<T>()
-            where T : class
+        public void AddConfigurator(RuleBuilderConfigurator configurator)
         {
-            var configurator = new RuleConditionConfiguratorImpl<T>();
-
-            _conditionConfigurators.Add(configurator);
-
-            return configurator;
+            _configurators.Add(configurator);
         }
 
-        public RuleConditionConfigurator<T> When<T>(
-            params Func<RuleConditionConfigurator<T>, RuleCondition<T>>[] conditions)
-            where T : class
-        {
-            var configurator = new RuleConditionConfiguratorImpl<T>();
-
-            for (int i = 0; i < conditions.Length; i++)
-            {
-                conditions[i](configurator);
-            }
-
-            _conditionConfigurators.Add(configurator);
-
-            return configurator;
-        }
-
-        public Rule Configure()
-        {
-            RuleBuilder builder = new RuleBuilderImpl();
-
-            return builder.Build();
-        }
-
-        public Binding<T> Binding<T>() 
+        public Binding<T> Binding<T>()
             where T : class
         {
             var binding = new BindingImpl<T>(this);
 
             return binding;
+        }
+
+        public Rule Configure()
+        {
+            RuleBuilder builder = new RuleBuilderImpl(_ruleName);
+
+            builder = _configurators.Aggregate(builder, (current, configurator) => configurator.Configure(current));
+
+            return builder.Build();
         }
     }
 }

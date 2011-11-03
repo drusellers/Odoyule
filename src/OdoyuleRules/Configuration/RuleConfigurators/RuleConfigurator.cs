@@ -12,21 +12,15 @@
 // specific language governing permissions and limitations under the License.
 namespace OdoyuleRules.Configuration.RuleConfigurators
 {
-    using System;
     using Designer;
-    using Models.SemanticModel;
 
     public interface RuleConfigurator
     {
         RuleConfigurator SetName(string ruleName);
 
-        RuleConditionConfigurator<T> When<T>()
-            where T : class;
+        void AddConfigurator(RuleBuilderConfigurator configurator);
 
-        RuleConditionConfigurator<T> When<T>(params Func<RuleConditionConfigurator<T>, RuleCondition<T>>[] conditions) 
-            where T : class;
-
-        Binding<T> Binding<T>() 
+        Binding<T> Binding<T>()
             where T : class;
     }
 }
