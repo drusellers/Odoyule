@@ -1,4 +1,4 @@
-﻿// Copyright 2011 Chris Patterson
+// Copyright 2011 Chris Patterson
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -13,29 +13,20 @@
 namespace OdoyuleRules.Designer
 {
     using System;
-    using Configuration.RuleConfigurators;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
     using Models.SemanticModel;
 
-    public abstract class RuleDesigner
+    public class ConditionExpressionParserImpl :
+        ConditionExpressionParser
     {
-        RuleConfigurator _ruleConfigurator;
-
-        protected RuleDesigner()
+        public IEnumerable<RuleCondition> Parse<TFact>(Expression<Func<TFact, bool>> expression)
+            where TFact : class
         {
-            _ruleConfigurator = new RuleConfiguratorImpl(GetType().Name.Replace("Rule", ""));
-        }
+            var visitor = new ConditionExpressionVisitor<TFact>();
+            visitor.Visit(expression);
 
-        protected Binding<T> Fact<T>() 
-            where T : class
-        {
-            var fact = new BindingImpl<T>(this);
-
-            return fact;
-        }
-
-        public Rule Build()
-        {
-            throw new NotImplementedException();
+            return visitor.Conditions;
         }
     }
 }

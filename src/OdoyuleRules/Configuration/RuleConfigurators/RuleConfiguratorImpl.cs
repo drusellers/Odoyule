@@ -16,21 +16,34 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
     using System.Collections.Generic;
     using Builders;
     using Configurators;
+    using Designer;
     using Models.SemanticModel;
-    using RulesEngineConfigurators;
 
     class RuleConfiguratorImpl :
         RuleConfigurator,
-        RulesEngineBuilderConfigurator
+        Configurator
     {
         readonly IList<RuleConditionConfigurator> _conditionConfigurators;
         string _ruleName;
 
-        public RuleConfiguratorImpl(string ruleName)
+        public RuleConfiguratorImpl()
         {
             _conditionConfigurators = new List<RuleConditionConfigurator>();
+        }
 
+        public IEnumerable<ValidationResult> ValidateConfiguration()
+        {
+            if (string.IsNullOrEmpty(_ruleName))
+                yield return this.Failure("The rule name must be specified");
+
+            yield break;
+        }
+
+        public RuleConfigurator SetName(string ruleName)
+        {
             _ruleName = ruleName;
+
+            return this;
         }
 
         public RuleConditionConfigurator<T> When<T>()
@@ -43,7 +56,8 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
             return configurator;
         }
 
-        public RuleConditionConfigurator<T> When<T>(params Func<RuleConditionConfigurator<T>, RuleCondition<T>>[] conditions)
+        public RuleConditionConfigurator<T> When<T>(
+            params Func<RuleConditionConfigurator<T>, RuleCondition<T>>[] conditions)
             where T : class
         {
             var configurator = new RuleConditionConfiguratorImpl<T>();
@@ -58,19 +72,19 @@ namespace OdoyuleRules.Configuration.RuleConfigurators
             return configurator;
         }
 
-        public RulesEngineBuilder Configure(RulesEngineBuilder builder)
+        public Rule Configure()
         {
-            throw new NotImplementedException("Need to configure rule");
+            RuleBuilder builder = new RuleBuilderImpl();
 
-            return builder;
+            return builder.Build();
         }
 
-        public IEnumerable<ValidationResult> ValidateConfiguration()
+        public Binding<T> Binding<T>() 
+            where T : class
         {
-            if (string.IsNullOrEmpty(_ruleName))
-                yield return this.Failure("The rule name must be specified");
+            var binding = new BindingImpl<T>(this);
 
-            yield break;
+            return binding;
         }
     }
 }

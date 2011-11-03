@@ -20,13 +20,13 @@ namespace OdoyuleRules
     public static class DesignerExtensions
     {
         public static void Rule<TRule>(this RulesEngineConfigurator configurator)
-            where TRule : RuleDesigner, new()
+            where TRule : RuleDefinition, new()
         {
             Rule(configurator, () => new TRule());
         }
 
         public static void Rule<TRule>(this RulesEngineConfigurator configurator, Func<TRule> ruleFactory)
-            where TRule : RuleDesigner
+            where TRule : RuleDefinition
         {
             TRule ruleDesigner = ruleFactory();
 

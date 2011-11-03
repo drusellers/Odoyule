@@ -43,7 +43,6 @@
     <Compile Include="Compiling\RuleConditionCompilerImpl.cs" />
     <Compile Include="Compiling\RuleConsequenceCompiler.cs" />
     <Compile Include="Compiling\RuleConsequenceCompilerImpl.cs" />
-    <Compile Include="Compiling\SemanticModelVisitorImpl.cs" />
     <Compile Include="Conditionals\Comparator.cs" />
     <Compile Include="Conditionals\Conditional.cs" />
     <Compile Include="Conditionals\ConstantValue.cs" />
@@ -82,7 +81,7 @@
     <Compile Include="Configuration\ConsequenceExtensions.cs" />
     <Compile Include="Configuration\DesignerExtensions.cs" />
     <Compile Include="Configuration\RuleConfigurators\DelegateRuleConsequenceConfigurator.cs" />
-    <Compile Include="Configuration\RuleConfigurators\PropertyExpressionVisitor.cs" />
+    <Compile Include="Configuration\RulesEngineConfigurators\Selectors\PropertyExpressionVisitor.cs" />
     <Compile Include="Configuration\RuleConfigurators\RuleConditionConfigurator.cs" />
     <Compile Include="Configuration\RuleConfigurators\RuleConditionConfiguratorImpl.cs" />
     <Compile Include="Configuration\RuleConfigurators\RuleConfigurator.cs" />
@@ -130,9 +129,14 @@
     <Compile Include="Configuration\SessionConfigurators\StatelessSessionConfiguratorImpl.cs" />
     <Compile Include="Designer\Binding.cs" />
     <Compile Include="Designer\BindingImpl.cs" />
-    <Compile Include="Designer\RuleDesigner.cs" />
+    <Compile Include="Designer\ConditionExpressionExtensions.cs" />
+    <Compile Include="Designer\ConditionExpressionParser.cs" />
+    <Compile Include="Designer\ConditionExpressionParserImpl.cs" />
+    <Compile Include="Designer\RuleDefinition.cs" />
+    <Compile Include="Designer\RuleDefinitionConfigurator.cs" />
     <Compile Include="Designer\ThenConfigurator.cs" />
     <Compile Include="Designer\ThenConfiguratorImpl.cs" />
+    <Compile Include="Designer\ConditionExpressionVisitor.cs" />
     <Compile Include="FactHandle.cs" />
     <Compile Include="Graphing\Edge.cs" />
     <Compile Include="Graphing\GraphRulesEngineExtensions.cs" />
@@ -207,6 +211,7 @@
     <Compile Include="Models\SemanticModel\RuleConsequence.cs" />
     <Compile Include="Models\SemanticModel\RuleSet.cs" />
     <Compile Include="Models\SemanticModel\SemanticModelVisitor.cs" />
+    <Compile Include="Models\SemanticModel\SemanticModelVisitorImpl.cs" />
     <Compile Include="OdoyuleRulesEngine.cs" />
     <Compile Include="Parsing\AbstractCharacterParser.cs" />
     <Compile Include="Parsing\AbstractParser.cs" />

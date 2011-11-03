@@ -48,7 +48,7 @@ namespace OdoyuleRules.Tests.InternalDSL
         }
 
         class SingleFactRule :
-            RuleDesigner
+            RuleDefinition
         {
             public SingleFactRule()
             {

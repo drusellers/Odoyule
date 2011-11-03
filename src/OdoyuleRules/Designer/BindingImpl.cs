@@ -14,16 +14,17 @@ namespace OdoyuleRules.Designer
 {
     using System;
     using System.Linq.Expressions;
+    using Configuration.RuleConfigurators;
 
     public class BindingImpl<T> :
         Binding<T>
         where T : class
     {
-        readonly RuleDesigner _designer;
+        readonly RuleConfigurator _configurator;
 
-        public BindingImpl(RuleDesigner designer)
+        public BindingImpl(RuleConfigurator configurator)
         {
-            _designer = designer;
+            _configurator = configurator;
         }
 
         public Binding<T> When(Expression<Func<T, bool>> expression)

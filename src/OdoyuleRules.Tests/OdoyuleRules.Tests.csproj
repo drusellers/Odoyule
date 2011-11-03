@@ -59,6 +59,7 @@
     <Compile Include="Execution\Condition_Specs.cs" />
     <Compile Include="Execution\Production_Specs.cs" />
     <Compile Include="Factory_Specs.cs" />
+    <Compile Include="InternalDSL\ExpressionParsing_Specs.cs" />
     <Compile Include="InternalDSL\RuleDesigner_Specs.cs" />
     <Compile Include="Parser_Specs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

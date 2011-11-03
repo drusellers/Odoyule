@@ -45,16 +45,6 @@ namespace OdoyuleRules.Configuration.RulesEngineConfigurators
             yield break;
         }
 
-        public void Rule(string name, Action<RuleConfigurator> configureCallback)
-        {
-            var configurator = new RuleConfiguratorImpl(name);
-
-            configureCallback(configurator);
-
-            _ruleConfigurators.Add(configurator);
-
-        }
-
         public void Add(params Rule[] rules)
         {
             foreach (var rule in rules)

@@ -64,16 +64,9 @@ namespace OdoyuleRules.Models.SemanticModel
             }
         }
 
-        public static bool operator ==(
-            PropertyEqualCondition<T, TProperty> left, PropertyEqualCondition<T, TProperty> right)
+        public override string ToString()
         {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(
-            PropertyEqualCondition<T, TProperty> left, PropertyEqualCondition<T, TProperty> right)
-        {
-            return !Equals(left, right);
+            return string.Format("{0} == {1}", PropertyExpression, Value);
         }
     }
 }

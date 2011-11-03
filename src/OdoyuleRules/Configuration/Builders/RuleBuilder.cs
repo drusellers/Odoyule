@@ -20,4 +20,18 @@ namespace OdoyuleRules.Configuration.Builders
 
         Rule Build();
     }
+
+    public class RuleBuilderImpl : 
+        RuleBuilder
+    {
+        public string RuleName
+        {
+            get { throw new System.NotImplementedException(); }
+        }
+
+        public Rule Build()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }
